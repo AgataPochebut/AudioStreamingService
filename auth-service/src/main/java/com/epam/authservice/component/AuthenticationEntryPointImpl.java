@@ -19,7 +19,7 @@ import java.io.IOException;
 public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
 
     @Override
-    public void commence(HttpServletRequest httpServletRequest, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
+    public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
 
         String errorMessage = e.getMessage();
 
@@ -30,6 +30,6 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
 //        response.setContentType("application/json");
 //        new ObjectMapper().writeValue(response.getWriter(), errorResponseDTO);
 
-        new ObjectMapper().writeValue(response.getWriter(), errorMessage);
+        new ObjectMapper().writeValue(httpServletResponse.getWriter(), errorMessage);
     }
 }
