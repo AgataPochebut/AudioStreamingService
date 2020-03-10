@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Set;
 
-public class AlbumRequestDto {
+public class PlaylistRequestDto {
 
     @NotNull
     @NotEmpty
