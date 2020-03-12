@@ -1,7 +1,6 @@
-package com.epam.userservice.service;
+package com.epam.authservice.service;
 
-import com.epam.songservice.model.Album;
-import com.epam.userservice.model.User;
+import com.epam.authservice.model.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

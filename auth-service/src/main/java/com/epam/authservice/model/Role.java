@@ -1,4 +1,4 @@
-package com.epam.userservice.model;
+package com.epam.authservice.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
