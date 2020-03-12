@@ -13,11 +13,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-//import org.springframework.security.oauth2.provider.token.TokenStore;
-//import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
@@ -41,6 +40,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private AuthenticationSuccessHandler authenticationSuccessHandler;
     @Autowired
     private AuthenticationFailureHandler authenticationFailureHandler;
+    @Autowired
+    private OAuth2UserService oAuth2UserService;
 
     @Bean
     @Override
@@ -87,14 +88,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .oauth2Login()
                 .successHandler(authenticationSuccessHandler)
                 .failureHandler(authenticationFailureHandler)
+//                .defaultSuccessUrl("/loginSuccess")
+//                .failureUrl("/loginFailure")
+//                .authorizationEndpoint().baseUri("/oauth2/authorize-client").authorizationRequestRepository(authorizationRequestRepository())
+//                .tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient())
+//                .redirectionEndpoint().baseUri("/oauth2/redirect")
+                .userInfoEndpoint().userService(oAuth2UserService)
 
-                .and()
-                .logout()
-                .logoutSuccessUrl("/").permitAll()
+//                .and()
+//                .logout()
+//                .logoutSuccessUrl("/").permitAll()
 
         ;
     }
 
+//    // for non-boot
 //    @Bean
 //    public ClientRegistrationRepository clientRegistrationRepository() {
 //        return new InMemoryClientRegistrationRepository(googleClientRegistration());
