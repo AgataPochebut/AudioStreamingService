@@ -1,5 +1,6 @@
 package com.epam.authservice.service;
 
+import com.epam.authservice.service.GenericService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 

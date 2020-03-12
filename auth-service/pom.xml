@@ -62,11 +62,11 @@
 <!--            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>-->
 <!--        </dependency>-->
 
-        <!--core client jose-->
-        <dependency>
-            <groupId>org.springframework.security.oauth</groupId>
-            <artifactId>spring-security-oauth2</artifactId>
-        </dependency>
+        <!--core+client+jose-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.security.oauth</groupId>-->
+<!--            <artifactId>spring-security-oauth2</artifactId>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

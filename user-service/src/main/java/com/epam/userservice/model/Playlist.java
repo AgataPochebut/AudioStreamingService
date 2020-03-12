@@ -1,6 +1,7 @@
 package com.epam.userservice.model;
 
 import com.epam.songservice.model.Song;
+import com.epam.authservice.model.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
