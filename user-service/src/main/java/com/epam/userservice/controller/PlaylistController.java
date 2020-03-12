@@ -25,6 +25,7 @@ public class PlaylistController {
     private Mapper mapper;
 
     @GetMapping
+    //@PreAuthorize("#oauth2.hasScope('read')")
     public ResponseEntity<List<PlaylistResponseDto>> readAll() {
         final List<Playlist> entity = service.findAll();
 
