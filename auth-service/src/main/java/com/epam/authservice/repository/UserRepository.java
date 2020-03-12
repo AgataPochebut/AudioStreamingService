@@ -1,7 +1,6 @@
-package com.epam.userservice.repository;
+package com.epam.authservice.repository;
 
-import com.epam.userservice.model.Playlist;
-import com.epam.userservice.model.User;
+import com.epam.authservice.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
