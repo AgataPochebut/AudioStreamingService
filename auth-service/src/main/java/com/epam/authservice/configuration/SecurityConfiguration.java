@@ -24,6 +24,7 @@ import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
@@ -36,6 +37,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private AccessDeniedHandler accessDeniedHandler;
     @Autowired
     private AuthenticationEntryPoint authenticationEntryPoint;
+    @Autowired
+    private AuthenticationSuccessHandler authenticationSuccessHandler;
     @Autowired
     private AuthenticationFailureHandler authenticationFailureHandler;
 
@@ -56,21 +59,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
-//                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-//
-//                .and()
-//                .cors()
-//
-//                .and()
+                .csrf().disable().cors()
+
+                .and()
                 .authorizeRequests()
-                .antMatchers("/api/v2/api-docs","/v2/api-docs","/api/swagger-resources/**", "/swagger-resources/**", "/api/swagger-ui.html**", "/api/webjars/**").permitAll()
-                .antMatchers("/auth/**").permitAll()
-                .antMatchers(HttpMethod.POST,"/users/**").permitAll()
-                .antMatchers("/events/**").authenticated()
-                .antMatchers(HttpMethod.POST).hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT).hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE).hasRole("ADMIN")
-                .anyRequest().authenticated()
+                .mvcMatchers("/**").permitAll()
+//                .antMatchers("/api/v2/api-docs","/v2/api-docs","/api/swagger-resources/**", "/swagger-resources/**", "/api/swagger-ui.html**", "/api/webjars/**").permitAll()
+//                .antMatchers("/auth/**").permitAll()
+//                .antMatchers(HttpMethod.POST,"/users/**").permitAll()
+//                .antMatchers("/events/**").authenticated()
+//                .antMatchers(HttpMethod.POST).hasRole("ADMIN")
+//                .antMatchers(HttpMethod.PUT).hasRole("ADMIN")
+//                .antMatchers(HttpMethod.DELETE).hasRole("ADMIN")
+//                .anyRequest().authenticated()
 
                 //check roles
                 .and()
@@ -84,6 +85,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .oauth2Login()
+                .successHandler(authenticationSuccessHandler)
                 .failureHandler(authenticationFailureHandler)
 
                 .and()
@@ -93,27 +95,27 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         ;
     }
 
-    @Bean
-    public ClientRegistrationRepository clientRegistrationRepository() {
-        return new InMemoryClientRegistrationRepository(googleClientRegistration());
-    }
-
-    private ClientRegistration googleClientRegistration() {
-        return ClientRegistration.withRegistrationId("google")
-                .clientId("google-client-id")
-                .clientSecret("google-client-secret")
-                .clientAuthenticationMethod(ClientAuthenticationMethod.BASIC)
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .redirectUriTemplate("{baseUrl}/login/oauth2/code/{registrationId}")
-                .scope("openid", "profile", "email", "address", "phone")
-                .authorizationUri("https://accounts.google.com/o/oauth2/v2/auth")
-                .tokenUri("https://www.googleapis.com/oauth2/v4/token")
-                .userInfoUri("https://www.googleapis.com/oauth2/v3/userinfo")
-                .userNameAttributeName(IdTokenClaimNames.SUB)
-                .jwkSetUri("https://www.googleapis.com/oauth2/v3/certs")
-                .clientName("Google")
-                .build();
-    }
+//    @Bean
+//    public ClientRegistrationRepository clientRegistrationRepository() {
+//        return new InMemoryClientRegistrationRepository(googleClientRegistration());
+//    }
+//
+//    private ClientRegistration googleClientRegistration() {
+//        return ClientRegistration.withRegistrationId("google")
+//                .clientId("google-client-id")
+//                .clientSecret("google-client-secret")
+//                .clientAuthenticationMethod(ClientAuthenticationMethod.BASIC)
+//                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+//                .redirectUriTemplate("{baseUrl}/login/oauth2/code/{registrationId}")
+//                .scope("openid", "profile", "email", "address", "phone")
+//                .authorizationUri("https://accounts.google.com/o/oauth2/v2/auth")
+//                .tokenUri("https://www.googleapis.com/oauth2/v4/token")
+//                .userInfoUri("https://www.googleapis.com/oauth2/v3/userinfo")
+//                .userNameAttributeName(IdTokenClaimNames.SUB)
+//                .jwkSetUri("https://www.googleapis.com/oauth2/v3/certs")
+//                .clientName("Google")
+//                .build();
+//    }
 
 }
 
