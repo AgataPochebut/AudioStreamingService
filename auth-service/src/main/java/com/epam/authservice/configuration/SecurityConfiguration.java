@@ -26,6 +26,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -60,11 +61,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
-                .csrf().disable().cors()
-
-                .and()
+//                .csrf().disable().cors()
+//
+//                .and()
                 .authorizeRequests()
-                .mvcMatchers("/**").permitAll()
+                .mvcMatchers("/").permitAll()
                 .antMatchers("/api/v2/api-docs","/v2/api-docs","/api/swagger-resources/**", "/swagger-resources/**", "/api/swagger-ui.html**", "/api/webjars/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/login").permitAll()
@@ -73,22 +74,24 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling()
                 .accessDeniedHandler(accessDeniedHandler)//check roles
-                .authenticationEntryPoint(authenticationEntryPoint) //check autorization
-
-                .and()
-                .oauth2Login()
-                .loginPage("/login")
-                .successHandler(authenticationSuccessHandler)
-                .failureHandler(authenticationFailureHandler)
-//                .defaultSuccessUrl("/loginSuccess")
-//                .failureUrl("/loginFailure")
-//                .authorizationEndpoint().baseUri("/oauth2/authorize-client").authorizationRequestRepository(authorizationRequestRepository())
-//                .tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient())
-//                .redirectionEndpoint().baseUri("/oauth2/redirect")
-                .userInfoEndpoint().userService(oAuth2UserService)
+//                .authenticationEntryPoint(authenticationEntryPoint) //check autorization
 
 //                .and()
-//                .logout()
+//                .formLogin().loginPage("/login").loginProcessingUrl("/login")
+//                .and()
+//                .logout().logoutUrl("/logout")
+
+                .and()
+                .oauth2Login().loginProcessingUrl("/login").userInfoEndpoint().userService(oAuth2UserService).
+//                .successHandler(authenticationSuccessHandler)
+//                .failureHandler(authenticationFailureHandler)
+////                .defaultSuccessUrl("/loginSuccess")
+////                .failureUrl("/loginFailure")
+////                .authorizationEndpoint().baseUri("/oauth2/authorize-client").authorizationRequestRepository(authorizationRequestRepository())
+////                .tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient())
+////                .redirectionEndpoint().baseUri("/oauth2/redirect")
+//                .userInfoEndpoint().userService(oAuth2UserService)
+
 
         ;
     }

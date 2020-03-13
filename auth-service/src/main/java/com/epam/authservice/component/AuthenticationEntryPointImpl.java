@@ -31,5 +31,8 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
 //        new ObjectMapper().writeValue(response.getWriter(), errorResponseDTO);
 
         new ObjectMapper().writeValue(httpServletResponse.getWriter(), errorMessage);
+
+//        httpServletResponse.setHeader("Location", "http://localhost:8080/oauth2/authorization/google");
+//        httpServletResponse.setStatus(302);
     }
 }
