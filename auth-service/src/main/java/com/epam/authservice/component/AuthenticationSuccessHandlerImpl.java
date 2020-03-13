@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -20,16 +21,10 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
 
-        String errorMessage = "ok";
-
-//        log.error(errorMessage, e);
-//
-//        ErrorResponseDto errorResponseDTO = new ErrorResponseDto(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage);
-//        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-//        response.setContentType("application/json");
-//        new ObjectMapper().writeValue(response.getWriter(), errorResponseDTO);
+        String errorMessage = "auth successful";
+        errorMessage="AuthenticationSuccessHandler";
+        log.info(errorMessage);
 
         new ObjectMapper().writeValue(httpServletResponse.getWriter(), errorMessage);
-
     }
 }

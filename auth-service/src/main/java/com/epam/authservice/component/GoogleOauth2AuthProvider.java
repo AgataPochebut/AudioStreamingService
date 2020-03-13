@@ -7,8 +7,9 @@
 //import org.springframework.security.authentication.AuthenticationProvider;
 //import org.springframework.security.core.Authentication;
 //import org.springframework.security.core.AuthenticationException;
-//import org.springframework.security.core.userdetails.UserDetailsService;
 //import org.springframework.security.core.userdetails.UsernameNotFoundException;
+//import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+//import org.springframework.security.oauth2.core.user.OAuth2User;
 //
 //
 ///**
@@ -19,15 +20,15 @@
 //    private static final Logger logger = LoggerFactory.getLogger(GoogleOauth2AuthProvider.class);
 //
 //    @Autowired(required = true)
-//    private UserDetailsService userDetailsService;
+//    private OAuth2UserService oAuth2UserService;
 //
 //    @Override
 //    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 //        logger.info("Provider Manager Executed");
-//        CustomOAuth2AuthenticationToken token = (CustomOAuth2AuthenticationToken) authentication;
-//        UserDetailsImpl registeredUser = (UserDetailsImpl) token.getPrincipal();
+//        OAuth2AuthenticationToken token = (OAuth2AuthenticationToken) authentication;
+//        OAuth2User registeredUser = (OAuth2User) token.getPrincipal();
 //        try {
-//            registeredUser = (UserDetailsImpl) userDetailsService
+//            OAuth2User registeredUser = userDetailsService
 //                    .loadUserByUsername(registeredUser.getEmail());
 //        } catch (UsernameNotFoundException usernameNotFoundException) {
 //            logger.info("User trying google/login not already a registered user. Register Him !!");
@@ -37,7 +38,7 @@
 //
 //    @Override
 //    public boolean supports(Class<?> authentication) {
-//        return CustomOAuth2AuthenticationToken.class
+//        return OAuth2AuthenticationToken.class
 //                .isAssignableFrom(authentication);
 //    }
 //}

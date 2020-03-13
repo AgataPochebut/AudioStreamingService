@@ -26,6 +26,8 @@ public class User implements UserDetails, OAuth2User {
 
     private String name;
 
+    private String email;
+
     @ManyToMany
     @JoinTable(name = "User_Role",
             joinColumns = {@JoinColumn(name = "user_id")},

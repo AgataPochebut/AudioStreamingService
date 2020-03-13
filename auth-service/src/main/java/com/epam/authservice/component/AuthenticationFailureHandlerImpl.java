@@ -19,8 +19,8 @@ public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHa
     public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
 
         String errorMessage = e.getMessage();
-
-//        log.error(errorMessage, e);
+        errorMessage="AuthenticationFailureHandler";
+        log.error(errorMessage, e);
 //
 //        ErrorResponseDto errorResponseDTO = new ErrorResponseDto(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage);
 //        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());

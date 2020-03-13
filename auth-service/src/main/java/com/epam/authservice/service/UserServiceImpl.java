@@ -18,4 +18,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, Long> implements U
         return repository.findByName(name);
     }
 
+    @Override
+    public User findByEmail(String email) { return repository.findByEmail(email); }
+
 }
