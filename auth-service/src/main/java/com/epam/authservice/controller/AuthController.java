@@ -8,6 +8,7 @@ import com.epam.authservice.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -20,7 +21,14 @@ public class AuthController {
 
     @GetMapping(value = "/login")
     public void login(HttpServletResponse httpServletResponse) {
-        httpServletResponse.setHeader("Location", "http://localhost:8080/auth_service/oauth2/authorization/google");
+        httpServletResponse.setHeader("Location", "http://localhost:8080/oauth2/authorization/google");
         httpServletResponse.setStatus(302);
+    }
+
+    @GetMapping(value = "/logout")
+    public void logout(HttpServletResponse httpServletResponse) {
+//        httpServletResponse.setHeader("Location", "http://localhost:8080/oauth2/authorization/google");
+//        httpServletResponse.setStatus(302);
+        SecurityContextHolder.getContext().setAuthentication(null);
     }
 }
