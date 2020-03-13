@@ -23,7 +23,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
         oAuth2UserRequest.getClientRegistration().getClientName();
 
-        String username="hfhfhfhff";
-        return mapper.map(userService.findByName(username), User.class);
+        String email="hfhfhfhff";
+        return mapper.map(userService.findByEmail(email), User.class);
     }
 }

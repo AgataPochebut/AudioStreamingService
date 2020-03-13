@@ -16,11 +16,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/auth")
 public class AuthController {
 
-    @GetMapping(value = "/signIn")
-    public void signIn(HttpServletResponse httpServletResponse) {
+    @GetMapping(value = "/login")
+    public void login(HttpServletResponse httpServletResponse) {
         httpServletResponse.setHeader("Location", "http://localhost:8080/auth_service/oauth2/authorization/google");
         httpServletResponse.setStatus(302);
     }

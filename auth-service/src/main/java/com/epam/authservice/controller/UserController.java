@@ -14,6 +14,8 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RestController
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired

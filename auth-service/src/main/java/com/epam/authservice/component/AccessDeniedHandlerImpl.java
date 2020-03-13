@@ -22,8 +22,8 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
     public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException, ServletException {
 
         String errorMessage = e.getMessage();
-
-//        log.error(errorMessage, e);
+        errorMessage="AccessDeniedHandler";
+        log.error(errorMessage, e);
 //
 //        ErrorResponseDto errorResponseDTO = new ErrorResponseDto(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage);
 //        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());

@@ -9,7 +9,7 @@
 ///**
 // * Created by colorado on 9/03/17.
 // */
-//public class CustomOAuth2AuthenticationToken extends AbstractAuthenticationToken {
+//public class OAuth2AuthenticationToken extends AbstractAuthenticationToken {
 //    /**
 //     * serialVersionUID
 //     */
@@ -17,7 +17,7 @@
 //
 //    private UserDetailsImpl registeredUser;
 //
-//    public CustomOAuth2AuthenticationToken(
+//    public OAuth2AuthenticationToken(
 //            Collection<? extends GrantedAuthority> authorities) {
 //        super(authorities);
 //    }
@@ -26,7 +26,7 @@
 //     * @param authorities
 //     * @param registeredUser
 //     */
-//    public CustomOAuth2AuthenticationToken(UserDetailsImpl registeredUser) {
+//    public OAuth2AuthenticationToken(UserDetailsImpl registeredUser) {
 //        super(UserDetailsImpl.DEFAULT_ROLES);
 //        this.registeredUser = registeredUser;
 //    }

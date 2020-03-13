@@ -22,8 +22,8 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
 
         String errorMessage = e.getMessage();
-
-//        log.error(errorMessage, e);
+        errorMessage="AuthenticationEntryPoint";
+        log.error(errorMessage, e);
 //
 //        ErrorResponseDto errorResponseDTO = new ErrorResponseDto(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage);
 //        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
