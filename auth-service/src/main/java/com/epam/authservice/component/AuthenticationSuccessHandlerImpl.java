@@ -28,11 +28,10 @@ public class AuthenticationSuccessHandlerImpl extends SavedRequestAwareAuthentic
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
 
-
         String errorMessage = "auth successful";
         errorMessage="AuthenticationSuccessHandler";
         log.info(errorMessage);
 
-//        new ObjectMapper().writeValue(httpServletResponse.getWriter(), errorMessage);
+        new ObjectMapper().writeValue(httpServletResponse.getWriter(), errorMessage);
     }
 }
