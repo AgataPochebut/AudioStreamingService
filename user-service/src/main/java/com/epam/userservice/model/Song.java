@@ -1,34 +1,29 @@
 package com.epam.userservice.model;
 
+import com.epam.songservice.model.Album;
+import com.epam.songservice.model.Storage;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Table
+@Table(name="SONGS")
 @NoArgsConstructor
 @Data
-public class Playlist {
+public class Song {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @NotNull
     @NotEmpty
+    @Column(nullable = false)
     private String title;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @ManyToMany
-    @JoinTable(name = "Playlist_Song",
-            joinColumns = {@JoinColumn(name = "playlist_id")},
-            inverseJoinColumns = {@JoinColumn(name = "song_id")})
-    private Set<Song> songs;
 }

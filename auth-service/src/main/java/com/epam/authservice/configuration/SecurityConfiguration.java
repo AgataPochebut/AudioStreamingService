@@ -20,6 +20,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -76,23 +77,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(accessDeniedHandler)//check roles
 //                .authenticationEntryPoint(authenticationEntryPoint) //check autorization
 
-//                .and()
-//                .formLogin().loginPage("/login").loginProcessingUrl("/login")
-//                .and()
-//                .logout().logoutUrl("/logout")
+                .and()
+                .oauth2Login()
+                .loginPage("/auth/login")
+                .userInfoEndpoint()
+                //.userAuthoritiesMapper(this.userAuthoritiesMapper())
+                .userService(oAuth2UserService)
+                .customUserType(OAuth2User.class, "google")
 
                 .and()
-                .oauth2Login().loginProcessingUrl("/login").userInfoEndpoint().userService(oAuth2UserService).
-//                .successHandler(authenticationSuccessHandler)
-//                .failureHandler(authenticationFailureHandler)
-////                .defaultSuccessUrl("/loginSuccess")
-////                .failureUrl("/loginFailure")
-////                .authorizationEndpoint().baseUri("/oauth2/authorize-client").authorizationRequestRepository(authorizationRequestRepository())
-////                .tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient())
-////                .redirectionEndpoint().baseUri("/oauth2/redirect")
-//                .userInfoEndpoint().userService(oAuth2UserService)
-
-
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(authenticationFailureHandler)
         ;
     }
 }
