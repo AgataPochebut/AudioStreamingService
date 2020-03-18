@@ -4,18 +4,22 @@ import com.epam.songservice.dto.request.SongRequestDto;
 import com.epam.songservice.dto.response.SongResponseDto;
 import com.epam.songservice.model.Song;
 import com.epam.songservice.service.SongService;
+import lombok.extern.slf4j.Slf4j;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Queue;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/songs")
+@Slf4j
 public class SongController {
 
     @Autowired
@@ -66,4 +70,12 @@ public class SongController {
         service.deleteById(id);
     }
 
+    @Autowired
+    private JmsTemplate jmsTemplate;
+
+    @GetMapping("message/{message}")
+    public ResponseEntity<String> publish(@PathVariable("message") final String message){
+        jmsTemplate.convertAndSend("test-queue5", message);
+        return new ResponseEntity(message, HttpStatus.OK);
+    }
 }
