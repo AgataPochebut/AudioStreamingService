@@ -25,7 +25,7 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
 
         String errorMessage = e.getMessage();
 
-//        log.error(errorMessage, e);
+        log.error(errorMessage, e);
 //
 //        ErrorResponseDto errorResponseDTO = new ErrorResponseDto(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage);
 //        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());

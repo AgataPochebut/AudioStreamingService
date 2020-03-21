@@ -1,10 +1,7 @@
 package com.epam.dto.response;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import java.util.Date;
+import java.util.Set;
 
 public class GenreResponseDto {
 
@@ -12,4 +9,15 @@ public class GenreResponseDto {
 
     String name;
 
+    public static class PlaylistResponseDto {
+
+        private Long id;
+
+        private String title;
+
+        private Date year;
+
+        private Set<String> notes;
+
+    }
 }

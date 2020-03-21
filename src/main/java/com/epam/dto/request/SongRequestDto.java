@@ -1,11 +1,8 @@
 package com.epam.dto.request;
 
-import com.epam.model.Album;
-import com.epam.model.Storage;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;

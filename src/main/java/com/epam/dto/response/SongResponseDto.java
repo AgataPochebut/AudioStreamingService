@@ -1,11 +1,5 @@
 package com.epam.dto.response;
 
-import com.epam.model.Album;
-import com.epam.model.Storage;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Set;
 

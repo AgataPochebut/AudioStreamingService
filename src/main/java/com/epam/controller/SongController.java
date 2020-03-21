@@ -1,19 +1,32 @@
 package com.epam.controller;
 
-import com.epam.dto.request.SongRequestDto;
+import com.epam.dto.request.SongDataRequestDto;
 import com.epam.dto.response.SongResponseDto;
 import com.epam.model.Song;
-import com.epam.service.GenericService;
-import com.epam.service.SongService;
+import com.epam.service.repository.SongService;
+import org.apache.commons.io.IOUtils;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.FileUrlResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/songs")
@@ -44,18 +57,9 @@ public class SongController {
     }
 
     @PostMapping
-    public ResponseEntity<SongResponseDto> create(@Valid @RequestBody SongRequestDto requestDto) throws Exception {
+    public ResponseEntity<SongResponseDto> create(@RequestBody SongDataRequestDto requestDto) throws Exception {
         final Song entity = mapper.map(requestDto, Song.class);
         service.save(entity);
-
-        final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
-
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<SongResponseDto> update(@PathVariable Long id, @Valid @RequestBody SongRequestDto requestDto) throws Exception {
-        final Song entity = mapper.map(requestDto, Song.class);
-        service.update(entity);
 
         final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -65,6 +69,59 @@ public class SongController {
     @ResponseStatus(value = HttpStatus.OK)
     public void delete(@PathVariable Long id) {
         service.deleteById(id);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    //    @Autowired
+    //    private FileStorageService fileStorageService;
+
+    @GetMapping(value = "/downloadFile")//, produces = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseBody
+    public Resource downloadFile(@RequestParam("url") String url) throws IOException {
+
+//        File file = new File(url);
+//        file.toURI();
+        Resource resource;
+
+//        resource = new FileSystemResource(url);
+        resource = new FileUrlResource(url);
+
+        return resource;
+
+    }
+
+//    @GetMapping(value = "/{id}/downloadFile")//, produces = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    @ResponseBody
+//    public Resource downloadFile(@PathVariable Long id) throws IOException {
+//
+//        Resource resource = new UrlResource(service.findById(id).getPath());
+//        return resource;
+//
+//    }
+
+    @PostMapping("/uploadFile")
+    @ResponseBody
+    public SongResponseDto uploadFile(@RequestParam("file") MultipartFile file) {
+//        String fileName = fileStorageService.storeFile(file);
+//
+//        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+//                .path("/downloadFile/")
+//                .path(fileName)
+//                .toUriString();
+//
+//        return new SongResponseDto();//fileName, fileDownloadUri, file.getContentType(), file.getSize());
+        return null;
+    }
+
+    @PostMapping("/uploadMultipleFiles")
+    @ResponseBody
+    public List<SongResponseDto> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
+//        return Arrays.asList(files)
+//                .stream()
+//                .map(file -> uploadFile(file))
+//                .collect(Collectors.toList());
+        return null;
     }
 
 }

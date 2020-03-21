@@ -41,9 +41,23 @@ public class Song {
     @JoinColumn(name = "album_id", nullable = false)
     private Album album;
 
-    @NotNull
-    @NotEmpty
-    @ManyToOne
-    @JoinColumn(name = "storage_id", nullable = false)
-    private Storage storage;
+//    @NotNull
+//    @NotEmpty
+//    @ManyToOne
+//    @JoinColumn(name = "resource_id", nullable = false)
+//    private Resource resource;
+
+    private String path;
+
+    private Integer size;
+
+    private String checksum;
+
+    enum StorageType {
+        FILESYSTEM,
+        S3
+    }
+
+    @Enumerated(EnumType.STRING)
+    private StorageType storageType;
 }

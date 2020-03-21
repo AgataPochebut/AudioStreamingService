@@ -1,25 +1,20 @@
-package com.epam.model;
-
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
-@Entity
-@Table(name="STORAGES")
-@NoArgsConstructor
-@Data
-public class Storage {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @NotNull
-    @NotEmpty
-    @Column(unique = true, nullable = false)
-    private String name;
-
-}
+//package com.epam.model;
+//
+//import lombok.Data;
+//import lombok.NoArgsConstructor;
+//
+//import javax.persistence.*;
+//import javax.validation.constraints.NotEmpty;
+//import javax.validation.constraints.NotNull;
+//
+//@Entity
+//@Table(name="STORAGES")
+//@NoArgsConstructor
+//@Data
+//public class Storage {
+//
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
+//
+//}

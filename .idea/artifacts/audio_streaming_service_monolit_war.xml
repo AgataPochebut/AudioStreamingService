@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="audio-streaming-service-monolit:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>audio-streaming-service-monolit</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="audio-streaming-service-1.0.war">
+      <element id="artifact" artifact-name="audio-streaming-service-monolit:war exploded" />
+    </root>
+  </artifact>
+</component>

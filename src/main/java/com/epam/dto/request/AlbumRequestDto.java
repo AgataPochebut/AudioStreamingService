@@ -1,9 +1,5 @@
 package com.epam.dto.request;
 
-import com.epam.model.Artist;
-import com.epam.model.Tag;
-
-import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;

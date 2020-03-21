@@ -3,7 +3,7 @@ package com.epam.controller;
 import com.epam.dto.request.ArtistRequestDto;
 import com.epam.dto.response.ArtistResponseDto;
 import com.epam.model.Artist;
-import com.epam.service.ArtistService;
+import com.epam.service.repository.ArtistService;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

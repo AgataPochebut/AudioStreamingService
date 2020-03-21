@@ -3,7 +3,7 @@ package com.epam.controller;
 import com.epam.dto.request.GenreRequestDto;
 import com.epam.dto.response.GenreResponseDto;
 import com.epam.model.Genre;
-import com.epam.service.GenreService;
+import com.epam.service.repository.GenreService;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

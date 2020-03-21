@@ -1,5 +1,9 @@
 Manifest-Version: 1.0
 Created-By: IntelliJ IDEA
-Built-By: Ahata_Pachabut
-Build-Jdk: 11.0.5
+Built-By: Pups
+Build-Jdk: 12.0.2
+Implementation-Title: Audio streaming service Maven Webapp
+Implementation-Version: 1.0
+Implementation-Vendor-Id: com.epam
+Main-Class: ${start-class}
 
