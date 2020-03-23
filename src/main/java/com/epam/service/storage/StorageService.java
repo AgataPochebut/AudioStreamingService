@@ -1,16 +1,17 @@
 package com.epam.service.storage;
 
+import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.Resource;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public interface StorageService {
 
-    Resource findById(String path);
+    File downloadFile(String path);
 
-    Resource save(Resource file) throws Exception;
+    File uploadFile(MultipartFile file) throws IOException;
 
-    void deleteById(String path);
-
-    boolean checkIfExistById(String path);
 }

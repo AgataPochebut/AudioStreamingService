@@ -19,45 +19,45 @@ public class Song {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @NotEmpty
-    @Column(nullable = false)
+//    @NotNull
+//    @NotEmpty
+//    @Column(nullable = false)
     private String title;
 
-    @NotNull
-    @NotEmpty
-    @Column(nullable = false)
+//    @NotNull
+//    @NotEmpty
+//    @Column(nullable = false)
     private Date year;
 
-    @NotNull
-    @NotEmpty
+//    @NotNull
+//    @NotEmpty
     @ElementCollection
     @CollectionTable(name = "notes", joinColumns = @JoinColumn(name = "source_id"))
     private Set<String> notes;
 
-    @NotNull
-    @NotEmpty
+//    @NotNull
+//    @NotEmpty
     @ManyToOne
     @JoinColumn(name = "album_id", nullable = false)
     private Album album;
 
 //    @NotNull
 //    @NotEmpty
-//    @ManyToOne
-//    @JoinColumn(name = "resource_id", nullable = false)
-//    private Resource resource;
+    @OneToOne
+    @JoinColumn(name = "resource_id", nullable = false)
+    private Resource resource;
 
-    private String path;
-
-    private Integer size;
-
-    private String checksum;
-
-    enum StorageType {
-        FILESYSTEM,
-        S3
-    }
-
-    @Enumerated(EnumType.STRING)
-    private StorageType storageType;
+//    private String path;
+//
+//    private Integer size;
+//
+//    private String checksum;
+//
+//    enum StorageType {
+//        FILESYSTEM,
+//        S3
+//    }
+//
+//    @Enumerated(EnumType.STRING)
+//    private StorageType storageType;
 }
