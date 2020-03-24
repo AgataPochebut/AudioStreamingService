@@ -1,6 +1,7 @@
 package com.epam.service.storage;
 
 import com.epam.model.Resource;
+import com.epam.model.StorageType;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -33,6 +34,7 @@ public class StorageServiceFS implements StorageService {
                 .parent(file.getParent())
                 .name(file.getName())
                 .size(file.length())
+                .storageType(StorageType.FS)
                 .build();
     }
 

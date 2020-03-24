@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.util.IOUtils;
 import com.epam.model.Resource;
+import com.epam.model.StorageType;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,6 +44,7 @@ public class StorageServiceS3 implements StorageService{
                 .path(amazonS3Client.getUrl(defaultBucketName, file.getName()).toString())
                 .parent(defaultBucketName)
                 .name(file.getName())
+                .storageType(StorageType.S3)
                 .build();
     }
 

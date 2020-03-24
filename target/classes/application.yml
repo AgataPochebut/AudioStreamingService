@@ -3,7 +3,7 @@ s3:
   accessKey: AKIAJWCFBXUCARGICLTQ
   secretKey: hJHb2Smt5ByRGeBKnOtIYD8PnR8yd/rFgl2iNZgb
   bucketName: your-bucket-name
-  defaultFolder: temp
+  tempFolder: temp
 
 fs:
   defaultFolder: files

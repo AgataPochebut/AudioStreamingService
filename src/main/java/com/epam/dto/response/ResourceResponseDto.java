@@ -7,4 +7,6 @@ public class ResourceResponseDto {
 
     private Long id;
 
+    private String  name;
+
 }
