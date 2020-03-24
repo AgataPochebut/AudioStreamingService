@@ -38,13 +38,13 @@ public class Song {
 //    @NotNull
 //    @NotEmpty
     @ManyToOne
-    @JoinColumn(name = "album_id", nullable = false)
+    @JoinColumn(name = "album_id")
     private Album album;
 
 //    @NotNull
 //    @NotEmpty
     @OneToOne
-    @JoinColumn(name = "resource_id", nullable = false)
+    @JoinColumn(name = "resource_id")
     private Resource resource;
 
 //    private String path;

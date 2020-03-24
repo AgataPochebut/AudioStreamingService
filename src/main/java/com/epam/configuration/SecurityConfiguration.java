@@ -64,17 +64,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(accessDeniedHandler)//check roles
 //                .authenticationEntryPoint(authenticationEntryPoint) //check autorization
 
-                .and()
-                .oauth2Login()
-                .loginPage("/auth/login")
-                .userInfoEndpoint()
-                //.userAuthoritiesMapper(this.userAuthoritiesMapper())
-                .userService(oAuth2UserService)
-                .customUserType(OAuth2User.class, "google")
-
-                .and()
-                .successHandler(authenticationSuccessHandler)
-                .failureHandler(authenticationFailureHandler)
+//                .and()
+//                .oauth2Login()
+//                .loginPage("/auth/login")
+//                .userInfoEndpoint()
+//                //.userAuthoritiesMapper(this.userAuthoritiesMapper())
+//                .userService(oAuth2UserService)
+//                .customUserType(OAuth2User.class, "google")
+//
+//                .and()
+//                .successHandler(authenticationSuccessHandler)
+//                .failureHandler(authenticationFailureHandler)
         ;
     }
 }

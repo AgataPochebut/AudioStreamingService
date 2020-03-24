@@ -1,14 +1,16 @@
 package com.epam.service.repository;
 
+import com.epam.repository.GenericRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 
 import java.util.List;
 
 public class GenericServiceImpl<T,U> implements GenericService<T, U> {
 
     @Autowired
-    private JpaRepository<T,U> repository;
+    private GenericRepository<T,U> repository;
 
     @Override
     public List<T> findAll() {

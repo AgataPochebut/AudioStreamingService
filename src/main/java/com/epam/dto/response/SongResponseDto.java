@@ -17,4 +17,5 @@ public class SongResponseDto {
 
     private StorageResponseDto storage;
 
+    private ResourceResponseDto resource;
 }

@@ -13,13 +13,13 @@ import org.springframework.stereotype.Service;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private UserService userService;
+    private UserService repositoryService;
 
     @Autowired
     private Mapper mapper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return mapper.map(userService.findByName(username), User.class);
+        return mapper.map(repositoryService.findByName(username), User.class);
     }
 }

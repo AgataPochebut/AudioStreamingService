@@ -1,5 +1,6 @@
 package com.epam.model;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.core.io.InputStreamSource;
@@ -12,11 +13,16 @@ import java.io.InputStream;
 @Table(name="RESOURCES")
 @NoArgsConstructor
 @Data
+@Builder
 public class Resource {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String name;
+
+    private String parent;
 
     private String path;
 
@@ -25,10 +31,11 @@ public class Resource {
     private String checksum;
 
     enum StorageType {
-        FILESYSTEM,
+        FS,
         S3
     }
 
     @Enumerated(EnumType.STRING)
     private StorageType storageType;
+
 }

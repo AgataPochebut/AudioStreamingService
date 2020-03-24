@@ -1,39 +1,22 @@
 package com.epam.controller;
 
-import com.epam.dto.request.SongDataRequestDto;
 import com.epam.dto.request.SongRequestDto;
-import com.epam.dto.response.ResourceResponseDto;
 import com.epam.dto.response.SongResponseDto;
 import com.epam.model.Resource;
 import com.epam.model.Song;
 import com.epam.service.repository.SongService;
-import com.epam.service.storage.StorageService;
-import org.apache.commons.io.IOUtils;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.FileUrlResource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.util.UriBuilder;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -47,7 +30,7 @@ public class SongController {
     @Autowired
     private Mapper mapper;
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<SongResponseDto>> readAll() {
         final List<Song> entity = service.findAll();
 
@@ -57,7 +40,7 @@ public class SongController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SongResponseDto> read(@PathVariable Long id) {
         Song entity = service.findById(id);
 
@@ -65,7 +48,7 @@ public class SongController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<SongResponseDto> create(@RequestBody SongRequestDto requestDto) throws Exception {
         final Song entity = mapper.map(requestDto, Song.class);
         service.save(entity);
@@ -74,27 +57,24 @@ public class SongController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/{id}")
-    @ResponseStatus(value = HttpStatus.OK)
-    public void delete(@PathVariable Long id) {
-        service.deleteById(id);
-    }
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public org.springframework.core.io.Resource download(@PathVariable Long id) throws IOException, URISyntaxException {
+        Song entity = service.findById(id);
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_OCTET_STREAM));
 
-    @GetMapping(value = "/downloadFile/{id}")
-    public org.springframework.core.io.Resource downloadFile(@PathVariable Long id) throws IOException, URISyntaxException {
+        HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
-        String requestUrl = "http://localhost:8080/resources/downloadFile/" + id;
+        String requestUrl = "http://localhost:8080/resources/" + entity.getResource().getId();
 
         RestTemplate restTemplate = new RestTemplate();
-        org.springframework.core.io.Resource resource = restTemplate.getForObject(requestUrl, org.springframework.core.io.Resource.class);
-
+        org.springframework.core.io.Resource resource = restTemplate.exchange(requestUrl, HttpMethod.GET, requestEntity,org.springframework.core.io.Resource.class).getBody();
         return resource;
     }
 
-    @PostMapping("/uploadFile")
-    public ResponseEntity<SongResponseDto> uploadFile(@RequestParam("data") MultipartFile file) throws Exception {
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<SongResponseDto> upload(@RequestParam("data") MultipartFile file) throws Exception {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -104,7 +84,7 @@ public class SongController {
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
-        String requestUrl = "http://localhost:8080/resources/uploadFile";
+        String requestUrl = "http://localhost:8080/resources";
 
         RestTemplate restTemplate = new RestTemplate();
         Resource resource = restTemplate.postForObject(requestUrl, requestEntity, Resource.class);
@@ -117,13 +97,16 @@ public class SongController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @PostMapping("/uploadMultipleFiles")
-    public List<SongResponseDto> uploadMultipleFiles(@RequestParam("data") MultipartFile[] files) {
-//        return Arrays.asList(files)
-//                .stream()
-//                .map(file -> uploadFile(file))
-//                .collect(Collectors.toList());
-        return null;
-    }
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void delete(@PathVariable Long id) {
+        Song entity = service.findById(id);
 
+        String requestUrl = "http://localhost:8080/resources/" + entity.getResource().getId();
+
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.delete(requestUrl, Void.class);
+
+        service.deleteById(id);
+    }
 }

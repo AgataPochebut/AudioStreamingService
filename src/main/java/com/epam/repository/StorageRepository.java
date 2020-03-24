@@ -6,5 +6,5 @@
 //import org.springframework.stereotype.Repository;
 //
 //@Repository
-//public interface StorageRepository extends JpaRepository<Storage, Long> {
+//public interface StorageRepository extends GenericRepository<Storage, Long> {
 //}
