@@ -1,12 +1,8 @@
 package com.epam.model;
 
-import com.amazonaws.services.kafka.model.S3;
 import lombok.*;
-import org.springframework.core.io.InputStreamSource;
 
 import javax.persistence.*;
-import java.io.IOException;
-import java.io.InputStream;
 
 @Builder
 @Data
@@ -28,9 +24,9 @@ public class Resource {
 
     private Long size;
 
-    private String checksum;
+    private int checksum;
 
     @Enumerated(EnumType.STRING)
-    private StorageType storageType;
+    private StorageTypes storageTypes;
 
 }

@@ -1,8 +1,13 @@
 package com.epam.dto.response;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.Date;
 import java.util.Set;
 
+@Data
+@NoArgsConstructor
 public class UserResponseDto {
 
     private Long id;

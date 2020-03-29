@@ -1,25 +1,35 @@
 package com.epam.service.storage;
 
+import com.epam.annotation.Decorate;
+import com.epam.annotation.StorageType;
 import com.epam.model.Resource;
-import com.epam.model.StorageType;
-import org.apache.commons.io.FileUtils;
+import com.epam.model.StorageTypes;
+import com.epam.service.repository.ResourceRepositoryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
-@Service("StorageServiceFS")
-public class StorageServiceFS implements StorageService {
+
+@Decorate(value = ResourceStorageDecorator.class)
+@StorageType(storageType = StorageTypes.FS)
+@Service
+public class ResourceStorageServiceFS implements ResourceStorageService {
 
     @Value("${fs.defaultFolder}")
     private String defaultBaseFolder;
+
+    @Autowired
+    private ResourceRepositoryService repositoryService;
 
     @Override
     public Resource upload(MultipartFile multipartFile) throws IOException {
@@ -34,7 +44,8 @@ public class StorageServiceFS implements StorageService {
                 .parent(file.getParent())
                 .name(file.getName())
                 .size(file.length())
-                .storageType(StorageType.FS)
+                .checksum(file.hashCode())
+                .storageTypes(StorageTypes.FS)
                 .build();
     }
 
@@ -46,6 +57,16 @@ public class StorageServiceFS implements StorageService {
     @Override
     public void delete(Resource resource) {
         new File(resource.getPath()).delete();
+    }
+
+    @Override
+    public boolean exist(Resource resource) {
+        return new File(resource.getPath()).exists();
+    }
+
+    @Override
+    public String make() {
+        return "FS";
     }
 
 }

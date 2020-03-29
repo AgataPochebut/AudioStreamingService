@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-@NoArgsConstructor
 @Data
+@NoArgsConstructor
 public class StorageRequestDto {
 
     @NotNull

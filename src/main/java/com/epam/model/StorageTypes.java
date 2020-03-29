@@ -1,5 +1,5 @@
 package com.epam.model;
 
-public enum StorageType {
+public enum StorageTypes {
     FS, S3
 }

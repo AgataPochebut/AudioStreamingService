@@ -20,10 +20,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
-    <org.spring.core>5.1.5.RELEASE</org.spring.core>
-    <org.spring.data>2.1.8.RELEASE</org.spring.data>
-    <hibernate.core>5.4.2.Final</hibernate.core>
-    <javax.servlet>4.0.1</javax.servlet>
     <jackson.core>2.9.9</jackson.core>
     <swagger>2.9.2</swagger>
     <logback>1.2.3</logback>
@@ -121,6 +117,23 @@
       <artifactId>aws-java-sdk</artifactId>
       <version>1.11.749</version>
     </dependency>
+
+<!--    <dependency>-->
+<!--      <groupId>org.springframework.cloud</groupId>-->
+<!--      <artifactId>spring-cloud-starter-aws</artifactId>-->
+<!--    </dependency>-->
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${jackson.core}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.core}</version>
+    </dependency>
+
 
   </dependencies>
 

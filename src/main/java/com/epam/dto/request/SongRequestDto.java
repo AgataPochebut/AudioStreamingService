@@ -8,8 +8,8 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Set;
 
-@NoArgsConstructor
 @Data
+@NoArgsConstructor
 public class SongRequestDto {
 
     @NotNull

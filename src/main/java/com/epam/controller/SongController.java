@@ -30,7 +30,7 @@ public class SongController {
     @Autowired
     private Mapper mapper;
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping//(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<SongResponseDto>> readAll() {
         final List<Song> entity = service.findAll();
 
@@ -40,7 +40,7 @@ public class SongController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}")//, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SongResponseDto> read(@PathVariable Long id) {
         Song entity = service.findById(id);
 
@@ -48,7 +48,7 @@ public class SongController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping//(consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<SongResponseDto> create(@RequestBody SongRequestDto requestDto) throws Exception {
         final Song entity = mapper.map(requestDto, Song.class);
         service.save(entity);

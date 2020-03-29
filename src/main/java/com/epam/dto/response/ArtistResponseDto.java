@@ -1,7 +1,12 @@
 package com.epam.dto.response;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.Set;
 
+@Data
+@NoArgsConstructor
 public class ArtistResponseDto {
 
     private Long id;

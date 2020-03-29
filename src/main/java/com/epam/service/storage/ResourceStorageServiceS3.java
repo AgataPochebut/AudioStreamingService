@@ -1,27 +1,26 @@
 package com.epam.service.storage;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import com.amazonaws.util.IOUtils;
+import com.epam.annotation.Decorate;
+import com.epam.annotation.StorageType;
 import com.epam.model.Resource;
-import com.epam.model.StorageType;
-import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.epam.model.StorageTypes;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-@Service("StorageServiceS3")
-public class StorageServiceS3 implements StorageService{
+@Decorate(value = ResourceStorageDecorator.class)
+@StorageType(storageType = StorageTypes.S3)
+@Service
+public class ResourceStorageServiceS3 implements ResourceStorageService {
 
 //    @Autowired
     private AmazonS3 amazonS3Client;
@@ -37,14 +36,16 @@ public class StorageServiceS3 implements StorageService{
         if (!dir.exists()) dir.mkdir();
         File file = new File(defaultBaseFolder, multipartFile.getOriginalFilename());
         if (!file.exists()) file.createNewFile();
-        multipartFile.transferTo(file);
+        FileCopyUtils.copy(multipartFile.getInputStream(), new FileOutputStream(file));
 
-        amazonS3Client.putObject(defaultBucketName, multipartFile.getOriginalFilename(), file);
+        amazonS3Client.putObject(defaultBucketName, file.getName(), file);
         return Resource.builder()
                 .path(amazonS3Client.getUrl(defaultBucketName, file.getName()).toString())
                 .parent(defaultBucketName)
                 .name(file.getName())
-                .storageType(StorageType.S3)
+                .storageTypes(StorageTypes.S3)
+                .size(file.length())
+                .checksum(file.hashCode())
                 .build();
     }
 
@@ -57,5 +58,15 @@ public class StorageServiceS3 implements StorageService{
     @Override
     public void delete(Resource resource) {
         amazonS3Client.deleteObject(defaultBucketName, resource.getName());
+    }
+
+    @Override
+    public boolean exist(Resource resource) {
+        return false;
+    }
+
+    @Override
+    public String make() {
+        return null;
     }
 }

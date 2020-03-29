@@ -1,0 +1,15 @@
+Access Key ID:
+AKIAJWCFBXUCARGICLTQ
+Secret Access Key:
+hJHb2Smt5ByRGeBKnOtIYD8PnR8yd/rFgl2iNZgb
+D:\Java\projects\audio-streaming-service-monolit\uploads\cveti-5120x2880-5k-4k-8k-vesna-art-4657.jpg
+
+mysqld --console --defaults-file="C:\\ProgramData\\MySQL\\MySQL Server 8.0\\my.ini" --init-file="D:\\mysql-init.txt"
+
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysqld.exe" --defaults-file="C:\ProgramData\MySQL\MySQL Server 8.0\my.ini" MYSQL80
+
+Command com = m.getAnnotation(Command.class);
+                if (com.showInHelp()) //???? ????? ?????????? ??????? ? ??????.
+                {
+                    sb.append("???, ").append(com.name()).append(" ").append(com.args()).append(" - ").append(com.desc()).append("\n");
+                }
