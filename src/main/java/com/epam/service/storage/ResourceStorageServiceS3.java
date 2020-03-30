@@ -7,6 +7,8 @@ import com.epam.annotation.Decorate;
 import com.epam.annotation.StorageType;
 import com.epam.model.Resource;
 import com.epam.model.StorageTypes;
+import com.epam.service.repository.ResourceRepositoryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
@@ -17,12 +19,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-@Decorate(value = ResourceStorageDecorator.class)
-@StorageType(storageType = StorageTypes.S3)
+@Decorate(ResourceStorageDecorator.class)
+@StorageType(StorageTypes.S3)
 @Service
 public class ResourceStorageServiceS3 implements ResourceStorageService {
 
-//    @Autowired
+    @Autowired
     private AmazonS3 amazonS3Client;
 
     @Value("${s3.bucketName}")
@@ -30,6 +32,9 @@ public class ResourceStorageServiceS3 implements ResourceStorageService {
 
     @Value("${s3.tempFolder}")
     String defaultBaseFolder;
+
+    @Autowired
+    private ResourceRepositoryService repositoryService;
 
     public Resource upload(MultipartFile multipartFile) throws IOException {
         File dir = new File(defaultBaseFolder);
@@ -56,13 +61,31 @@ public class ResourceStorageServiceS3 implements ResourceStorageService {
     }
 
     @Override
+    public org.springframework.core.io.Resource download(Long id) {
+        Resource resource = repositoryService.findById(id);
+        return download(resource);
+    }
+
+    @Override
     public void delete(Resource resource) {
         amazonS3Client.deleteObject(defaultBucketName, resource.getName());
     }
 
     @Override
+    public void delete(Long id) {
+        Resource resource = repositoryService.findById(id);
+        delete(resource);
+    }
+
+    @Override
     public boolean exist(Resource resource) {
         return false;
+    }
+
+    @Override
+    public boolean exist(Long id) {
+        Resource resource = repositoryService.findById(id);
+        return exist(resource);
     }
 
     @Override

@@ -6,5 +6,4 @@ public interface ResourceRepositoryService extends GenericService<Resource, Long
 
     Resource findByChecksum(int checksum);
 
-
 }

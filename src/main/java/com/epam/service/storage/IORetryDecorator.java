@@ -20,7 +20,24 @@ public class IORetryDecorator extends ResourceStorageDecorator {
     }
 
     @Override
+    public void delete(Resource resource) {
+        do{
+            super.delete(resource);
+        }
+        while (super.exist(resource));
+    }
+
+    @Override
+    public void delete(Long id) {
+        do{
+            super.delete(id);
+        }
+        while (super.exist(id));
+    }
+
+    @Override
     public String make() {
         return super.make() + "IORetry";
     }
+
 }

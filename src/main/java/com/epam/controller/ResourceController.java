@@ -1,14 +1,11 @@
 package com.epam.controller;
 
-import com.epam.dto.request.ResourceRequestDto;
 import com.epam.dto.response.ResourceResponseDto;
 import com.epam.model.Resource;
-import com.epam.model.StorageTypes;
 import com.epam.service.repository.ResourceRepositoryService;
 import com.epam.service.storage.*;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/resources")
@@ -31,7 +26,7 @@ public class ResourceController {
     private ResourceRepositoryService repositoryService;
 
     @Autowired
-    private ResourceStorageServiceFactory storageServiceFactory;
+    private ResourceStorageFactory storageServiceFactory;
 
 //    @Autowired
 //    private ResourceStorageService storageService;
@@ -69,7 +64,7 @@ public class ResourceController {
 //        org.springframework.core.io.Resource resource = storageService.download(id);
 
         Resource entity = repositoryService.findById(id);
-        org.springframework.core.io.Resource resource = storageServiceFactory.service().download(entity);
+        org.springframework.core.io.Resource resource = storageServiceFactory.getService().download(entity);
 
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
@@ -77,7 +72,7 @@ public class ResourceController {
     // Content type 'multipart/form-data;boundary
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<ResourceResponseDto> upload(@RequestParam("data") MultipartFile file) throws Exception {
-        Resource entity = storageServiceFactory.service().upload(file);
+        Resource entity = storageServiceFactory.getService().upload(file);
 
         final ResourceResponseDto responseDto = mapper.map(entity, ResourceResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -88,12 +83,12 @@ public class ResourceController {
 //        storageService.delete(id);
 
         Resource entity = repositoryService.findById(id);
-        storageServiceFactory.service().delete(entity);
+        storageServiceFactory.getService().delete(entity);
         repositoryService.deleteById(id);
     }
 
     @GetMapping
     public String make() {
-        return storageServiceFactory.service().make();
+        return storageServiceFactory.getService().make();
     }
 }

@@ -27,4 +27,5 @@ public class DedupingDecorator extends ResourceStorageDecorator {
     public String make() {
         return super.make() + "Deduping";
     }
+
 }

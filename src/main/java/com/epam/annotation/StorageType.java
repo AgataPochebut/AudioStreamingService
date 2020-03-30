@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE) //Указывает, что целью нашей Аннотации является класс.
 public @interface StorageType {
 
-    StorageTypes storageType();
+    StorageTypes value();
 
 }

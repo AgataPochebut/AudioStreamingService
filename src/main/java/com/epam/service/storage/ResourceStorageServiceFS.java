@@ -20,8 +20,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 
-@Decorate(value = ResourceStorageDecorator.class)
-@StorageType(storageType = StorageTypes.FS)
+@Decorate(ResourceStorageDecorator.class)
+@StorageType(StorageTypes.FS)
 @Service
 public class ResourceStorageServiceFS implements ResourceStorageService {
 
@@ -55,13 +55,31 @@ public class ResourceStorageServiceFS implements ResourceStorageService {
     }
 
     @Override
+    public org.springframework.core.io.Resource download(Long id) {
+        Resource resource = repositoryService.findById(id);
+        return download(resource);
+    }
+
+    @Override
     public void delete(Resource resource) {
         new File(resource.getPath()).delete();
     }
 
     @Override
+    public void delete(Long id) {
+        Resource resource = repositoryService.findById(id);
+        delete(resource);
+    }
+
+    @Override
     public boolean exist(Resource resource) {
         return new File(resource.getPath()).exists();
+    }
+
+    @Override
+    public boolean exist(Long id) {
+        Resource resource = repositoryService.findById(id);
+        return exist(resource);
     }
 
     @Override

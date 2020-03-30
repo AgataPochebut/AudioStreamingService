@@ -20,7 +20,20 @@ public class DBInsertDecorator extends ResourceStorageDecorator {
     }
 
     @Override
+    public void delete(Resource resource) {
+        super.delete(resource);
+        repositoryService.delete(resource);
+    }
+
+    @Override
+    public void delete(Long id) {
+        super.delete(id);
+        repositoryService.deleteById(id);
+    }
+
+    @Override
     public String make() {
         return super.make() + "DBInsert";
     }
+
 }

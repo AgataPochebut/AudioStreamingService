@@ -36,4 +36,7 @@ public class GenericServiceImpl<T,U> implements GenericService<T, U> {
     public void deleteById(U id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public void delete(T entity) { repository.delete(entity); }
 }

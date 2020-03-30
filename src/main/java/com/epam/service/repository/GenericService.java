@@ -14,4 +14,6 @@ public interface GenericService<T,U> {
 
     void deleteById(U id);
 
+    void delete(T entity);
+
 }

@@ -15,21 +15,26 @@ import java.util.Map;
 //регить в фактори мапу storagetype - сервис
 //в фабрике в методе getservice отдавать сервис нужного типа
 @Component
-public class ResourceStorageServiceFactory {
+public class ResourceStorageFactory {
 
     private static final Map<StorageTypes, ResourceStorageService> serviceCache = new HashMap<>();
 
-    @Autowired
-    public ResourceStorageServiceFactory(List<ResourceStorageService> services) {
-        for(ResourceStorageService service : services) {
-            //тут уже декорированный, нет storagetype
-            if(service.getClass().isAnnotationPresent(StorageType.class)) {
-                serviceCache.put(service.getClass().getAnnotation(StorageType.class).storageType(), service);
-            }
-        }
+//    @Autowired
+//    public ResourceStorageServiceFactory(List<ResourceStorageService> services) {
+//        for (ResourceStorageService service : services) {
+//            //тут уже декорированный, нет storagetype
+//            if (service.getClass().isAnnotationPresent(StorageType.class)) {
+//                serviceCache.put(service.getClass().getAnnotation(StorageType.class).storageType(), service);
+//            }
+//        }
+//    }
+
+    public void registerService(StorageTypes storageType, ResourceStorageService storageService)
+    {
+        serviceCache.put(storageType, storageService);
     }
 
-    public ResourceStorageService service(){
+    public ResourceStorageService getService(){
         return serviceCache.get(StorageTypes.FS);
     };
 
