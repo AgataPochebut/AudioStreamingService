@@ -30,7 +30,7 @@ public class ResourceStorageServiceS3 implements ResourceStorageService {
     @Value("${s3.bucketName}")
     private String defaultBucketName;
 
-    @Value("${s3.tempFolder}")
+    @Value("${s3.defaultFolder}")
     String defaultBaseFolder;
 
     @Autowired

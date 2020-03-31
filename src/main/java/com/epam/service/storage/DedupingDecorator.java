@@ -2,6 +2,7 @@ package com.epam.service.storage;
 
 import com.epam.model.Resource;
 import com.epam.service.repository.ResourceRepositoryService;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;

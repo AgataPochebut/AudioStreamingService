@@ -2,7 +2,7 @@ package com.epam.controller;
 
 import com.epam.dto.response.ResourceResponseDto;
 import com.epam.model.Resource;
-import com.epam.service.repository.ResourceRepositoryService;
+import com.epam.service.conversion.ConversionService;
 import com.epam.service.storage.*;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,24 +12,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 
 @RestController
 @RequestMapping("/resources")
 public class ResourceController {
 
-
     @Autowired
     private Mapper mapper;
 
     @Autowired
-    private ResourceRepositoryService repositoryService;
-
-    @Autowired
     private ResourceStorageFactory storageServiceFactory;
-
-//    @Autowired
-//    private ResourceStorageService storageService;
 
 //    @GetMapping//(produces = MediaType.APPLICATION_JSON_VALUE)
 //    public ResponseEntity<List<ResourceResponseDto>> readAll() {
@@ -61,18 +55,18 @@ public class ResourceController {
     // Accept 'application/octet-stream'
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<org.springframework.core.io.Resource> download(@PathVariable Long id) throws IOException {
-//        org.springframework.core.io.Resource resource = storageService.download(id);
+        org.springframework.core.io.Resource resource = storageServiceFactory.getService().download(id);
 
-        Resource entity = repositoryService.findById(id);
-        org.springframework.core.io.Resource resource = storageServiceFactory.getService().download(entity);
+//        Resource entity = repositoryService.findById(id);
+//        org.springframework.core.io.Resource resource = storageServiceFactory.getService().download(entity);
 
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
     // Content type 'multipart/form-data;boundary
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<ResourceResponseDto> upload(@RequestParam("data") MultipartFile file) throws Exception {
-        Resource entity = storageServiceFactory.getService().upload(file);
+    public ResponseEntity<ResourceResponseDto> upload(@RequestParam("data") MultipartFile multipartFile) throws Exception {
+        Resource entity = storageServiceFactory.getService().upload(multipartFile);
 
         final ResourceResponseDto responseDto = mapper.map(entity, ResourceResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -80,15 +74,29 @@ public class ResourceController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-//        storageService.delete(id);
+        storageServiceFactory.getService().delete(id);
 
-        Resource entity = repositoryService.findById(id);
-        storageServiceFactory.getService().delete(entity);
-        repositoryService.deleteById(id);
+//        Resource entity = repositoryService.findById(id);
+//        storageServiceFactory.getService().delete(entity);
+//        repositoryService.deleteById(id);
     }
 
     @GetMapping
     public String make() {
         return storageServiceFactory.getService().make();
+    }
+
+    @Autowired
+    private ConversionService conversionService;
+
+    @PostMapping("/conversion")
+    public ResponseEntity<ResourceResponseDto> conversion(@RequestParam("data") MultipartFile multipartFile) throws Exception {
+        Resource entity = storageServiceFactory.getService().upload(multipartFile);
+
+        File file = new File(entity.getPath());
+        File newfile = conversionService.convert(file, "mp3");
+
+        final ResourceResponseDto responseDto = mapper.map(entity, ResourceResponseDto.class);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 }

@@ -3,15 +3,13 @@ s3:
   accessKey: AKIAJWCFBXUCARGICLTQ
   secretKey: hJHb2Smt5ByRGeBKnOtIYD8PnR8yd/rFgl2iNZgb
   bucketName: your-bucket-name
-  tempFolder: temp
+  defaultFolder: temp
 
 fs:
   defaultFolder: files
 
-#  activemq:
-#      broker-url: tcp://localhost:61616
-#      user: admin
-#      password: admin
+conversion:
+  defaultFolder: files
 
 spring:
   datasource:
@@ -33,3 +31,8 @@ spring:
             client-secret: cYunCGV91wrv7KI2M3a31LxS
 server:
   port: 8080
+
+#  activemq:
+#      broker-url: tcp://localhost:61616
+#      user: admin
+#      password: admin
