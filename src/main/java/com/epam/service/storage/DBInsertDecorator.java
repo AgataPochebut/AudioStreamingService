@@ -16,26 +16,26 @@ public class DBInsertDecorator extends ResourceStorageDecorator {
     }
 
     @Override
-    public Resource upload(MultipartFile file) throws Exception {
-        Resource resource = super.upload(file);
+    public Resource upload(org.springframework.core.io.Resource source) throws Exception {
+        Resource resource = super.upload(source);
         return repositoryService.save(resource);
     }
 
     @Override
     public void delete(Resource resource) {
         super.delete(resource);
-        repositoryService.delete(resource);
+        repositoryService.deleteById(resource.getId());
     }
 
-    @Override
-    public void delete(Long id) {
-        super.delete(id);
-        repositoryService.deleteById(id);
-    }
+//    @Override
+//    public void delete(Long id) {
+//        super.delete(id);
+//        repositoryService.deleteById(id);
+//    }
 
     @Override
-    public String make() {
-        return super.make() + "DBInsert";
+    public String test() {
+        return super.test() + "DBInsert";
     }
 
 }

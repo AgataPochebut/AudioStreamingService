@@ -18,15 +18,15 @@ public class DedupingDecorator extends ResourceStorageDecorator {
     }
 
     @Override
-    public Resource upload(MultipartFile file) throws Exception {
-        Resource resource = repositoryService.findByChecksum(file.hashCode());
+    public Resource upload(org.springframework.core.io.Resource source) throws Exception {
+        Resource resource = repositoryService.findByChecksum(source.hashCode());
         if(resource!=null) return resource;
-        else return super.upload(file);
+        else return super.upload(source);
     }
 
     @Override
-    public String make() {
-        return super.make() + "Deduping";
+    public String test() {
+        return super.test() + "Deduping";
     }
 
 }

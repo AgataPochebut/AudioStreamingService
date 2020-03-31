@@ -9,7 +9,7 @@ fs:
   defaultFolder: files
 
 conversion:
-  defaultFolder: files
+  defaultFolder: conversion
 
 spring:
   datasource:

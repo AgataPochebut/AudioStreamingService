@@ -36,12 +36,12 @@ public class ResourceStorageServiceS3 implements ResourceStorageService {
     @Autowired
     private ResourceRepositoryService repositoryService;
 
-    public Resource upload(MultipartFile multipartFile) throws IOException {
+    public Resource upload(org.springframework.core.io.Resource source) throws IOException {
         File dir = new File(defaultBaseFolder);
         if (!dir.exists()) dir.mkdir();
-        File file = new File(defaultBaseFolder, multipartFile.getOriginalFilename());
+        File file = new File(defaultBaseFolder, source.getFilename());
         if (!file.exists()) file.createNewFile();
-        FileCopyUtils.copy(multipartFile.getInputStream(), new FileOutputStream(file));
+        FileCopyUtils.copy(source.getInputStream(), new FileOutputStream(file));
 
         amazonS3Client.putObject(defaultBucketName, file.getName(), file);
         return Resource.builder()
@@ -60,36 +60,36 @@ public class ResourceStorageServiceS3 implements ResourceStorageService {
         return new InputStreamResource(inputStream);
     }
 
-    @Override
-    public org.springframework.core.io.Resource download(Long id) {
-        Resource resource = repositoryService.findById(id);
-        return download(resource);
-    }
+//    @Override
+//    public org.springframework.core.io.Resource download(Long id) {
+//        Resource resource = repositoryService.findById(id);
+//        return download(resource);
+//    }
 
     @Override
     public void delete(Resource resource) {
         amazonS3Client.deleteObject(defaultBucketName, resource.getName());
     }
 
-    @Override
-    public void delete(Long id) {
-        Resource resource = repositoryService.findById(id);
-        delete(resource);
-    }
+//    @Override
+//    public void delete(Long id) {
+//        Resource resource = repositoryService.findById(id);
+//        delete(resource);
+//    }
 
     @Override
     public boolean exist(Resource resource) {
         return false;
     }
 
-    @Override
-    public boolean exist(Long id) {
-        Resource resource = repositoryService.findById(id);
-        return exist(resource);
-    }
+//    @Override
+//    public boolean exist(Long id) {
+//        Resource resource = repositoryService.findById(id);
+//        return exist(resource);
+//    }
 
     @Override
-    public String make() {
-        return null;
+    public String test() {
+        return "S3";
     }
 }

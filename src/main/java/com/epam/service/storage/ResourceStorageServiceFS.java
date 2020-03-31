@@ -32,12 +32,15 @@ public class ResourceStorageServiceFS implements ResourceStorageService {
     private ResourceRepositoryService repositoryService;
 
     @Override
-    public Resource upload(MultipartFile multipartFile) throws IOException {
-        File dir = new File(defaultBaseFolder);
-        if (!dir.exists()) dir.mkdir();
-        File file = new File(defaultBaseFolder, multipartFile.getOriginalFilename());
-        if (!file.exists()) file.createNewFile();
-        FileCopyUtils.copy(multipartFile.getInputStream(), new FileOutputStream(file));
+    public Resource upload(org.springframework.core.io.Resource source) throws IOException {
+        File file;
+        if (source.isFile()) {
+            file = source.getFile();
+        } else {
+            file = new File(defaultBaseFolder, source.getFilename());
+            if (!file.exists()) {file.getParentFile().mkdirs(); file.createNewFile();}
+            FileCopyUtils.copy(source.getInputStream(), new FileOutputStream(file));
+        }
 
         return Resource.builder()
                 .path(file.getAbsolutePath())
@@ -54,36 +57,36 @@ public class ResourceStorageServiceFS implements ResourceStorageService {
         return new FileSystemResource(resource.getPath());
     }
 
-    @Override
-    public org.springframework.core.io.Resource download(Long id) {
-        Resource resource = repositoryService.findById(id);
-        return download(resource);
-    }
+//    @Override
+//    public org.springframework.core.io.Resource download(Long id) {
+//        Resource resource = repositoryService.findById(id);
+//        return download(resource);
+//    }
 
     @Override
     public void delete(Resource resource) {
         new File(resource.getPath()).delete();
     }
 
-    @Override
-    public void delete(Long id) {
-        Resource resource = repositoryService.findById(id);
-        delete(resource);
-    }
+//    @Override
+//    public void delete(Long id) {
+//        Resource resource = repositoryService.findById(id);
+//        delete(resource);
+//    }
 
     @Override
     public boolean exist(Resource resource) {
         return new File(resource.getPath()).exists();
     }
 
-    @Override
-    public boolean exist(Long id) {
-        Resource resource = repositoryService.findById(id);
-        return exist(resource);
-    }
+//    @Override
+//    public boolean exist(Long id) {
+//        Resource resource = repositoryService.findById(id);
+//        return exist(resource);
+//    }
 
     @Override
-    public String make() {
+    public String test() {
         return "FS";
     }
 

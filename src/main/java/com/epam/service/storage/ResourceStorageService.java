@@ -12,19 +12,19 @@ import java.util.List;
 
 public interface ResourceStorageService {
 
-    Resource upload(MultipartFile file) throws Exception;
+    Resource upload(org.springframework.core.io.Resource resource) throws Exception;
 
     org.springframework.core.io.Resource download(Resource resource);
 
-    org.springframework.core.io.Resource download(Long id);
+//    org.springframework.core.io.Resource download(Long id);
 
     void delete(Resource resource);
 
-    void delete(Long id);
+//    void delete(Long id);
 
     boolean exist(Resource resource);
 
-    boolean exist(Long id);
+//    boolean exist(Long id);
 
-    String make();
+    String test();
 }

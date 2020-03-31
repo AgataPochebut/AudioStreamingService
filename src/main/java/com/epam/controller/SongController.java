@@ -7,7 +7,9 @@ import com.epam.model.Song;
 import com.epam.service.repository.SongService;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.*;
+import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -57,8 +60,9 @@ public class SongController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    // Accept 'application/octet-stream'
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public org.springframework.core.io.Resource download(@PathVariable Long id) throws IOException, URISyntaxException {
+    public ResponseEntity<org.springframework.core.io.Resource> download(@PathVariable Long id) throws IOException, URISyntaxException {
         Song entity = service.findById(id);
 
         HttpHeaders headers = new HttpHeaders();
@@ -69,10 +73,12 @@ public class SongController {
         String requestUrl = "http://localhost:8080/resources/" + entity.getResource().getId();
 
         RestTemplate restTemplate = new RestTemplate();
-        org.springframework.core.io.Resource resource = restTemplate.exchange(requestUrl, HttpMethod.GET, requestEntity,org.springframework.core.io.Resource.class).getBody();
-        return resource;
+        //restTemplate.setMessageConverters(getMessageConverters());
+        //new RestTemplateBuilder().basicAuthentication("user", "their_password" ).build();
+        return restTemplate.exchange(requestUrl, HttpMethod.GET, requestEntity,org.springframework.core.io.Resource.class);
     }
 
+    // Content type 'multipart/form-data;boundary
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<SongResponseDto> upload(@RequestParam("data") MultipartFile file) throws Exception {
 
@@ -101,12 +107,11 @@ public class SongController {
     @ResponseStatus(value = HttpStatus.OK)
     public void delete(@PathVariable Long id) {
         Song entity = service.findById(id);
+        service.deleteById(id);
 
         String requestUrl = "http://localhost:8080/resources/" + entity.getResource().getId();
 
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.delete(requestUrl, Void.class);
-
-        service.deleteById(id);
     }
 }

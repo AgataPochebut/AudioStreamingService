@@ -11,34 +11,34 @@ public class IORetryDecorator extends ResourceStorageDecorator {
     }
 
     @Override
-    public Resource upload(MultipartFile file) throws Exception {
-        Resource resource;
-        do{
-            resource = super.upload(file);
+    public Resource upload(org.springframework.core.io.Resource source) throws Exception {
+        Resource resource = null;
+        while (resource==null || !super.exist(resource))
+        {
+            resource = super.upload(source);
         }
-        while (resource==null || !super.exist(resource));
         return resource;
     }
 
     @Override
     public void delete(Resource resource) {
-        do{
+        while (super.exist(resource))
+        {
             super.delete(resource);
         }
-        while (super.exist(resource));
     }
 
-    @Override
-    public void delete(Long id) {
-        do{
-            super.delete(id);
-        }
-        while (super.exist(id));
-    }
+//    @Override
+//    public void delete(Long id) {
+//        do{
+//            super.delete(id);
+//        }
+//        while (super.exist(id));
+//    }
 
     @Override
-    public String make() {
-        return super.make() + "IORetry";
+    public String test() {
+        return super.test() + "IORetry";
     }
 
 }
