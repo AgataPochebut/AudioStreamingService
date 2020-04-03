@@ -1,15 +1,17 @@
+server:
+  port: 8080
 
 s3:
   accessKey: AKIAJWCFBXUCARGICLTQ
   secretKey: hJHb2Smt5ByRGeBKnOtIYD8PnR8yd/rFgl2iNZgb
   bucketName: your-bucket-name
-  defaultFolder: temp
+  defaultFolder: /Java/temp
 
 fs:
-  defaultFolder: files
+  defaultFolder: /Java/files
 
 conversion:
-  defaultFolder: conversion
+  defaultFolder: /Java/temp
 
 spring:
   datasource:
@@ -29,8 +31,13 @@ spring:
           google:
             client-id: 696075587142-1aoemai0pdblm3tdqqujkm9blo4h1eoi.apps.googleusercontent.com
             client-secret: cYunCGV91wrv7KI2M3a31LxS
-server:
-  port: 8080
+
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 500MB
+      max-request-size: 500MB
 
 #  activemq:
 #      broker-url: tcp://localhost:61616

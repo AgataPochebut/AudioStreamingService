@@ -7,7 +7,6 @@ import com.epam.service.repository.ResourceRepositoryService;
 import com.epam.service.storage.*;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -39,8 +38,8 @@ public class AudioStreamingServiceApplication {
                             && bean.getClass().getAnnotation(Decorate.class).value() == ResourceStorageDecorator.class) {
                         newbean = new IORetryDecorator(newbean);
                         newbean = new DBInsertDecorator(newbean, repositoryService);
-                        newbean = new ConversionDecorator(newbean, conversionService);
                         newbean = new DedupingDecorator(newbean, repositoryService);
+                        newbean = new ConversionDecorator(newbean, conversionService);
                     }
                     if (bean.getClass().isAnnotationPresent(StorageType.class)) {
                         storageServiceFactory.registerService(bean.getClass().getAnnotation(StorageType.class).value(), newbean);

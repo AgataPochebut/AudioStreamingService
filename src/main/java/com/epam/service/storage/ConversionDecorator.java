@@ -2,20 +2,7 @@ package com.epam.service.storage;
 
 import com.epam.model.Resource;
 import com.epam.service.conversion.ConversionService;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.InputStreamSource;
-import org.springframework.http.*;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.ResourceHttpMessageConverter;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Collections;
+import org.apache.commons.io.FilenameUtils;
 
 public class ConversionDecorator extends ResourceStorageDecorator {
 
@@ -28,9 +15,9 @@ public class ConversionDecorator extends ResourceStorageDecorator {
 
     @Override
     public Resource upload(org.springframework.core.io.Resource source) throws Exception {
-
-        org.springframework.core.io.Resource newsource = conversionService.convert(source, "mp3");
-        return super.upload(newsource);
+        if (FilenameUtils.getExtension(source.getFilename()).equals("wav"))
+            source = conversionService.convert(source, "mp3");
+        return super.upload(source);
 
 //        HttpHeaders headers = new HttpHeaders();
 //        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_OCTET_STREAM));//ожидаем ответа

@@ -1,5 +1,7 @@
 package com.epam.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,10 +11,12 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Set;
 
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name="SONGS")
-@NoArgsConstructor
-@Data
 public class Song {
 
     @Id

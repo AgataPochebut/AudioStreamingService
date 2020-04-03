@@ -14,7 +14,7 @@ public class ResourceRepositoryServiceImpl extends GenericServiceImpl<Resource, 
     private ResourceRepository repository;
 
     @Override
-    public Resource findByChecksum(int checksum) {
-        return repository.findByChecksum(checksum);
+    public Resource findByChecksum(String checksum) {
+        return repository.findByChecksum(checksum).orElse(null);
     }
 }

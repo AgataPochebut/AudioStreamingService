@@ -24,7 +24,8 @@ public class Resource {
 
     private Long size;
 
-    private int checksum;
+    @Column(unique = true)
+    private String checksum;
 
     @Enumerated(EnumType.STRING)
     private StorageTypes storageTypes;

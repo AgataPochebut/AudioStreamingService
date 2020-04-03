@@ -2,11 +2,7 @@ package com.epam.service.storage;
 
 import com.epam.model.Resource;
 import com.epam.service.repository.ResourceRepositoryService;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.apache.commons.codec.digest.DigestUtils;
 
 public class DedupingDecorator extends ResourceStorageDecorator {
 
@@ -19,7 +15,8 @@ public class DedupingDecorator extends ResourceStorageDecorator {
 
     @Override
     public Resource upload(org.springframework.core.io.Resource source) throws Exception {
-        Resource resource = repositoryService.findByChecksum(source.hashCode());
+
+        Resource resource = repositoryService.findByChecksum(DigestUtils.md5Hex(source.getInputStream()));
         if(resource!=null) return resource;
         else return super.upload(source);
     }

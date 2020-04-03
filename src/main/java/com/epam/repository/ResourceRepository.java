@@ -1,14 +1,13 @@
 package com.epam.repository;
 
 import com.epam.model.Resource;
-import com.epam.model.Song;
-import com.epam.model.User;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public interface ResourceRepository extends GenericRepository<Resource, Long> {
 
-    Resource findByChecksum(int checksum);
+    Optional<Resource> findByChecksum(String checksum);
 
 }

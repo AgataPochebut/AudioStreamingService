@@ -5,17 +5,15 @@ import com.epam.annotation.StorageType;
 import com.epam.model.Resource;
 import com.epam.model.StorageTypes;
 import com.epam.service.repository.ResourceRepositoryService;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -38,7 +36,7 @@ public class ResourceStorageServiceFS implements ResourceStorageService {
             file = source.getFile();
         } else {
             file = new File(defaultBaseFolder, source.getFilename());
-            if (!file.exists()) {file.getParentFile().mkdirs(); file.createNewFile();}
+            file.getParentFile().mkdirs();
             FileCopyUtils.copy(source.getInputStream(), new FileOutputStream(file));
         }
 
@@ -47,7 +45,7 @@ public class ResourceStorageServiceFS implements ResourceStorageService {
                 .parent(file.getParent())
                 .name(file.getName())
                 .size(file.length())
-                .checksum(file.hashCode())
+                .checksum(DigestUtils.md5Hex(new FileInputStream(file)))
                 .storageTypes(StorageTypes.FS)
                 .build();
     }

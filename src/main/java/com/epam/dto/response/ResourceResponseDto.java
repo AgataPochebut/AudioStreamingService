@@ -14,4 +14,11 @@ public class ResourceResponseDto {
 
     private String name;
 
+    private String path;
+
+    private Long size;
+
+    private String checksum;
+
+
 }

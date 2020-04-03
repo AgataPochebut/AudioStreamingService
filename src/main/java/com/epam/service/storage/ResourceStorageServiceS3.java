@@ -8,14 +8,15 @@ import com.epam.annotation.StorageType;
 import com.epam.model.Resource;
 import com.epam.model.StorageTypes;
 import com.epam.service.repository.ResourceRepositoryService;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -43,6 +44,9 @@ public class ResourceStorageServiceS3 implements ResourceStorageService {
         if (!file.exists()) file.createNewFile();
         FileCopyUtils.copy(source.getInputStream(), new FileOutputStream(file));
 
+//        ObjectMetadata md = new ObjectMetadata();
+//        md.setContentMD5("foobar");
+
         amazonS3Client.putObject(defaultBucketName, file.getName(), file);
         return Resource.builder()
                 .path(amazonS3Client.getUrl(defaultBucketName, file.getName()).toString())
@@ -50,7 +54,7 @@ public class ResourceStorageServiceS3 implements ResourceStorageService {
                 .name(file.getName())
                 .storageTypes(StorageTypes.S3)
                 .size(file.length())
-                .checksum(file.hashCode())
+                .checksum(DigestUtils.md5Hex(new FileInputStream(file)))
                 .build();
     }
 

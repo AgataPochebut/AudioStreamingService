@@ -23,7 +23,7 @@ public class ConversionServiceImpl implements ConversionService {
         if(FilenameUtils.getExtension(file.getName()).equals(format)) return file;
 
         File newfile = new File(defaultBaseFolder, FilenameUtils.removeExtension(file.getName()) + "." + format);
-        if (!newfile.exists()) {newfile.getParentFile().mkdirs(); newfile.createNewFile();}
+        newfile.getParentFile().mkdirs();
 
         FFmpegBuilder builder = new FFmpegBuilder()
                 .setInput(file.getAbsolutePath())
@@ -45,7 +45,7 @@ public class ConversionServiceImpl implements ConversionService {
             file = source.getFile();
         } else {
             file = new File(defaultBaseFolder, source.getFilename());
-            if (!file.exists()) {file.getParentFile().mkdirs(); file.createNewFile();}
+            file.getParentFile().mkdirs();
             FileCopyUtils.copy(source.getInputStream(), new FileOutputStream(file));
         }
 
