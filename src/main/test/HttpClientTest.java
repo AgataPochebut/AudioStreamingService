@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 
-public class AsyncHttpClientTest {
+public class HttpClientTest {
 
     private static AsyncHttpClient HTTP_CLIENT;
 
@@ -21,7 +21,7 @@ public class AsyncHttpClientTest {
     }
 
     @Test
-    public void executeSyncGetRequest() {
+    public void testSync() {
 
         BoundRequestBuilder boundGetRequest = HTTP_CLIENT.prepareGet("http://www.baeldung.com");
 
@@ -42,7 +42,7 @@ public class AsyncHttpClientTest {
     }
 
     @Test
-    public void executeAsyncGetRequest() throws ExecutionException, InterruptedException {
+    public void testAsync() throws ExecutionException, InterruptedException {
 
         // execute a bound GET request
         BoundRequestBuilder boundGetRequest = HTTP_CLIENT.prepareGet("http://www.baeldung.com");

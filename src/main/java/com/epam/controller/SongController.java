@@ -3,18 +3,20 @@ package com.epam.controller;
 import com.epam.dto.response.SongResponseDto;
 import com.epam.model.Resource;
 import com.epam.model.Song;
-import com.epam.service.SongServiceImpl;
+import com.epam.service.song.SongServiceImpl;
 import com.epam.service.repository.SongRepositoryService;
 import com.epam.service.storage.ResourceStorageFactory;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -81,16 +83,40 @@ public class SongController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    // Content type 'multipart/form-data;boundary
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, params = {"async"})
-    public void uploadAsync(@RequestParam("data") MultipartFile multipartFile) throws Exception {
-//        CompletableFuture<Song> entity = songService.uploadAsync(multipartFile.getResource());
-//        CompletableFuture.allOf(entity).join();
-//
-//        final SongResponseDto responseDto = mapper.map(entity.get(), SongResponseDto.class);
-//        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    @PostMapping(value = "/callable", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Callable<ResponseEntity<SongResponseDto>> uploadCallable(@RequestParam("data") MultipartFile multipartFile) throws Exception {
+        return () -> upload(multipartFile);
+    }
 
-        songService.uploadAsync(multipartFile.getResource());
+    @PostMapping(value = "/deferred", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public DeferredResult<ResponseEntity<SongResponseDto>> uploadDeferred(@RequestParam("data") MultipartFile multipartFile) throws Exception {
+        DeferredResult<ResponseEntity<SongResponseDto>> result = new DeferredResult<>();
+        result.onCompletion(() -> System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXX " + result.hasResult()));
+
+
+//        CompletableFuture.supplyAsync(taskService::execute)
+//                .whenCompleteAsync((result, throwable) -> deferredResult.setResult(result));
+
+        new Thread(() -> {
+            try {
+                result.setResult(upload(multipartFile));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+        return result;
+    }
+
+    // Content type 'multipart/form-data;boundary
+    @PostMapping(value = "/future", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public void uploadFuture(@RequestParam("data") MultipartFile multipartFile) throws Exception {
+        CompletableFuture<Song> entity = songService.uploadAsync(multipartFile.getResource());
+        CompletableFuture.allOf(entity).join();
+
+        final SongResponseDto responseDto = mapper.map(entity.get(), SongResponseDto.class);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+
     }
 
     // Content type 'multipart/form-data;boundary

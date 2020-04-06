@@ -1,4 +1,4 @@
-package com.epam.service;
+package com.epam.service.song;
 
 public interface SongService {
 }

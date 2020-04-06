@@ -1,4 +1,4 @@
-package com.epam.service;
+package com.epam.service.song;
 
 import com.epam.model.Song;
 import com.epam.service.repository.SongRepositoryService;
