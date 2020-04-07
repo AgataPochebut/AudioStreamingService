@@ -1,6 +1,7 @@
-package com.epam.controller;
+package com.epam.test;
 
 import org.asynchttpclient.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,6 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ForkJoinPool;
 
 @RestController
 @RequestMapping("/test")
@@ -66,55 +66,34 @@ public class TestController {
         });
     }
 
-    @GetMapping(value = "/basic")
-    public ResponseEntity<String> test1() throws InterruptedException {
-        Thread.sleep(10000);
-        return new ResponseEntity<>("TEST", HttpStatus.OK);
+    @Autowired
+    private TestService testService;
+
+    @GetMapping(value = "/sync")
+    public ResponseEntity<String> test1() {
+        String result = testService.testSync();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping(value = "/callable")
     public Callable<ResponseEntity<String>> test2() throws Exception {
-        return () -> {
-            return test1();
-        };
+        return () -> test1();
     }
-
 
     @GetMapping(value = "/deferred")
     public DeferredResult<ResponseEntity<String>> test3() throws Exception {
-        DeferredResult<ResponseEntity<String>> result = new DeferredResult<>();
-        result.onError(throwable -> System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXX " + throwable.getMessage()));
-        result.onCompletion(() -> System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXX " + result.hasResult()));
+        DeferredResult<ResponseEntity<String>> deferredResult = new DeferredResult<>();
 
-        ForkJoinPool.commonPool().submit(() -> {
-            try {
-                test1();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            result.setResult(ResponseEntity.ok("ok"));
-        });
+        CompletableFuture
+                .supplyAsync(() -> test1())
+                .whenCompleteAsync((result, throwable) -> deferredResult.setResult(result));
+//        new Thread(() -> result.setResult(test1())).start();
 
-//        new Thread(() -> {
-//            try {
-//                result.setResult(test1());
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }).start();
-
-        return result;
+        return deferredResult;
     }
 
     @GetMapping(value = "/future")
     public CompletableFuture<ResponseEntity<String>> test4() throws Exception {
-        return CompletableFuture.supplyAsync(()-> {
-            try {
-                return test1();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        });
+        return CompletableFuture.supplyAsync(() -> test1());
     }
 }

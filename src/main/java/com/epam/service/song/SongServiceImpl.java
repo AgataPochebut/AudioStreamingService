@@ -7,14 +7,12 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -92,15 +90,12 @@ public class SongServiceImpl implements SongService{
         storageServiceFactory.getService().delete(entity.getResource());
     }
 
-
-    @Async
-    public CompletableFuture<Song> uploadAsync(Resource source) throws Exception {
-        return CompletableFuture.completedFuture(upload(source));
-    }
-
-    @Async
-    public CompletableFuture<List<Song>> uploadZipAsync(Resource source) throws Exception {
-        return CompletableFuture.completedFuture(uploadZip(source));
-    }
+//    public CompletableFuture<Song> uploadAsync(Resource source) throws Exception {
+//        return CompletableFuture.completedFuture(upload(source));
+//    }
+//
+//    public CompletableFuture<List<Song>> uploadZipAsync(Resource source) throws Exception {
+//        return CompletableFuture.completedFuture(uploadZip(source));
+//    }
 
 }

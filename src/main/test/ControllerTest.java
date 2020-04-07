@@ -35,12 +35,7 @@ public class ControllerTest {
 
     @Test
     public void testCallable() throws Exception {
-        testAsync("/songs/callable");
-    }
-
-    @Test
-    public void testDeferred() throws Exception {
-        testAsync("/songs/deferred");
+        testAsync("/songs/future");
     }
 
     private void testSync(String route) throws Exception {
@@ -55,16 +50,5 @@ public class ControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.asyncDispatch(resultActions))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-//        .andExpect(jsonPath("$.responses[0].status").value(200))
-//                .andExpect(jsonPath("$.responses[0].duration").isNumber())
-//                .andExpect(jsonPath("$.responses[0].body.celsius").value(25.0))
-//                .andExpect(jsonPath("$.responses[1].body.celsius").value(15.0))
-//                .andExpect(jsonPath("$.responses[2].body.celsius").value(30.0))
-//                .andExpect(jsonPath("$.responses[3].body.celsius").value(10.0))
-//                .andExpect(jsonPath("$.responses[4].body.lat").value(52.087515))
-//                .andExpect(jsonPath("$.responses[5].body.lat").value(51.5285578))
-//                .andExpect(jsonPath("$.responses[6].body.lat").value(-33.873061))
-//                .andExpect(jsonPath("$.responses[7].body.lat").value(52.372333))
-//                .andExpect(jsonPath("$.duration", Matchers.lessThan(750))); //Should be around 500ms.
     }
 }
