@@ -1,8 +1,6 @@
 package com.epam.service.storage;
 
 import com.epam.model.Resource;
-import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 public class IORetryDecorator extends ResourceStorageDecorator {
 
@@ -21,20 +19,18 @@ public class IORetryDecorator extends ResourceStorageDecorator {
     }
 
     @Override
+    public org.springframework.core.io.Resource download(Resource resource) throws Exception {
+        if (!super.exist(resource)) throw new Exception("Not exist");
+        return super.download(resource);
+    }
+
+    @Override
     public void delete(Resource resource) {
         while (super.exist(resource))
         {
             super.delete(resource);
         }
     }
-
-//    @Override
-//    public void delete(Long id) {
-//        do{
-//            super.delete(id);
-//        }
-//        while (super.exist(id));
-//    }
 
     @Override
     public String test() {

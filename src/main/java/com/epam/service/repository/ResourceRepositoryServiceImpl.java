@@ -17,4 +17,9 @@ public class ResourceRepositoryServiceImpl extends GenericServiceImpl<Resource, 
     public Resource findByChecksum(String checksum) {
         return repository.findByChecksum(checksum).orElse(null);
     }
+
+    @Override
+    public boolean existByChecksum(String checksum){
+        return !repository.findByChecksum(checksum).isEmpty();
+    }
 }

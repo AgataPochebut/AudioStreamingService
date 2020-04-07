@@ -1,21 +1,31 @@
 package com.epam.component;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import javax.validation.ConstraintViolationException;
 
 @ControllerAdvice(annotations = RestController.class)
 @Slf4j
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(MultipartException.class)
+    @ResponseBody
+    ResponseEntity<?> handleControllerException(MultipartException exception, WebRequest request) {
+
+        String errorMessage = exception.getMessage();
+        log.error(errorMessage, exception);
+//        ErrorResponseDto errorResponseDTO = new ErrorResponseDto(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage);
+//        return new ResponseEntity(errorResponseDTO, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
+
+    }
 
 //    @ExceptionHandler(value = {MethodArgumentNotValidException.class})
 //    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception,

@@ -21,9 +21,28 @@ public class HttpClientTest {
     }
 
     @Test
-    public void testSync() {
+    public void testBasic() throws Exception {
+        testSync("http://localhost:8080/songs");
+    }
 
-        BoundRequestBuilder boundGetRequest = HTTP_CLIENT.prepareGet("http://www.baeldung.com");
+    @Test
+    public void testCallable() throws Exception {
+        testAsync("http://localhost:8080/songs/callable");
+    }
+
+    @Test
+    public void testDeferred() throws Exception {
+        testAsync("http://localhost:8080/songs/deferred");
+    }
+
+    @Test
+    public void testFuture() throws Exception {
+        testAsync("http://localhost:8080/songs/future");
+    }
+
+    public void testSync(String route) {
+
+        BoundRequestBuilder boundGetRequest = HTTP_CLIENT.prepareGet(route);
 
         Future<Response> responseFuture = boundGetRequest.execute();
         try {
@@ -41,11 +60,10 @@ public class HttpClientTest {
         }
     }
 
-    @Test
-    public void testAsync() throws ExecutionException, InterruptedException {
+    public void testAsync(String route) throws ExecutionException, InterruptedException {
 
         // execute a bound GET request
-        BoundRequestBuilder boundGetRequest = HTTP_CLIENT.prepareGet("http://www.baeldung.com");
+        BoundRequestBuilder boundGetRequest = HTTP_CLIENT.prepareGet(route);
 
         boundGetRequest.execute(new AsyncCompletionHandler<Integer>() {
             @Override

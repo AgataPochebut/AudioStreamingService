@@ -27,6 +27,21 @@ public class SongServiceImpl implements SongService{
     @Autowired
     private ResourceStorageFactory storageServiceFactory;
 
+    public List<Song> getAll() throws Exception {
+        return repositoryService.findAll();
+    }
+
+    public Song get(Long id) throws Exception {
+        return repositoryService.findById(id);
+    }
+
+    public Resource download(Long id) throws Exception {
+        Song entity = repositoryService.findById(id);
+        com.epam.model.Resource resource = entity.getResource();
+
+        return storageServiceFactory.getService().download(resource);
+    }
+
     public Song upload(Resource source) throws Exception {
 
         com.epam.model.Resource resource = storageServiceFactory.getService().upload(source);
@@ -35,11 +50,6 @@ public class SongServiceImpl implements SongService{
                 .build());
 
         return entity;
-    }
-
-    @Async
-    public CompletableFuture<Song> uploadAsync(Resource source) throws Exception {
-        return CompletableFuture.completedFuture(upload(source));
     }
 
     public List<Song> uploadZip(Resource source) throws Exception {
@@ -74,11 +84,6 @@ public class SongServiceImpl implements SongService{
         return entity;
     }
 
-    @Async
-    public CompletableFuture<List<Song>> uploadZipAsync(Resource source) throws Exception {
-        return CompletableFuture.completedFuture(uploadZip(source));
-    }
-
     public void delete(Long id){
         Song entity = repositoryService.findById(id);
         com.epam.model.Resource resource = entity.getResource();
@@ -86,4 +91,16 @@ public class SongServiceImpl implements SongService{
         repositoryService.deleteById(id);
         storageServiceFactory.getService().delete(entity.getResource());
     }
+
+
+    @Async
+    public CompletableFuture<Song> uploadAsync(Resource source) throws Exception {
+        return CompletableFuture.completedFuture(upload(source));
+    }
+
+    @Async
+    public CompletableFuture<List<Song>> uploadZipAsync(Resource source) throws Exception {
+        return CompletableFuture.completedFuture(uploadZip(source));
+    }
+
 }

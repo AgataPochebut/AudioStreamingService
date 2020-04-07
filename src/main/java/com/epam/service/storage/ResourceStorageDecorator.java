@@ -21,7 +21,7 @@ public abstract class ResourceStorageDecorator implements ResourceStorageService
     }
 
     @Override
-    public org.springframework.core.io.Resource download(Resource resource) {
+    public org.springframework.core.io.Resource download(Resource resource) throws Exception {
         return storageService.download(resource);
     }
 

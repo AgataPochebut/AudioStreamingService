@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
-    <facet type="web" name="Web">
-      <configuration>
-        <webroots>
-          <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
-        </webroots>
-      </configuration>
-    </facet>
     <facet type="Spring" name="Spring">
       <configuration />
     </facet>
+    <facet type="web" name="Web">
+      <configuration>
+        <descriptors>
+          <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/web/WEB-INF/web.xml" />
+        </descriptors>
+        <webroots>
+          <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
+        </webroots>
+        <sourceRoots>
+          <root url="file://$MODULE_DIR$/src/main/java" />
+          <root url="file://$MODULE_DIR$/src/main/resources" />
+        </sourceRoots>
+      </configuration>
+    </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_11">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
@@ -25,8 +32,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-web:2.2.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:2.2.5.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:2.2.5.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-autoconfigure:2.2.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-logging:2.2.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-to-slf4j:2.12.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.12.1" level="project" />
@@ -348,6 +353,15 @@
     <orderEntry type="library" name="Maven: net.bramp.ffmpeg:ffmpeg:0.6.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.6" level="project" />
     <orderEntry type="library" name="Maven: org.modelmapper:modelmapper:0.7.7" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-thymeleaf:2.1.2.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.thymeleaf:thymeleaf-spring5:3.0.11.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.thymeleaf:thymeleaf:3.0.11.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.attoparser:attoparser:2.0.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.unbescape:unbescape:1.1.6.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.springframework.boot:spring-boot-devtools:2.2.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:2.2.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-autoconfigure:2.2.5.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-starter-test:2.2.5.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test:2.2.5.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test-autoconfigure:2.2.5.RELEASE" level="project" />
@@ -395,22 +409,22 @@
     <orderEntry type="library" scope="TEST" name="Maven: com.sun.xml.bind:jaxb-osgi:2.2.10" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.sling:org.apache.sling.javax.activation:0.1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: javax.activation:activation:1.1.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.asynchttpclient:async-http-client:2.2.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.asynchttpclient:async-http-client-netty-utils:2.2.0" level="project" />
+    <orderEntry type="library" name="Maven: org.asynchttpclient:async-http-client:2.2.0" level="project" />
+    <orderEntry type="library" name="Maven: org.asynchttpclient:async-http-client-netty-utils:2.2.0" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.1.45.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-codec-http:4.1.45.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.45.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-transport:4.1.45.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-codec:4.1.45.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-handler:4.1.45.Final" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.netty:netty-codec-socks:4.1.45.Final" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.netty:netty-handler-proxy:4.1.45.Final" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.netty:netty-transport-native-epoll:linux-x86_64:4.1.45.Final" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.netty:netty-transport-native-unix-common:4.1.45.Final" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.netty:netty-resolver-dns:4.1.45.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-socks:4.1.45.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-handler-proxy:4.1.45.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport-native-epoll:linux-x86_64:4.1.45.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport-native-unix-common:4.1.45.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-resolver-dns:4.1.45.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-resolver:4.1.45.Final" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.netty:netty-codec-dns:4.1.45.Final" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.reactivestreams:reactive-streams:1.0.3" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: com.typesafe.netty:netty-reactive-streams:2.0.0" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-dns:4.1.45.Final" level="project" />
+    <orderEntry type="library" name="Maven: org.reactivestreams:reactive-streams:1.0.3" level="project" />
+    <orderEntry type="library" name="Maven: com.typesafe.netty:netty-reactive-streams:2.0.0" level="project" />
   </component>
 </module>

@@ -14,7 +14,7 @@ public interface ResourceStorageService {
 
     Resource upload(org.springframework.core.io.Resource resource) throws Exception;
 
-    org.springframework.core.io.Resource download(Resource resource);
+    org.springframework.core.io.Resource download(Resource resource) throws Exception;
 
 //    org.springframework.core.io.Resource download(Long id);
 

@@ -15,9 +15,7 @@ public class DedupingDecorator extends ResourceStorageDecorator {
 
     @Override
     public Resource upload(org.springframework.core.io.Resource source) throws Exception {
-
-        Resource resource = repositoryService.findByChecksum(DigestUtils.md5Hex(source.getInputStream()));
-        if(resource!=null) return resource;
+        if(repositoryService.existByChecksum(DigestUtils.md5Hex(source.getInputStream()))) throw new Exception("Exist");
         else return super.upload(source);
     }
 

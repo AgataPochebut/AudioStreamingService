@@ -4,8 +4,6 @@ import com.epam.dto.response.SongResponseDto;
 import com.epam.model.Resource;
 import com.epam.model.Song;
 import com.epam.service.song.SongServiceImpl;
-import com.epam.service.repository.SongRepositoryService;
-import com.epam.service.storage.ResourceStorageFactory;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -13,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
@@ -26,20 +22,14 @@ import java.util.stream.Collectors;
 public class SongController {
 
     @Autowired
-    private SongRepositoryService repositoryService;
-
-    @Autowired
-    private ResourceStorageFactory storageServiceFactory;
-
-    @Autowired
     private SongServiceImpl songService;
 
     @Autowired
     private Mapper mapper;
 
     @GetMapping//(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<SongResponseDto>> readAll() {
-        final List<Song> entity = repositoryService.findAll();
+    public ResponseEntity<List<SongResponseDto>> readAll() throws Exception {
+        final List<Song> entity = songService.getAll();
 
         final List<SongResponseDto> responseDto = entity.stream()
                 .map((i) -> mapper.map(i, SongResponseDto.class))
@@ -48,21 +38,19 @@ public class SongController {
     }
 
     @GetMapping(value = "/{id}")//, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SongResponseDto> read(@PathVariable Long id) {
-        Song entity = repositoryService.findById(id);
+    public ResponseEntity<SongResponseDto> read(@PathVariable Long id) throws Exception {
+        final Song entity = songService.get(id);
 
         final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-
     // Accept 'application/octet-stream'
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<org.springframework.core.io.Resource> download(@PathVariable Long id) throws IOException, URISyntaxException {
-        Song entity = repositoryService.findById(id);
-        Resource resource = entity.getResource();
-
-        org.springframework.core.io.Resource source = storageServiceFactory.getService().download(resource);
+    public ResponseEntity<org.springframework.core.io.Resource> download(@PathVariable Long id) throws Exception {
+        final Song entity = songService.get(id);
+        final Resource resource = entity.getResource();
+        final org.springframework.core.io.Resource source = songService.download(id);
 
         HttpHeaders headers = new HttpHeaders();
         ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
@@ -72,7 +60,6 @@ public class SongController {
 
         return new ResponseEntity<>(source, headers, HttpStatus.OK);
     }
-
 
     // Content type 'multipart/form-data;boundary
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -85,17 +72,15 @@ public class SongController {
 
     @PostMapping(value = "/callable", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public Callable<ResponseEntity<SongResponseDto>> uploadCallable(@RequestParam("data") MultipartFile multipartFile) throws Exception {
-        return () -> upload(multipartFile);
+        return () -> {
+            upload(multipartFile);
+            return ResponseEntity.ok().build();
+        };
     }
 
     @PostMapping(value = "/deferred", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public DeferredResult<ResponseEntity<SongResponseDto>> uploadDeferred(@RequestParam("data") MultipartFile multipartFile) throws Exception {
         DeferredResult<ResponseEntity<SongResponseDto>> result = new DeferredResult<>();
-        result.onCompletion(() -> System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXX " + result.hasResult()));
-
-
-//        CompletableFuture.supplyAsync(taskService::execute)
-//                .whenCompleteAsync((result, throwable) -> deferredResult.setResult(result));
 
         new Thread(() -> {
             try {
@@ -110,14 +95,25 @@ public class SongController {
 
     // Content type 'multipart/form-data;boundary
     @PostMapping(value = "/future", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public void uploadFuture(@RequestParam("data") MultipartFile multipartFile) throws Exception {
-        CompletableFuture<Song> entity = songService.uploadAsync(multipartFile.getResource());
-        CompletableFuture.allOf(entity).join();
-
-        final SongResponseDto responseDto = mapper.map(entity.get(), SongResponseDto.class);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
-
+    public CompletableFuture<ResponseEntity<SongResponseDto>> uploadFuture(@RequestParam("data") MultipartFile multipartFile) throws Exception {
+        return CompletableFuture.supplyAsync(()-> {
+            try {
+                return upload(multipartFile);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        });
     }
+
+
+
+
+
+
+
+
+
 
     // Content type 'multipart/form-data;boundary
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, params = {"extension=zip"})
