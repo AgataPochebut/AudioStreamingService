@@ -9,8 +9,8 @@ import java.util.concurrent.CompletableFuture;
 public class TestService {
 
     @Async
-    public CompletableFuture<String> testAsync() throws Exception {
-        return CompletableFuture.supplyAsync(()-> testSync());
+    public CompletableFuture<String> testAsync() {
+        return CompletableFuture.completedFuture(testSync());
     }
 
     public String testSync()  {

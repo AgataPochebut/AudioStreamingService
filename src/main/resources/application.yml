@@ -19,10 +19,24 @@ spring:
     username: root
     password: root
 
+#  data:
+#    jpa:
+#      repositories:
+#        enabled: true
+#    elasticsearch:
+#      repositories:
+#        enabled: true
+
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     show-sql: false
     hibernate.ddl-auto: update
+
+#  elasticsearch:
+#    rest:
+#      uris:
+#      username:
+#      password:
 
   security:
     oauth2:

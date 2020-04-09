@@ -1,11 +1,6 @@
 package com.epam.service.storage;
 
-import com.amazonaws.services.dynamodbv2.model.Get;
 import com.epam.model.Resource;
-import com.epam.model.StorageTypes;
-import lombok.Setter;
-import org.springframework.context.annotation.Primary;
-import org.springframework.web.multipart.MultipartFile;
 
 public abstract class ResourceStorageDecorator implements ResourceStorageService {
 
