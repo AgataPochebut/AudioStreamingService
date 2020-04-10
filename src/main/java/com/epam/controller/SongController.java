@@ -3,8 +3,8 @@ package com.epam.controller;
 import com.epam.dto.response.SongResponseDto;
 import com.epam.model.Resource;
 import com.epam.model.Song;
-import com.epam.service.search.SongSearchService;
-import com.epam.service.song.SongServiceImpl;
+import com.epam.service.search.SearchService;
+import com.epam.service.song.SongService;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
 public class SongController {
 
     @Autowired
-    private SongServiceImpl songService;
+    private SongService songService;
 
     @Autowired
-    private SongSearchService elasticsearchService;
+    private SearchService searchService;
 
     @Autowired
     private Mapper mapper;
@@ -70,7 +70,6 @@ public class SongController {
         Song entity = null;
         try {
             entity = songService.upload(multipartFile.getResource());
-            entity = elasticsearchService.save(entity);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -113,7 +112,6 @@ public class SongController {
     @ResponseStatus(value = HttpStatus.OK)
     public void delete(@PathVariable Long id) {
         songService.delete(id);
-        elasticsearchService.deleteById(id);
     }
 
 }

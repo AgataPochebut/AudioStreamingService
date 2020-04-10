@@ -1,18 +1,27 @@
 package com.epam.test;
 
+import com.epam.dto.response.SongResponseDto;
+import com.epam.feign.SearchClient;
 import org.asynchttpclient.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/test")
 public class TestController {
+
+    @Autowired
+    private SearchClient searchClient;
 
     @GetMapping(value = "/client/{endpoint}")
     public void test(@PathVariable String endpoint) throws Exception {
@@ -61,6 +70,11 @@ public class TestController {
     @GetMapping(value = "/future")
     public CompletableFuture<ResponseEntity<String>> test4() throws Exception {
         return CompletableFuture.supplyAsync(() -> test1());
+    }
+
+    @GetMapping
+    public ResponseEntity<List<SongResponseDto>> readAll() {
+        return searchClient.readAll();
     }
 
 }

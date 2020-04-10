@@ -1,5 +1,21 @@
+#  activemq:
+#      broker-url: tcp://localhost:61616
+#      user: admin
+#      password: admin
+
+#feign:
+#  client:
+#    config:
+#      default:
+#        connectTimeout: 5000
+#        readTimeout: 5000
+#        loggerLevel: basic
+#        requestInterceptors: com.baeldung.cloud.openfeign.JSONPlaceHolderInterceptor
+
 server:
   port: 8080
+#  servlet:
+#    context-path: /pet-services
 
 s3:
   accessKey: AKIAJWCFBXUCARGICLTQ
@@ -18,14 +34,6 @@ spring:
     url: jdbc:mysql://localhost:3306/service?useUnicode=true&serverTimezone=UTC
     username: root
     password: root
-
-#  data:
-#    jpa:
-#      repositories:
-#        enabled: true
-#    elasticsearch:
-#      repositories:
-#        enabled: true
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
@@ -52,8 +60,3 @@ spring:
       file-size-threshold: 2KB
       max-file-size: 500MB
       max-request-size: 500MB
-
-#  activemq:
-#      broker-url: tcp://localhost:61616
-#      user: admin
-#      password: admin

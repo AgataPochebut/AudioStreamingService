@@ -1,9 +1,7 @@
 package com.epam.service.repository;
 
-import com.epam.repository.GenericRepository;
+import com.epam.jpa_repository.GenericRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 
 import java.util.List;
 

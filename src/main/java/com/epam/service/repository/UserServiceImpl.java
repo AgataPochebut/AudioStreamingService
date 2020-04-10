@@ -1,7 +1,7 @@
 package com.epam.service.repository;
 
 import com.epam.model.User;
-import com.epam.repository.UserRepository;
+import com.epam.jpa_repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

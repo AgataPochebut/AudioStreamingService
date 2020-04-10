@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
+
 @RestController
 @RequestMapping("/conversion")
 public class ConversionController {
@@ -19,9 +22,14 @@ public class ConversionController {
 
     // Accept 'application/octet-stream'
     // Content type 'multipart/form-data;boundary
-    @PostMapping(produces = MediaType.APPLICATION_OCTET_STREAM_VALUE, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<Resource> conversion(@RequestParam("data") MultipartFile multipartFile, @RequestParam("format") String format) throws Exception {
-        org.springframework.core.io.Resource resource = conversionService.convert(multipartFile.getResource(), format);
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<Resource> conversion(@RequestParam("data") MultipartFile multipartFile, @RequestParam("format") String format) {
+        Resource resource = null;
+        try {
+            resource = conversionService.convert(multipartFile.getResource(), format);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         HttpHeaders headers = new HttpHeaders();
         ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
@@ -31,5 +39,12 @@ public class ConversionController {
 
         return new ResponseEntity<>(resource, headers, HttpStatus.OK);
     }
+
+    // Content type 'multipart/form-data;boundary
+    @PostMapping(value = "/future", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public CompletableFuture<ResponseEntity<Resource>> uploadFuture(@RequestParam("data") MultipartFile multipartFile, @RequestParam("format") String format) throws Exception {
+        return CompletableFuture.supplyAsync(()-> conversion(multipartFile, format));
+    }
+
 
 }

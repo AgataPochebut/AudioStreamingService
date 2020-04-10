@@ -1,5 +1,6 @@
 package com.epam.controller;
 
+import com.epam.dto.request.SongRequestDto;
 import com.epam.dto.response.SongResponseDto;
 import com.epam.model.Song;
 import com.epam.service.search.SongSearchService;
@@ -7,14 +8,11 @@ import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 
 @RestController
@@ -22,17 +20,14 @@ import java.util.stream.StreamSupport;
 public class SearchController {
 
     @Autowired
-    private SongSearchService elasticsearchService;
+    private SongSearchService service;
 
     @Autowired
     private Mapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<SongResponseDto>> readAll() throws Exception {
-        Iterable<Song> iterable = elasticsearchService.findAll();
-
-        List<Song> entity = StreamSupport.stream(iterable.spliterator(), false)
-                .collect(Collectors.toList());
+    public ResponseEntity<List<SongResponseDto>> readAll() {
+        final List<Song> entity = service.findAll();
 
         final List<SongResponseDto> responseDto = entity.stream()
                 .map((i) -> mapper.map(i, SongResponseDto.class))
@@ -41,10 +36,47 @@ public class SearchController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<SongResponseDto> read(@PathVariable Long id) throws Exception {
-        final Song entity = elasticsearchService.findById(id);
+    public ResponseEntity<SongResponseDto> read(@PathVariable Long id) {
+        Song entity = service.findById(id);
 
         final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
+
+    @PostMapping
+    public ResponseEntity<SongResponseDto> create(@Valid @RequestBody SongRequestDto requestDto) throws Exception {
+        final Song entity = mapper.map(requestDto, Song.class);
+        service.save(entity);
+
+        final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<SongResponseDto> update(@PathVariable Long id, @Valid @RequestBody SongRequestDto requestDto) throws Exception {
+        final Song entity = mapper.map(requestDto, Song.class);
+        service.update(entity);
+
+        final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void delete(@PathVariable Long id) {
+        final Song entity = service.findById(id);
+        service.delete(entity);
+    }
+
+    //Search
+    @GetMapping(value = "/search")
+    public ResponseEntity<List<SongResponseDto>> search(@RequestParam String query) throws Exception {
+        List<Song> entity = service.search(query);
+
+        final List<SongResponseDto> responseDto = entity.stream()
+                .map((i) -> mapper.map(i, SongResponseDto.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
 }
