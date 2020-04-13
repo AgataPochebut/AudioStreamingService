@@ -4,9 +4,7 @@ import com.epam.annotation.Decorate;
 import com.epam.annotation.StorageType;
 import com.epam.model.Resource;
 import com.epam.model.StorageTypes;
-import com.epam.service.repository.ResourceRepositoryService;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
@@ -25,9 +23,6 @@ public class ResourceStorageServiceFS implements ResourceStorageService {
 
     @Value("${fs.defaultFolder}")
     private String defaultBaseFolder;
-
-    @Autowired
-    private ResourceRepositoryService repositoryService;
 
     @Override
     public Resource upload(org.springframework.core.io.Resource source) throws IOException {

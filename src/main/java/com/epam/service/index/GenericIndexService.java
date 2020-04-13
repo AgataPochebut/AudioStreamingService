@@ -1,8 +1,8 @@
-package com.epam.service.search;
+package com.epam.service.index;
 
 import java.util.List;
 
-public interface SearchService<T,U> {
+public interface GenericIndexService<T,U> {
 
     List<T> findAll();
 
@@ -15,6 +15,7 @@ public interface SearchService<T,U> {
 //    void deleteById(U id);
 
     void delete(T entity);
+
 
     List<T> search(String keyword);
 

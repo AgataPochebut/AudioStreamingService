@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -16,7 +18,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name="SONGS")
-@Document(indexName = "techfou", type = "songs")
+@Document(indexName = "service", type = "songs")
 public class Song {
 
     @Id
@@ -43,6 +45,7 @@ public class Song {
 //    @NotEmpty
     @ManyToOne
     @JoinColumn(name = "album_id")
+    @Field(type = FieldType.Nested, includeInParent = true)
     private Album album;
 
 //    @NotNull

@@ -1,9 +1,9 @@
 package com.epam.controller;
 
 import com.epam.dto.response.SongResponseDto;
+import com.epam.feign.SongIndexClient;
 import com.epam.model.Resource;
 import com.epam.model.Song;
-import com.epam.service.search.SearchService;
 import com.epam.service.song.SongService;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class SongController {
     private SongService songService;
 
     @Autowired
-    private SearchService searchService;
+    private SongIndexClient searchClient;
 
     @Autowired
     private Mapper mapper;
@@ -74,6 +74,8 @@ public class SongController {
             e.printStackTrace();
         }
 
+        searchClient.create(entity);
+
         final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
@@ -112,6 +114,7 @@ public class SongController {
     @ResponseStatus(value = HttpStatus.OK)
     public void delete(@PathVariable Long id) {
         songService.delete(id);
+        searchClient.delete(id);
     }
 
 }

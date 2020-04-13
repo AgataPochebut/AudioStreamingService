@@ -2,6 +2,7 @@ package com.epam.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -13,7 +14,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name="ALBUMS")
-//@Document(indexName = "techfou", type = "albums")
+@Document(indexName = "service", type = "albums")
 public class Album {
 
     @Id

@@ -2,7 +2,6 @@ package com.epam.service.song;
 
 import com.epam.model.Song;
 import com.epam.service.repository.SongRepositoryService;
-import com.epam.service.search.SearchService;
 import com.epam.service.storage.ResourceStorageFactory;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +23,6 @@ public class SongServiceImpl implements SongService{
     private SongRepositoryService repositoryService;
 
     @Autowired
-    private SearchService searchService;
-
-    @Autowired
     private ResourceStorageFactory storageServiceFactory;
 
     public List<Song> getAll() {
@@ -45,13 +41,11 @@ public class SongServiceImpl implements SongService{
     }
 
     public Song upload(Resource source) throws Exception {
-
         com.epam.model.Resource resource = storageServiceFactory.getService().upload(source);
         Song entity = Song.builder()
                 .resource(resource)
                 .build();
         entity = repositoryService.save(entity);
-        entity = (Song) searchService.save(entity);
         return entity;
     }
 
@@ -76,10 +70,7 @@ public class SongServiceImpl implements SongService{
                         }
                     }
 
-                    com.epam.model.Resource resource = storageServiceFactory.getService().upload(new FileSystemResource(file));
-                    entity.add(repositoryService.save(Song.builder()
-                            .resource(resource)
-                            .build()));
+                    entity.add(upload(new FileSystemResource(file)));
                 }
                 zin.closeEntry();
             }
@@ -91,7 +82,6 @@ public class SongServiceImpl implements SongService{
         Song entity = repositoryService.findById(id);
         com.epam.model.Resource resource = entity.getResource();
 
-        searchService.delete(entity);
         repositoryService.delete(entity);
         storageServiceFactory.getService().delete(entity.getResource());
     }

@@ -19,18 +19,16 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.concurrent.Executor;
-
 @SpringBootApplication
-@EnableAsync
+//@EnableAsync
 @EnableJpaRepositories(
+        //basePackages = {"com.epam.jpa_repository"},
         includeFilters = @ComponentScan.Filter(
                 type = FilterType.ASSIGNABLE_TYPE, classes = JpaRepository.class))
 @EnableElasticsearchRepositories(
+        //basePackages = {"com.epam.es_repository"},
         includeFilters = @ComponentScan.Filter(
                 type = FilterType.ASSIGNABLE_TYPE, classes = ElasticsearchRepository.class))
 @EnableFeignClients
@@ -72,16 +70,16 @@ public class AudioStreamingServiceApplication {
         };
     }
 
-    @Bean
-    public Executor taskExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(2);
-        executor.setMaxPoolSize(2);
-        executor.setQueueCapacity(500);
-        executor.setThreadNamePrefix("GithubLookup-");
-        executor.initialize();
-        return executor;
-    }
+//    @Bean
+//    public Executor taskExecutor() {
+//        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+//        executor.setCorePoolSize(2);
+//        executor.setMaxPoolSize(2);
+//        executor.setQueueCapacity(500);
+//        executor.setThreadNamePrefix("GithubLookup-");
+//        executor.initialize();
+//        return executor;
+//    }
 
     @LoadBalanced
     @Bean

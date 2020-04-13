@@ -1,25 +1,21 @@
-package com.epam.service.search;
+package com.epam.service.index;
 
+import com.epam.es_repository.GenericElasticsearchRepository;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
-import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Primary
-@Service
-public class SearchServiceImpl<T,U> implements SearchService<T, U> {
+public class GenericIndexServiceES<T,U> implements GenericIndexService<T, U> {
 
     @Autowired
-    private ElasticsearchRepository<T,U> repository;
+    private GenericElasticsearchRepository<T,U> repository;
 
     @Override
     public List<T> findAll() {
@@ -54,23 +50,6 @@ public class SearchServiceImpl<T,U> implements SearchService<T, U> {
         repository.delete(entity);
     }
 
-    //    @Override
-//    public List<T> search(String keyword){return null;}
-
-//    @Override
-//    public List<T> search(String keyword){
-//
-//        QueryBuilder queryBuilder = QueryBuilders.boolQuery()
-//                .must(QueryBuilders.matchQuery("name", keyword));
-//
-//        SearchQuery searchQuery = new NativeSearchQueryBuilder()
-//                .withQuery(queryBuilder)
-//                .build();
-//
-//        List<T> list = new ArrayList<>();
-//        repository.search(searchQuery).forEach(i -> list.add(i));
-//        return list;
-//    }
 
     @Override
     public List<T> search(String keyword){
@@ -88,4 +67,18 @@ public class SearchServiceImpl<T,U> implements SearchService<T, U> {
         return list;
     }
 
+
+//    @Autowired
+//    private ElasticsearchRestTemplate elasticsearchTemplate;
+//
+//    public List<T> search(String keyword){
+//
+//        QueryBuilder queryBuilder = QueryBuilders.matchAllQuery();
+//
+//        SearchQuery searchQuery = new NativeSearchQueryBuilder()
+//                .withQuery(queryBuilder)
+//                .build();
+//
+//        return elasticsearchTemplate.queryForList(searchQuery, T);
+//    }
 }
