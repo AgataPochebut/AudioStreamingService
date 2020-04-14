@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/songs/index")
+@RequestMapping("/index/songs")
 public class SongIndexController {
 
     @Autowired
@@ -56,5 +56,54 @@ public class SongIndexController {
         final Song entity = service.findById(id);
         service.delete(entity);
     }
+
+
+//    @Autowired
+//    private ElasticsearchRestTemplate elasticsearchTemplate;
+//
+//    @GetMapping("/template")
+//    public void readAll1(){
+//        QueryBuilder queryBuilder = QueryBuilders.matchAllQuery();
+//
+//        SearchQuery searchQuery = new NativeSearchQueryBuilder()
+//                .withQuery(queryBuilder)
+//                .build();
+//
+//        elasticsearchTemplate.queryForList(searchQuery, Song.class);
+//    }
+//
+//    @GetMapping("/template/{id}")
+//    public void read1(@PathVariable String id){
+//        QueryBuilder queryBuilder = QueryBuilders.matchAllQuery();
+//
+//        SearchQuery searchQuery = new NativeSearchQueryBuilder()
+//                .withQuery(queryBuilder)
+//                .build();
+//
+//        elasticsearchTemplate.queryForList(searchQuery, Song.class);
+//    }
+//
+//    @PostMapping("/template/{id}")
+//    public void create1(@PathVariable String id, @RequestBody Song entity){
+//
+//        IndexQuery indexQuery = new IndexQueryBuilder()
+//                .withId(id)
+//                .withObject(entity)
+//                .build();
+//
+//        elasticsearchTemplate.index(indexQuery);
+//    }
+//
+//    @PutMapping(value = "/template/{id}")
+//    public void update1(@PathVariable Long id, @RequestBody Song entity) throws Exception {
+//
+//    }
+//
+//    @DeleteMapping(value = "/template/{id}")
+//    @ResponseStatus(value = HttpStatus.OK)
+//    public void delete1(@PathVariable Long id) {
+//        final Song entity = service.findById(id);
+//        service.delete(entity);
+//    }
 
 }

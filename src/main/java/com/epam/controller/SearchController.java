@@ -26,11 +26,16 @@ public class SearchController {
     @Autowired
     private ElasticsearchRestTemplate elasticsearchTemplate;
 
+//    @Autowired
+//    private GenericSearchServiceES<Song> service;
+
     @Autowired
     private Mapper mapper;
 
     @GetMapping("/songs")
-    public ResponseEntity<List<SongResponseDto>> search(@RequestParam String query){
+    public ResponseEntity<List<SongResponseDto>> searchSongs(@RequestParam String query){
+//        List<Song> entity = service.search(query);
+
         QueryBuilder queryBuilder = QueryBuilders.matchAllQuery();
 
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
@@ -45,13 +50,4 @@ public class SearchController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<SongResponseDto>> search(@RequestParam String query) throws Exception {
-//        List<Song> entity = service.search(query);
-//
-//        final List<SongResponseDto> responseDto = entity.stream()
-//                .map((i) -> mapper.map(i, SongResponseDto.class))
-//                .collect(Collectors.toList());
-//        return new ResponseEntity<>(responseDto, HttpStatus.OK);
-//    }
 }

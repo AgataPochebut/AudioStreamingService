@@ -75,22 +75,6 @@ public class TestController {
     }
 
 
-    @Autowired
-    private SongElasticsearchRepository elasticsearchRepository;
-
-    @GetMapping("/search/repository")
-    public void test10(){
-        QueryBuilder queryBuilder = QueryBuilders.matchAllQuery();
-
-        SearchQuery searchQuery = new NativeSearchQueryBuilder()
-                .withQuery(queryBuilder)
-                .build();
-
-        List<Song> list = new ArrayList<>();
-        elasticsearchRepository.search(searchQuery).forEach(i -> list.add(i));
-    }
-
-
 //    @Autowired
 //    private RestHighLevelClient elasticsearchClient;
 //
@@ -139,4 +123,19 @@ public class TestController {
         elasticsearchTemplate.queryForList(searchQuery, Song.class);
     }
 
+
+    @Autowired
+    private SongElasticsearchRepository elasticsearchRepository;
+
+    @GetMapping("/search/repository")
+    public void test10(){
+        QueryBuilder queryBuilder = QueryBuilders.matchAllQuery();
+
+        SearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withQuery(queryBuilder)
+                .build();
+
+        List<Song> list = new ArrayList<>();
+        elasticsearchRepository.search(searchQuery).forEach(i -> list.add(i));
+    }
 }
