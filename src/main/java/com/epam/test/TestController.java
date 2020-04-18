@@ -1,6 +1,6 @@
 package com.epam.test;
 
-import com.epam.es_repository.SongElasticsearchRepository;
+import com.epam.es_repository.SongESRepository;
 import com.epam.model.Song;
 import org.asynchttpclient.*;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -22,7 +22,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
-@RequestMapping("/test")
+@RequestMapping("/tests")
 public class TestController {
 
     @GetMapping(value = "/client/{endpoint}")
@@ -125,7 +125,7 @@ public class TestController {
 
 
     @Autowired
-    private SongElasticsearchRepository elasticsearchRepository;
+    private SongESRepository elasticsearchRepository;
 
     @GetMapping("/search/repository")
     public void test10(){

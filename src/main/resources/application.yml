@@ -14,8 +14,8 @@
 
 server:
   port: 8080
-#  servlet:
-#    context-path: /pet-services
+  servlet:
+    context-path: /
 
 s3:
   accessKey: AKIAJWCFBXUCARGICLTQ
@@ -60,3 +60,10 @@ spring:
       file-size-threshold: 2KB
       max-file-size: 500MB
       max-request-size: 500MB
+
+cloud:
+  aws:
+    region: eu-west-1
+    credentials:
+      accessKey: AKIAJWCFBXUCARGICLTQ
+      secretKey: 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

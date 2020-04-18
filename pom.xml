@@ -3,6 +3,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -15,22 +16,34 @@
   <version>1.0</version>
   <packaging>war</packaging>
   <name>Audio streaming service Maven Webapp</name>
+
   <properties>
     <java.version>11</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
-    <jackson.core>2.9.9</jackson.core>
+<!--    <jackson>2.5.2</jackson>-->
+    <jackson>2.9.4</jackson>
     <swagger>2.9.2</swagger>
     <logback>1.2.3</logback>
     <lombok>1.18.12</lombok>
     <dozer>5.5.1</dozer>
     <hibernate.validator>6.0.16.Final</hibernate.validator>
-
   </properties>
 
-  <dependencies>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>Hoxton.SR3</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
+  <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
@@ -56,12 +69,35 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
-
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-oauth2-client</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+    </dependency>
 
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-openfeign</artifactId>
+    </dependency>
+
+    <!--    <dependency>-->
+    <!--      <groupId>org.springframework.cloud</groupId>-->
+    <!--      <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>-->
+    <!--    </dependency>-->
+
+    <!--    <dependency>-->
+    <!--      <groupId>org.springframework.cloud</groupId>-->
+    <!--      <artifactId>spring-cloud-starter-aws</artifactId>-->
+    <!--    </dependency>-->
+
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk</artifactId>
+      <version>1.11.762</version>
+    </dependency>
 
     <dependency>
       <groupId>io.springfox</groupId>
@@ -115,28 +151,16 @@
       <version>1.4</version>
     </dependency>
 
-    <dependency>
-      <groupId>com.amazonaws</groupId>
-      <artifactId>aws-java-sdk</artifactId>
-      <version>1.11.749</version>
-    </dependency>
-
+<!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
+<!--&lt;!&ndash;      <groupId>com.fasterxml.jackson.core</groupId>&ndash;&gt;-->
+<!--&lt;!&ndash;      <artifactId>jackson-core</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;      <version>2.5.2</version>&ndash;&gt;-->
+<!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
 <!--    <dependency>-->
-<!--      <groupId>org.springframework.cloud</groupId>-->
-<!--      <artifactId>spring-cloud-starter-aws</artifactId>-->
-<!--      <version>2.2.1.RELEASE</version>-->
+<!--      <groupId>com.fasterxml.jackson.core</groupId>-->
+<!--      <artifactId>jackson-databind</artifactId>-->
+<!--&lt;!&ndash;      <version>2.9.4</version>&ndash;&gt;-->
 <!--    </dependency>-->
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-      <version>${jackson.core}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>${jackson.core}</version>
-    </dependency>
 
     <dependency>
       <groupId>net.bramp.ffmpeg</groupId>
@@ -144,38 +168,23 @@
       <version>0.6.1</version>
     </dependency>
 
-<!--    <dependency>-->
-<!--      <groupId>org.elasticsearch</groupId>-->
-<!--      <artifactId>elasticsearch</artifactId>-->
-<!--      <version>7.6.2</version>-->
-<!--    </dependency>-->
-
-
-
-    <dependency>
-      <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-starter-openfeign</artifactId>
-      <version>2.2.2.RELEASE</version>
-    </dependency>
-
-<!--    <dependency>-->
-<!--      <groupId>org.springframework.cloud</groupId>-->
-<!--      <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>-->
-<!--      <version>2.2.2.RELEASE</version>-->
-<!--    </dependency>-->
-
     <!--test-->
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.junit.vintage</groupId>
+          <artifactId>junit-vintage-engine</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
-      <groupId>io.rest-assured</groupId>
-      <artifactId>spring-mock-mvc</artifactId>
-      <version>3.0.0</version>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-test</artifactId>
       <scope>test</scope>
     </dependency>
 

@@ -11,10 +11,7 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilde
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,8 +29,8 @@ public class SearchController {
     @Autowired
     private Mapper mapper;
 
-    @GetMapping("/songs")
-    public ResponseEntity<List<SongResponseDto>> searchSongs(@RequestParam String query){
+    @GetMapping("/songs/{keyword}")
+    public ResponseEntity<List<SongResponseDto>> searchSongs(@PathVariable String keyword){
 //        List<Song> entity = service.search(query);
 
         QueryBuilder queryBuilder = QueryBuilders.matchAllQuery();

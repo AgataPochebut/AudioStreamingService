@@ -11,13 +11,13 @@ import java.util.List;
 public interface GenericIndexClient<T,U> {
 
     @RequestMapping(value = "/index", method = RequestMethod.GET)
-    ResponseEntity<List<T>> readAll();
+    ResponseEntity<List<T>> find();
 
     @GetMapping(value = "/index/{id}")
-    public ResponseEntity<T> read(@PathVariable U id);
+    public ResponseEntity<T> find(@PathVariable U id);
 
     @PostMapping(value = "/index")
-    public ResponseEntity<T> create(@Valid @RequestBody T entity);
+    public ResponseEntity<T> save(@Valid @RequestBody T entity);
 
     @PutMapping(value = "/index/{id}")
     public ResponseEntity<T> update(@PathVariable U id, @Valid @RequestBody T entity);

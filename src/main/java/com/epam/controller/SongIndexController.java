@@ -1,7 +1,7 @@
 package com.epam.controller;
 
 import com.epam.model.Song;
-import com.epam.service.index.SongIndexService;
+import com.epam.service.index.SongRepositoryService;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,27 +17,27 @@ import java.util.List;
 public class SongIndexController {
 
     @Autowired
-    private SongIndexService service;
+    private SongRepositoryService service;
 
     @Autowired
     private Mapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<Song>> readAll() {
+    public ResponseEntity<List<Song>> find() {
         final List<Song> entity = service.findAll();
 
         return new ResponseEntity<>(entity, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Song> read(@PathVariable Long id) {
+    public ResponseEntity<Song> find(@PathVariable Long id) {
         Song entity = service.findById(id);
 
         return new ResponseEntity<>(entity, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Song> create(@Valid @RequestBody Song entity) throws Exception {
+    public ResponseEntity<Song> save(@Valid @RequestBody Song entity) throws Exception {
         service.save(entity);
 
         return new ResponseEntity<>(entity, HttpStatus.OK);

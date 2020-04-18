@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -19,20 +18,15 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
-//@EnableAsync
-@EnableJpaRepositories(
-        //basePackages = {"com.epam.jpa_repository"},
-        includeFilters = @ComponentScan.Filter(
+@EnableJpaRepositories(includeFilters = @ComponentScan.Filter(
                 type = FilterType.ASSIGNABLE_TYPE, classes = JpaRepository.class))
-@EnableElasticsearchRepositories(
-        //basePackages = {"com.epam.es_repository"},
-        includeFilters = @ComponentScan.Filter(
+@EnableElasticsearchRepositories(includeFilters = @ComponentScan.Filter(
                 type = FilterType.ASSIGNABLE_TYPE, classes = ElasticsearchRepository.class))
 @EnableFeignClients
 //@EnableDiscoveryClient
+//@EnableAsync
 public class AudioStreamingServiceApplication {
 
     public static void main(String[] args) { SpringApplication.run(AudioStreamingServiceApplication.class, args); }
@@ -64,6 +58,7 @@ public class AudioStreamingServiceApplication {
                     if (bean.getClass().isAnnotationPresent(StorageType.class)) {
                         storageServiceFactory.registerService(bean.getClass().getAnnotation(StorageType.class).value(), newbean);
                     }
+                    return newbean;
                 }
                 return bean;
             }
@@ -81,10 +76,10 @@ public class AudioStreamingServiceApplication {
 //        return executor;
 //    }
 
-    @LoadBalanced
-    @Bean
-    RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
+//    @LoadBalanced
+//    @Bean
+//    RestTemplate restTemplate() {
+//        return new RestTemplate();
+//    }
 
 }
