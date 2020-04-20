@@ -21,7 +21,7 @@ public class DedupingDecorator extends ResourceStorageDecorator {
 
     @Override
     public String test() {
-        return super.test() + "Deduping";
+        return super.test() + " Deduping";
     }
 
 }

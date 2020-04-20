@@ -32,7 +32,7 @@ public class DBInsertDecorator extends ResourceStorageDecorator {
 
     @Override
     public String test() {
-        return super.test() + "DBInsert";
+        return super.test() + " DBInsert";
     }
 
 }

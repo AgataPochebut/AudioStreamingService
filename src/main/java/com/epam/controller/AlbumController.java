@@ -25,7 +25,7 @@ public class AlbumController {
     private Mapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<AlbumResponseDto>> readAll() {
+    public ResponseEntity<List<AlbumResponseDto>> read() {
         final List<Album> entity = service.findAll();
 
         final List<AlbumResponseDto> responseDto = entity.stream()

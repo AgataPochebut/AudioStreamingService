@@ -4,5 +4,5 @@ import com.epam.model.Song;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SongESRepositoryService extends GenericESRepositoryService<Song, Long> implements SongRepositoryService {
+public class SongRepositoryServiceES extends GenericRepositoryServiceES<Song, Long> implements SongRepositoryService {
 }

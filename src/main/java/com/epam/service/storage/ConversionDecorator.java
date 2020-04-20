@@ -41,7 +41,7 @@ public class ConversionDecorator extends ResourceStorageDecorator {
 
     @Override
     public String test() {
-        return super.test() + "Conversion";
+        return super.test() + " Conversion";
     }
 
 }

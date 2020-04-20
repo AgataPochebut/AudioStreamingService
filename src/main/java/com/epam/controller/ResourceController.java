@@ -28,7 +28,7 @@
 //    private ResourceStorageFactory storageServiceFactory;
 //
 //    @GetMapping//(produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<List<ResourceResponseDto>> readAll() {
+//    public ResponseEntity<List<ResourceResponseDto>> read() {
 //        final List<Resource> entity = repositoryService.findAll();
 //
 //        final List<ResourceResponseDto> responseDto = entity.stream()

@@ -1,4 +1,4 @@
-package com.epam.feign;
+package com.epam.feign.index;
 
 import com.epam.model.Song;
 import org.springframework.cloud.openfeign.FeignClient;

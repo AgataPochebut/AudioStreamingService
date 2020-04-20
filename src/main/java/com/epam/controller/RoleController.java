@@ -25,7 +25,7 @@ public class RoleController {
     private Mapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<RoleResponseDto>> readAll() {
+    public ResponseEntity<List<RoleResponseDto>> read() {
         final List<Role> entity = service.findAll();
 
         final List<RoleResponseDto> responseDto = entity.stream()

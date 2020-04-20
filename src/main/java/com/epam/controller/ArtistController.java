@@ -25,7 +25,7 @@ public class ArtistController {
     private Mapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<ArtistResponseDto>> readAll() {
+    public ResponseEntity<List<ArtistResponseDto>> read() {
         final List<Artist> entity = service.findAll();
 
         final List<ArtistResponseDto> responseDto = entity.stream()

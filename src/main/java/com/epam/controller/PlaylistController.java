@@ -25,7 +25,7 @@ public class PlaylistController {
     private Mapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<PlaylistResponseDto>> readAll() {
+    public ResponseEntity<List<PlaylistResponseDto>> read() {
         final List<Playlist> entity = service.findAll();
 
         final List<PlaylistResponseDto> responseDto = entity.stream()

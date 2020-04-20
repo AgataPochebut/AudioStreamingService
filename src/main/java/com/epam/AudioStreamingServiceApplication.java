@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -24,6 +25,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
                 type = FilterType.ASSIGNABLE_TYPE, classes = JpaRepository.class))
 @EnableElasticsearchRepositories(includeFilters = @ComponentScan.Filter(
                 type = FilterType.ASSIGNABLE_TYPE, classes = ElasticsearchRepository.class))
+@EnableCaching
 @EnableFeignClients
 //@EnableDiscoveryClient
 //@EnableAsync
@@ -54,6 +56,7 @@ public class AudioStreamingServiceApplication {
                         newbean = new DBInsertDecorator(newbean, repositoryService);
                         newbean = new DedupingDecorator(newbean, repositoryService);
                         newbean = new ConversionDecorator(newbean, conversionService);
+                        newbean = new CacheDecorator(newbean);
                     }
                     if (bean.getClass().isAnnotationPresent(StorageType.class)) {
                         storageServiceFactory.registerService(bean.getClass().getAnnotation(StorageType.class).value(), newbean);

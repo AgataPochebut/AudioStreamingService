@@ -1,7 +1,7 @@
 package com.epam.controller;
 
 import com.epam.dto.response.SongResponseDto;
-import com.epam.feign.SongIndexClient;
+import com.epam.feign.index.SongIndexClient;
 import com.epam.model.Resource;
 import com.epam.model.Song;
 import com.epam.service.repository.SongRepositoryService;
@@ -41,7 +41,7 @@ public class SongController {
     private Mapper mapper;
 
     @GetMapping//(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<SongResponseDto>> readAll() throws Exception {
+    public ResponseEntity<List<SongResponseDto>> read() throws Exception {
         final List<Song> entity = repositoryService.findAll();
 
         final List<SongResponseDto> responseDto = entity.stream()
@@ -167,7 +167,7 @@ public class SongController {
 
         entity = repositoryService.save(entity);
 
-        searchClient.save(entity);
+        searchClient.create(entity);
 
         return entity;
     }

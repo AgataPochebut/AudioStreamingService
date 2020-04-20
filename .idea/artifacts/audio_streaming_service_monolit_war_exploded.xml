@@ -110,6 +110,15 @@
           <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpcore-nio:4.4.13" />
           <element id="library" level="project" name="Maven: org.elasticsearch.plugin:aggs-matrix-stats-client:6.8.6" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.10.2" />
+          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-data-redis:2.2.5.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.data:spring-data-redis:2.2.5.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.data:spring-data-keyvalue:2.2.5.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-oxm:5.2.4.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-context-support:5.2.4.RELEASE" />
+          <element id="library" level="project" name="Maven: io.lettuce:lettuce-core:5.2.2.RELEASE" />
+          <element id="library" level="project" name="Maven: io.netty:netty-common:4.1.45.Final" />
+          <element id="library" level="project" name="Maven: io.netty:netty-transport:4.1.45.Final" />
+          <element id="library" level="project" name="Maven: io.projectreactor:reactor-core:3.3.3.RELEASE" />
           <element id="library" level="project" name="Maven: mysql:mysql-connector-java:8.0.19" />
           <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-security:2.2.5.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-aop:5.2.4.RELEASE" />
@@ -420,8 +429,6 @@
           <element id="library" level="project" name="Maven: org.asynchttpclient:async-http-client-netty-utils:2.2.0" />
           <element id="library" level="project" name="Maven: io.netty:netty-buffer:4.1.45.Final" />
           <element id="library" level="project" name="Maven: io.netty:netty-codec-http:4.1.45.Final" />
-          <element id="library" level="project" name="Maven: io.netty:netty-common:4.1.45.Final" />
-          <element id="library" level="project" name="Maven: io.netty:netty-transport:4.1.45.Final" />
           <element id="library" level="project" name="Maven: io.netty:netty-codec:4.1.45.Final" />
           <element id="library" level="project" name="Maven: io.netty:netty-handler:4.1.45.Final" />
           <element id="library" level="project" name="Maven: io.netty:netty-codec-socks:4.1.45.Final" />

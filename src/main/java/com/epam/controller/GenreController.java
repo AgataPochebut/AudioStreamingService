@@ -25,7 +25,7 @@ public class GenreController {
     private Mapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<GenreResponseDto>> readAll() {
+    public ResponseEntity<List<GenreResponseDto>> read() {
         final List<Genre> entity = service.findAll();
 
         final List<GenreResponseDto> responseDto = entity.stream()

@@ -12,7 +12,7 @@ import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenericESRepositoryService<T,U> implements GenericRepositoryService<T, U> {
+public class GenericRepositoryServiceES<T,U> implements GenericRepositoryService<T, U> {
 
     @Autowired
     private GenericESRepository<T,U> repository;
@@ -50,7 +50,6 @@ public class GenericESRepositoryService<T,U> implements GenericRepositoryService
         repository.delete(entity);
     }
 
-
     @Override
     public List<T> search(String keyword){
 
@@ -66,19 +65,4 @@ public class GenericESRepositoryService<T,U> implements GenericRepositoryService
         repository.search(searchQuery).forEach(i -> list.add(i));
         return list;
     }
-
-
-//    @Autowired
-//    private ElasticsearchRestTemplate elasticsearchTemplate;
-//
-//    public List<T> search(String keyword){
-//
-//        QueryBuilder queryBuilder = QueryBuilders.matchAllQuery();
-//
-//        SearchQuery searchQuery = new NativeSearchQueryBuilder()
-//                .withQuery(queryBuilder)
-//                .build();
-//
-//        return elasticsearchTemplate.queryForList(searchQuery, T);
-//    }
 }

@@ -25,7 +25,7 @@ public class UserController {
     private Mapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<UserResponseDto>> readAll() {
+    public ResponseEntity<List<UserResponseDto>> read() {
         final List<User> entity = service.findAll();
 
         final List<UserResponseDto> responseDto = entity.stream()
