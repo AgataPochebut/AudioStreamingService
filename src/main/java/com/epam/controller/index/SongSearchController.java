@@ -5,7 +5,6 @@ import com.epam.model.Song;
 import com.epam.service.index.SongRepositoryService;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,8 +23,8 @@ public class SongSearchController {
     @Autowired
     private SongRepositoryService service;
 
-    @Autowired
-    private ElasticsearchTemplate elasticsearchTemplate;
+//    @Autowired
+//    private ElasticsearchRestTemplate elasticsearchTemplate;
 
     @Autowired
     private Mapper mapper;

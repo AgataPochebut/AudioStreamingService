@@ -2,6 +2,8 @@ package com.epam.service.repository;
 
 import com.epam.jpa_repository.GenericRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 
@@ -10,11 +12,13 @@ public class GenericServiceImpl<T,U> implements GenericService<T, U> {
     @Autowired
     private GenericRepository<T,U> repository;
 
+    @Cacheable(cacheNames = "cachetest")
     @Override
     public List<T> findAll() {
         return repository.findAll();
     }
 
+    @Cacheable(cacheNames = "cachetest")
     @Override
     public T findById(U id) {
         return repository.findById(id).orElseThrow(() -> new RuntimeException());
@@ -30,14 +34,17 @@ public class GenericServiceImpl<T,U> implements GenericService<T, U> {
         return repository.save(entity);
     }
 
+    @CacheEvict
+    @Override
+    public void delete(T entity) {
+        repository.delete(entity);
+    }
+
+    @CacheEvict
     @Override
     public void deleteById(U id) {
         if (repository.findById(id).isPresent()) {
             repository.deleteById(id);}
     }
 
-    @Override
-    public void delete(T entity) {
-        repository.delete(entity);
-    }
 }

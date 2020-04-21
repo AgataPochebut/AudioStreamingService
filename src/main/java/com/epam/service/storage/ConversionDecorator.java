@@ -15,8 +15,9 @@ public class ConversionDecorator extends ResourceStorageDecorator {
 
     @Override
     public Resource upload(org.springframework.core.io.Resource source) throws Exception {
-        if (FilenameUtils.getExtension(source.getFilename()).equals("wav"))
+        if (FilenameUtils.getExtension(source.getFilename()).equals("wav")) {
             source = conversionService.convert(source, "mp3");
+        }
         return super.upload(source);
 
 //        HttpHeaders headers = new HttpHeaders();

@@ -1,6 +1,5 @@
 package com.epam.feign.index;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +21,6 @@ public interface GenericIndexClient<T,U> {
     public ResponseEntity<T> update(@PathVariable U id, @Valid @RequestBody T entity);
 
     @DeleteMapping(value = "/{id}")
-    @ResponseStatus(value = HttpStatus.OK)
+//    @ResponseStatus(value = HttpStatus.OK)
     public void delete(@PathVariable U id);
 }

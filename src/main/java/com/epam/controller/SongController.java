@@ -9,6 +9,7 @@ import com.epam.service.storage.ResourceStorageFactory;
 import org.apache.commons.io.FilenameUtils;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -29,13 +30,16 @@ import java.util.zip.ZipInputStream;
 public class SongController {
 
     @Autowired
+    private CacheManager cacheManager;
+
+    @Autowired
     private SongRepositoryService repositoryService;
 
     @Autowired
     private ResourceStorageFactory storageServiceFactory;
 
     @Autowired
-    private SongIndexClient searchClient;
+    private SongIndexClient indexClient;
 
     @Autowired
     private Mapper mapper;
@@ -149,7 +153,7 @@ public class SongController {
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public void delete(@PathVariable Long id) {
-        searchClient.delete(id);
+        indexClient.delete(id);
 
         Song entity = repositoryService.findById(id);
         repositoryService.delete(entity);
@@ -167,7 +171,7 @@ public class SongController {
 
         entity = repositoryService.save(entity);
 
-        searchClient.create(entity);
+        indexClient.create(entity);
 
         return entity;
     }
