@@ -110,8 +110,15 @@
           <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpcore-nio:4.4.13" />
           <element id="library" level="project" name="Maven: org.elasticsearch.plugin:aggs-matrix-stats-client:6.8.6" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.10.2" />
-          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-cache:2.2.5.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-data-redis:2.2.5.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.data:spring-data-redis:2.2.5.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.data:spring-data-keyvalue:2.2.5.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-oxm:5.2.4.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-context-support:5.2.4.RELEASE" />
+          <element id="library" level="project" name="Maven: io.lettuce:lettuce-core:5.2.2.RELEASE" />
+          <element id="library" level="project" name="Maven: io.netty:netty-common:4.1.45.Final" />
+          <element id="library" level="project" name="Maven: io.netty:netty-transport:4.1.45.Final" />
+          <element id="library" level="project" name="Maven: io.projectreactor:reactor-core:3.3.3.RELEASE" />
           <element id="library" level="project" name="Maven: mysql:mysql-connector-java:8.0.19" />
           <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-security:2.2.5.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-aop:5.2.4.RELEASE" />
@@ -130,6 +137,15 @@
           <element id="library" level="project" name="Maven: com.nimbusds:nimbus-jose-jwt:7.8.1" />
           <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-oauth2-resource-server:2.2.5.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework.security:spring-security-oauth2-resource-server:5.2.2.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-activemq:2.2.5.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-jms:5.2.4.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-messaging:5.2.4.RELEASE" />
+          <element id="library" level="project" name="Maven: org.apache.activemq:activemq-broker:5.15.11" />
+          <element id="library" level="project" name="Maven: org.apache.activemq:activemq-client:5.15.11" />
+          <element id="library" level="project" name="Maven: org.fusesource.hawtbuf:hawtbuf:1.11" />
+          <element id="library" level="project" name="Maven: org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec:1.0.1" />
+          <element id="library" level="project" name="Maven: org.apache.activemq:activemq-openwire-legacy:5.15.11" />
+          <element id="library" level="project" name="Maven: jakarta.jms:jakarta.jms-api:2.0.3" />
           <element id="library" level="project" name="Maven: org.springframework.cloud:spring-cloud-starter-openfeign:2.2.2.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework.cloud:spring-cloud-starter:2.2.2.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework.cloud:spring-cloud-context:2.2.2.RELEASE" />
@@ -397,6 +413,9 @@
           <element id="library" level="project" name="Maven: io.springfox:springfox-swagger-ui:2.9.2" />
           <element id="library" level="project" name="Maven: io.springfox:springfox-bean-validators:2.9.2" />
           <element id="library" level="project" name="Maven: org.projectlombok:lombok:1.18.12" />
+          <element id="library" level="project" name="Maven: org.hibernate.validator:hibernate-validator:6.0.16.Final" />
+          <element id="library" level="project" name="Maven: javax.validation:validation-api:2.0.1.Final" />
+          <element id="library" level="project" name="Maven: org.jboss.logging:jboss-logging:3.4.1.Final" />
           <element id="library" level="project" name="Maven: ch.qos.logback:logback-classic:1.2.3" />
           <element id="library" level="project" name="Maven: ch.qos.logback:logback-core:1.2.3" />
           <element id="library" level="project" name="Maven: net.sf.dozer:dozer:5.5.1" />
@@ -404,9 +423,6 @@
           <element id="library" level="project" name="Maven: commons-collections:commons-collections:3.2.1" />
           <element id="library" level="project" name="Maven: org.apache.commons:commons-lang3:3.9" />
           <element id="library" level="project" name="Maven: org.slf4j:jcl-over-slf4j:1.7.30" />
-          <element id="library" level="project" name="Maven: org.hibernate.validator:hibernate-validator:6.0.16.Final" />
-          <element id="library" level="project" name="Maven: javax.validation:validation-api:2.0.1.Final" />
-          <element id="library" level="project" name="Maven: org.jboss.logging:jboss-logging:3.4.1.Final" />
           <element id="library" level="project" name="Maven: commons-io:commons-io:2.6" />
           <element id="library" level="project" name="Maven: commons-fileupload:commons-fileupload:1.4" />
           <element id="library" level="project" name="Maven: net.bramp.ffmpeg:ffmpeg:0.6.1" />
@@ -422,8 +438,6 @@
           <element id="library" level="project" name="Maven: org.asynchttpclient:async-http-client-netty-utils:2.2.0" />
           <element id="library" level="project" name="Maven: io.netty:netty-buffer:4.1.45.Final" />
           <element id="library" level="project" name="Maven: io.netty:netty-codec-http:4.1.45.Final" />
-          <element id="library" level="project" name="Maven: io.netty:netty-common:4.1.45.Final" />
-          <element id="library" level="project" name="Maven: io.netty:netty-transport:4.1.45.Final" />
           <element id="library" level="project" name="Maven: io.netty:netty-codec:4.1.45.Final" />
           <element id="library" level="project" name="Maven: io.netty:netty-handler:4.1.45.Final" />
           <element id="library" level="project" name="Maven: io.netty:netty-codec-socks:4.1.45.Final" />
