@@ -7,17 +7,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class ConversionDecorator extends ResourceStorageDecorator {
 
-    private ConversionClient conversionClient;
+    private ConversionClient conversionService;
 
-    public ConversionDecorator(ResourceStorageService storageService, ConversionClient conversionClient) {
+    public ConversionDecorator(ResourceStorageService storageService, ConversionClient conversionService) {
         super(storageService);
-        this.conversionClient = conversionClient;
+        this.conversionService = conversionService;
     }
 
     @Override
     public Resource upload(org.springframework.core.io.Resource source) throws Exception {
         if (FilenameUtils.getExtension(source.getFilename()).equals("wav")) {
-            source = conversionClient.convert((MultipartFile) source, "mp3").getBody();
+            source = conversionService.convert((MultipartFile) source, "mp3").getBody();
         }
         return super.upload(source);
     }

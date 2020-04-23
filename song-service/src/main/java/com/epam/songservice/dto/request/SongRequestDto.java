@@ -3,14 +3,13 @@ package com.epam.songservice.dto.request;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Set;
 
-@NoArgsConstructor
 @Data
+@NoArgsConstructor
 public class SongRequestDto {
 
     @NotNull

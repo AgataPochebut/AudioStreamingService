@@ -2,6 +2,7 @@ package com.epam.songservice;
 
 import com.epam.songservice.annotation.Decorate;
 import com.epam.songservice.annotation.StorageType;
+import com.epam.songservice.feign.conversion.ConversionClient;
 import com.epam.songservice.service.repository.ResourceRepositoryService;
 import com.epam.songservice.service.storage.*;
 import org.springframework.beans.BeansException;
@@ -11,6 +12,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -22,6 +24,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @EnableJpaRepositories(includeFilters = @ComponentScan.Filter(
         type = FilterType.ASSIGNABLE_TYPE, classes = JpaRepository.class))
+@EnableCaching
 @EnableFeignClients
 //@EnableDiscoveryClient
 public class SongServiceApplication extends SpringBootServletInitializer {
@@ -34,7 +37,7 @@ public class SongServiceApplication extends SpringBootServletInitializer {
     private ResourceRepositoryService repositoryService;
 
     @Autowired
-    private ConversionService conversionService;
+    private ConversionClient conversionService;
 
     @Autowired
     private ResourceStorageFactory storageServiceFactory;

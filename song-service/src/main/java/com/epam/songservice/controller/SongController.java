@@ -34,7 +34,7 @@ public class SongController {
     private ResourceStorageFactory storageServiceFactory;
 
     @Autowired
-    private SongIndexClient indexClient;
+    private SongIndexClient indexService;
 
     @Autowired
     private Mapper mapper;
@@ -151,7 +151,7 @@ public class SongController {
         Song entity = repositoryService.findById(id);
         Resource resource = entity.getResource();
 
-        indexClient.delete(id);
+//        indexService.delete(id);
 
         repositoryService.deleteById(id);
 
@@ -167,7 +167,7 @@ public class SongController {
 
         entity = repositoryService.save(entity);
 
-        indexClient.create(entity);
+//        indexService.create(entity);
 
         return entity;
     }
