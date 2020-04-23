@@ -7,8 +7,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-//@Entity
-//@Table(name="SONGS")
+@Entity
+@Table(name="SONGS")
 @NoArgsConstructor
 @Data
 public class Song {
