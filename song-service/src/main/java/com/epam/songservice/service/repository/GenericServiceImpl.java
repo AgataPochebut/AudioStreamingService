@@ -1,20 +1,24 @@
-package com.epam.songservice.service;
+package com.epam.songservice.service.repository;
 
+import com.epam.songservice.repository.GenericRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 
 public class GenericServiceImpl<T,U> implements GenericService<T, U> {
 
     @Autowired
-    private JpaRepository<T,U> repository;
+    private GenericRepository<T,U> repository;
 
+    @Cacheable(cacheNames = "cachetest")
     @Override
     public List<T> findAll() {
         return repository.findAll();
     }
 
+    @Cacheable(cacheNames = "cachetest")
     @Override
     public T findById(U id) {
         return repository.findById(id).orElseThrow(() -> new RuntimeException());
@@ -30,8 +34,17 @@ public class GenericServiceImpl<T,U> implements GenericService<T, U> {
         return repository.save(entity);
     }
 
+    @CacheEvict(cacheNames = "cachetest")
+    @Override
+    public void delete(T entity) {
+        repository.delete(entity);
+    }
+
+    @CacheEvict(cacheNames = "cachetest")
     @Override
     public void deleteById(U id) {
-        repository.deleteById(id);
+        if (repository.existsById(id)) {
+            repository.deleteById(id);}
     }
+
 }

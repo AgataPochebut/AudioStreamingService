@@ -1,5 +1,7 @@
 package com.epam.songservice.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,15 +11,13 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Set;
 
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name="ALBUMS")
-@NoArgsConstructor
-@Data
-public class Album {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Album extends BaseEntity {
 
     @NotNull
     @NotEmpty

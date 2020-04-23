@@ -1,9 +1,8 @@
 package com.epam.songservice.repository;
 
 import com.epam.songservice.model.Genre;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface GenreRepository extends JpaRepository<Genre, Long> {
+public interface GenreRepository extends GenericRepository<Genre, Long> {
 }
