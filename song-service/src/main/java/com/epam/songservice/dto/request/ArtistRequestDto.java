@@ -1,10 +1,14 @@
 package com.epam.songservice.dto.request;
 
-import javax.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
 
+@Data
+@NoArgsConstructor
 public class ArtistRequestDto {
 
     @NotNull
