@@ -11,23 +11,31 @@
     <groupId>com.epam</groupId>
     <artifactId>user-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
     <name>user-service</name>
     <description>user-service</description>
 
     <properties>
         <java.version>11</java.version>
-        <org.spring.core>5.2.4.RELEASE</org.spring.core>
-        <org.spring.data>2.1.8.RELEASE</org.spring.data>
-        <hibernate.core>5.4.2.Final</hibernate.core>
-        <javax.servlet>4.0.1</javax.servlet>
         <jackson.core>2.9.9</jackson.core>
         <dozer>5.5.1</dozer>
         <swagger>2.9.2</swagger>
-        <org.spring.security>5.3.0.RELEASE</org.spring.security>
         <logback>1.2.3</logback>
         <lombok>1.18.12</lombok>
         <hibernate.validator>6.0.16.Final</hibernate.validator>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Hoxton.SR3</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -39,12 +47,29 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        <!--    <dependency>-->
+        <!--      <groupId>org.springframework.boot</groupId>-->
+        <!--      <artifactId>spring-boot-starter-cache</artifactId>-->
+        <!--    </dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <!--    <dependency>-->
+        <!--      <groupId>org.springframework.cloud</groupId>-->
+        <!--      <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>-->
+        <!--    </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -80,15 +105,15 @@
         </dependency>
 
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok}</version>
-        </dependency>
-
-        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok}</version>
         </dependency>
 
         <dependency>
