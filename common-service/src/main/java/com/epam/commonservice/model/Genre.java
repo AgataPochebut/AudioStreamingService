@@ -1,4 +1,4 @@
-package com.epam.songservice.model;
+package com.epam.commonservice.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,10 +8,10 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name="STORAGES")
+@Table(name="GENRES")
 @NoArgsConstructor
 @Data
-public class Storage {
+public class Genre {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +20,6 @@ public class Storage {
     @NotNull
     @NotEmpty
     @Column(unique = true, nullable = false)
-    private String name;
+    String name;
 
 }

@@ -3,7 +3,7 @@ package com.epam.songservice.controller;
 import com.epam.songservice.dto.request.ArtistRequestDto;
 import com.epam.songservice.dto.response.ArtistResponseDto;
 import com.epam.songservice.model.Artist;
-import com.epam.songservice.service.ArtistService;
+import com.epam.songservice.service.repository.ArtistService;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ public class ArtistController {
     private Mapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<ArtistResponseDto>> readAll() {
+    public ResponseEntity<List<ArtistResponseDto>> read() {
         final List<Artist> entity = service.findAll();
 
         final List<ArtistResponseDto> responseDto = entity.stream()

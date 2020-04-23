@@ -3,7 +3,7 @@ package com.epam.songservice.controller;
 import com.epam.songservice.dto.request.GenreRequestDto;
 import com.epam.songservice.dto.response.GenreResponseDto;
 import com.epam.songservice.model.Genre;
-import com.epam.songservice.service.GenreService;
+import com.epam.songservice.service.repository.GenreService;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ public class GenreController {
     private Mapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<GenreResponseDto>> readAll() {
+    public ResponseEntity<List<GenreResponseDto>> read() {
         final List<Genre> entity = service.findAll();
 
         final List<GenreResponseDto> responseDto = entity.stream()

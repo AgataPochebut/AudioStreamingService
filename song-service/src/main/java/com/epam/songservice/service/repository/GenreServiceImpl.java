@@ -1,4 +1,4 @@
-package com.epam.songservice.service;
+package com.epam.songservice.service.repository;
 
 import com.epam.songservice.model.Genre;
 import org.springframework.stereotype.Service;

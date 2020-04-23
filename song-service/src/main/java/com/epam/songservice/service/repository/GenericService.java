@@ -1,4 +1,4 @@
-package com.epam.songservice.service;
+package com.epam.songservice.service.repository;
 
 import java.util.List;
 
@@ -13,5 +13,7 @@ public interface GenericService<T,U> {
     T update(T entity) throws Exception;
 
     void deleteById(U id);
+
+    void delete(T entity);
 
 }
