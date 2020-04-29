@@ -1,4 +1,4 @@
-package com.epam.audiostreamingservice.component;
+package com.epam.audiostreamingservice.component.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;

@@ -1,9 +1,9 @@
-package com.epam.audiostreamingservice.component;
+package com.epam.audiostreamingservice.component.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
@@ -11,15 +11,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * handle exc when no authentication
+ */
 @Component
 @Slf4j
-public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHandler {
+public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
 
     @Override
-    public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
+    public void commence(HttpServletRequest httpServletRequest, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
 
         String errorMessage = e.getMessage();
-        errorMessage="AuthenticationFailureHandler";
 
         log.error(errorMessage, e);
 //
@@ -28,6 +30,6 @@ public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHa
 //        response.setContentType("application/json");
 //        new ObjectMapper().writeValue(response.getWriter(), errorResponseDTO);
 
-        new ObjectMapper().writeValue(httpServletResponse.getWriter(), errorMessage);
+        new ObjectMapper().writeValue(response.getWriter(), errorMessage);
     }
 }

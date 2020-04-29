@@ -1,4 +1,4 @@
-package com.epam.audiostreamingservice.controller;
+package com.epam.audiostreamingservice.controller.security;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;

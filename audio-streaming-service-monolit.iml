@@ -83,6 +83,7 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-orm:5.2.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-tx:5.2.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-aspects:5.2.4.RELEASE" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: mysql:mysql-connector-java:8.0.19" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-data-elasticsearch:2.2.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-elasticsearch:3.2.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: joda-time:joda-time:2.10.5" level="project" />
@@ -136,7 +137,6 @@
     <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.45.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-transport:4.1.45.Final" level="project" />
     <orderEntry type="library" name="Maven: io.projectreactor:reactor-core:3.3.3.RELEASE" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: mysql:mysql-connector-java:8.0.19" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-security:2.2.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-aop:5.2.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-config:5.2.2.RELEASE" level="project" />

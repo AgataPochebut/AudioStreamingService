@@ -1,7 +1,8 @@
 package com.epam.audiostreamingservice;
 
-import com.epam.audiostreamingservice.annotation.*;
-import com.epam.audiostreamingservice.service.conversion.ConversionService;
+import com.epam.audiostreamingservice.annotation.Decorate;
+import com.epam.audiostreamingservice.annotation.StorageType;
+import com.epam.audiostreamingservice.feign.conversion.ConversionClient;
 import com.epam.audiostreamingservice.service.repository.ResourceRepositoryService;
 import com.epam.audiostreamingservice.service.storage.*;
 import org.springframework.beans.BeansException;
@@ -37,7 +38,7 @@ public class AudioStreamingServiceApplication {
     private ResourceRepositoryService repositoryService;
 
     @Autowired
-    private ConversionService conversionService;
+    private ConversionClient conversionService;
 
     @Autowired
     private ResourceStorageFactory storageServiceFactory;
@@ -58,7 +59,7 @@ public class AudioStreamingServiceApplication {
                         newbean = new IORetryDecorator(newbean);
                         newbean = new DBInsertDecorator(newbean, repositoryService);
                         newbean = new DedupingDecorator(newbean, repositoryService);
-//                        newbean = new ConversionDecorator(newbean, conversionService);
+                        newbean = new ConversionDecorator(newbean, conversionService);
                         newbean = new CacheDecorator(newbean, cacheManager);
                     }
                     if (bean.getClass().isAnnotationPresent(StorageType.class)) {
