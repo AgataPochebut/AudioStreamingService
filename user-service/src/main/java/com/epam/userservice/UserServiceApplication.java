@@ -1,13 +1,20 @@
 package com.epam.userservice;
 
-import com.epam.authservice.configuration.SecurityConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Import;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@Import({SecurityConfiguration.class})
-
+@EnableCaching
+@EnableJpaRepositories(includeFilters = @ComponentScan.Filter(
+        type = FilterType.ASSIGNABLE_TYPE, classes = JpaRepository.class))
+@EnableFeignClients
+//@EnableDiscoveryClient
 public class UserServiceApplication {
 
     public static void main(String[] args) {

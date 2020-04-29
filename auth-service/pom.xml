@@ -146,7 +146,6 @@
             <artifactId>hibernate-validator</artifactId>
             <version>${hibernate.validator}</version>
         </dependency>
-
     </dependencies>
 
     <build>

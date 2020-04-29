@@ -15,12 +15,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="PLAYLISTS")
-public class Playlist {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+@Table(name = "PLAYLISTS")
+public class Playlist extends BaseEntity {
 
     @NotNull
     @NotEmpty
