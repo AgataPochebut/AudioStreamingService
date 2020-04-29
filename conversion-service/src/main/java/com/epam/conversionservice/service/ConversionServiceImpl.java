@@ -51,4 +51,20 @@ public class ConversionServiceImpl implements ConversionService {
 
         return new FileSystemResource(convert(file, format));
     }
+
+    public String test(String name){
+        return "Hello, " + name;
+    }
+
+//    public byte[] convert(byte[] source, String format) throws IOException {
+//        if(FilenameUtils.getExtension(source.getFilename()).equals(format)) return source;
+//
+//        File file = new File(defaultBaseFolder, source.getFilename());
+//            file.getParentFile().mkdirs();
+//        FileUtils.writeByteArrayToFile(file, source);
+//        }
+//
+//        return new FileSystemResource(convert(file, format));
+//    }
+
 }

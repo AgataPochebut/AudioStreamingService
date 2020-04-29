@@ -1,20 +1,20 @@
 package com.epam.authservice.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 
-@Entity
-@Table
-@NoArgsConstructor
+@Builder
 @Data
-public class Role implements GrantedAuthority {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name="ROLES")
+public class Role extends BaseEntity implements GrantedAuthority {
 
     private String name;
 

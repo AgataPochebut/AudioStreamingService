@@ -22,7 +22,7 @@ public class ConversionController {
 
     // Accept 'application/octet-stream'
     // Content type 'multipart/form-data;boundary
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping//(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Resource> convert(@RequestParam("data") MultipartFile multipartFile, @RequestParam("format") String format) {
         Resource resource = null;
         try {

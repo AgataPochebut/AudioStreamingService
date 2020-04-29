@@ -1,12 +1,11 @@
 package com.epam.authservice.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import javax.persistence.*;
@@ -14,15 +13,13 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-@Entity
-@Table
-@NoArgsConstructor
+@Builder
 @Data
-public class User implements UserDetails, OAuth2User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name="USERS")
+public class User extends BaseEntity implements UserDetails, OAuth2User {
 
     private String name;
 

@@ -151,7 +151,7 @@ public class SongController {
         Song entity = repositoryService.findById(id);
         Resource resource = entity.getResource();
 
-//        indexService.delete(id);
+        indexService.delete(id);
 
         repositoryService.deleteById(id);
 
@@ -163,11 +163,12 @@ public class SongController {
 
         Song entity = Song.builder()
                 .resource(resource)
+                .title("test")
                 .build();
 
         entity = repositoryService.save(entity);
 
-//        indexService.create(entity);
+        indexService.create(entity);
 
         return entity;
     }

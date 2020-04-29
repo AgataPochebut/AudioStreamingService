@@ -20,6 +20,7 @@ public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHa
 
         String errorMessage = e.getMessage();
         errorMessage="AuthenticationFailureHandler";
+
         log.error(errorMessage, e);
 //
 //        ErrorResponseDto errorResponseDTO = new ErrorResponseDto(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage);

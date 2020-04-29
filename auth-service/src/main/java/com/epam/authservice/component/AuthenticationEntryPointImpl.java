@@ -19,10 +19,10 @@ import java.io.IOException;
 public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
 
     @Override
-    public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
+    public void commence(HttpServletRequest httpServletRequest, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
 
         String errorMessage = e.getMessage();
-        errorMessage="AuthenticationEntryPoint";
+
         log.error(errorMessage, e);
 //
 //        ErrorResponseDto errorResponseDTO = new ErrorResponseDto(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage);
@@ -30,9 +30,6 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
 //        response.setContentType("application/json");
 //        new ObjectMapper().writeValue(response.getWriter(), errorResponseDTO);
 
-        new ObjectMapper().writeValue(httpServletResponse.getWriter(), errorMessage);
-
-//        httpServletResponse.setHeader("Location", "http://localhost:8080/oauth2/authorization/google");
-//        httpServletResponse.setStatus(302);
+        new ObjectMapper().writeValue(response.getWriter(), errorMessage);
     }
 }

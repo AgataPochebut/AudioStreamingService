@@ -1,7 +1,7 @@
-activemq:
-  broker-url: tcp://localhost:61616
-  user: admin
-  password: admin
+server:
+  port: 8083
+  servlet:
+    context-path: /
 
 #feign:
 #  client:
@@ -11,11 +11,6 @@ activemq:
 #        readTimeout: 5000
 #        loggerLevel: basic
 #        requestInterceptors: com.baeldung.cloud.openfeign.JSONPlaceHolderInterceptor
-
-server:
-  port: 8083
-  servlet:
-    context-path: /
 
 s3:
   accessKey: AKIAJWCFBXUCARGICLTQ
@@ -30,6 +25,13 @@ conversion:
   defaultFolder: /Java/temp
 
 spring:
+  #  security:
+  #    oauth2:
+  #      client:
+  #        registration:
+  #          google:
+  #            client-id: 696075587142-1aoemai0pdblm3tdqqujkm9blo4h1eoi.apps.googleusercontent.com
+  #            client-secret: cYunCGV91wrv7KI2M3a31LxS
 
   datasource:
     url: jdbc:mysql://localhost:3306/song_service?useUnicode=true&serverTimezone=UTC
@@ -41,26 +43,19 @@ spring:
     show-sql: false
     hibernate.ddl-auto: update
 
-  #  elasticsearch:
-  #    rest:
-  #      uris:
-  #      username:
-  #      password:
-
-#  security:
-#    oauth2:
-#      client:
-#        registration:
-#          google:
-#            client-id: 696075587142-1aoemai0pdblm3tdqqujkm9blo4h1eoi.apps.googleusercontent.com
-#            client-secret: cYunCGV91wrv7KI2M3a31LxS
-
   servlet:
     multipart:
       enabled: true
       file-size-threshold: 2KB
       max-file-size: 500MB
       max-request-size: 500MB
+
+  activemq:
+    broker-url: tcp://localhost:61616
+    user: admin
+    password: admin
+    packages:
+      trust-all: true
 
 cloud:
   aws:

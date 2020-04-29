@@ -10,4 +10,6 @@ public interface ConversionService {
     File convert(File file, String format) throws IOException;
 
     Resource convert(Resource source, String format) throws IOException;
+
+    String test(String name);
 }

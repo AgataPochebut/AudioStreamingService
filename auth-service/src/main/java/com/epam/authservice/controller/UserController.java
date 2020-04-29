@@ -3,7 +3,7 @@ package com.epam.authservice.controller;
 import com.epam.authservice.dto.request.UserRequestDto;
 import com.epam.authservice.dto.response.UserResponseDto;
 import com.epam.authservice.model.User;
-import com.epam.authservice.service.UserService;
+import com.epam.authservice.service.repository.UserService;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
