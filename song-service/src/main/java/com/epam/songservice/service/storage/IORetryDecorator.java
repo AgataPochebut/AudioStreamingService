@@ -9,11 +9,11 @@ public class IORetryDecorator extends ResourceStorageDecorator {
     }
 
     @Override
-    public Resource upload(org.springframework.core.io.Resource source) throws Exception {
+    public Resource upload(org.springframework.core.io.Resource source, String name) throws Exception {
         Resource resource = null;
         while (resource==null || !super.exist(resource))
         {
-            resource = super.upload(source);
+            resource = super.upload(source, name);
         }
         return resource;
     }

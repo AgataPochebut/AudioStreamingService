@@ -35,7 +35,7 @@ public class ResourceStorageServiceS3 implements ResourceStorageService {
     @Autowired
     private ResourceRepositoryService repositoryService;
 
-    public Resource upload(org.springframework.core.io.Resource source) throws IOException {
+    public Resource upload(org.springframework.core.io.Resource source, String name) throws IOException {
         File dir = new File(defaultBaseFolder);
         if (!dir.exists()) dir.mkdir();
         File file = new File(defaultBaseFolder, source.getFilename());

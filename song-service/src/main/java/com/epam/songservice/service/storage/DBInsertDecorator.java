@@ -13,8 +13,8 @@ public class DBInsertDecorator extends ResourceStorageDecorator {
     }
 
     @Override
-    public Resource upload(org.springframework.core.io.Resource source) throws Exception {
-        Resource resource = super.upload(source);
+    public Resource upload(org.springframework.core.io.Resource source, String name) throws Exception {
+        Resource resource = super.upload(source, name);
         return repositoryService.save(resource);
     }
 

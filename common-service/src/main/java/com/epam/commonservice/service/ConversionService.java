@@ -1,4 +1,4 @@
-package com.epam.songservice.jms;
+package com.epam.commonservice.service;
 
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;

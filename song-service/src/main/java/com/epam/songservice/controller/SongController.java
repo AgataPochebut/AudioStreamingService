@@ -11,9 +11,15 @@ import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.*;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.ObjectMessage;
+import javax.jms.Session;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -35,6 +41,9 @@ public class SongController {
 
     @Autowired
     private SongIndexClient indexService;
+
+    @Autowired
+    private JmsTemplate jmsTemplate;
 
     @Autowired
     private Mapper mapper;
@@ -77,7 +86,7 @@ public class SongController {
     // Content type 'multipart/form-data;boundary
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<SongResponseDto> upload(@RequestParam("data") MultipartFile multipartFile) throws Exception {
-        Song entity = upload(multipartFile.getResource());
+        Song entity = upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
 
         final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -119,7 +128,7 @@ public class SongController {
                         }
                     }
 
-                    entity.add(upload(new FileSystemResource(file)));
+                    entity.add(upload(new FileSystemResource(file), file.getName()));
                 }
                 zin.closeEntry();
             }
@@ -151,15 +160,32 @@ public class SongController {
         Song entity = repositoryService.findById(id);
         Resource resource = entity.getResource();
 
-        indexService.delete(id);
+//        indexService.delete(id);
+
+        //sync mq
+        jmsTemplate.sendAndReceive("index.delete.song", new MessageCreator() {
+            @Override
+            public Message createMessage(Session session) throws JMSException {
+                try {
+                    ObjectMessage objectMessage = session.createObjectMessage();
+                    objectMessage.setObject(entity);
+
+                    objectMessage.setJMSCorrelationID("123");
+
+                    return objectMessage;
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+        });
 
         repositoryService.deleteById(id);
 
         storageServiceFactory.getService().delete(resource);
     }
 
-    private Song upload(org.springframework.core.io.Resource source) throws Exception {
-        Resource resource = storageServiceFactory.getService().upload(source);
+    private Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
+        Resource resource = storageServiceFactory.getService().upload(source, name);
 
         Song entity = Song.builder()
                 .resource(resource)
@@ -168,7 +194,25 @@ public class SongController {
 
         entity = repositoryService.save(entity);
 
-        indexService.create(entity);
+//        indexService.create(entity);
+
+        //sync mq
+        Song finalEntity = entity;
+        jmsTemplate.sendAndReceive("index.create.song", new MessageCreator() {
+            @Override
+            public Message createMessage(Session session) throws JMSException {
+                try {
+                    ObjectMessage objectMessage = session.createObjectMessage();
+                    objectMessage.setObject(finalEntity);
+
+                    objectMessage.setJMSCorrelationID("123");
+
+                    return objectMessage;
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+        });
 
         return entity;
     }

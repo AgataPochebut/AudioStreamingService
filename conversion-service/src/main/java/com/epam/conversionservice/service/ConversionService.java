@@ -11,5 +11,6 @@ public interface ConversionService {
 
     Resource convert(Resource source, String format) throws IOException;
 
-    String test(String name);
+    byte[] convert(byte [] source, String name, String format) throws IOException;
+
 }

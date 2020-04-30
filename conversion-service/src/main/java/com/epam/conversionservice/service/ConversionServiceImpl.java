@@ -43,7 +43,8 @@ public class ConversionServiceImpl implements ConversionService {
         File file;
         if (source.isFile()) {
             file = source.getFile();
-        } else {
+        }
+        else {
             file = new File(defaultBaseFolder, source.getFilename());
             file.getParentFile().mkdirs();
             FileCopyUtils.copy(source.getInputStream(), new FileOutputStream(file));
@@ -52,19 +53,15 @@ public class ConversionServiceImpl implements ConversionService {
         return new FileSystemResource(convert(file, format));
     }
 
-    public String test(String name){
-        return "Hello, " + name;
-    }
+    @Override
+    public byte[] convert(byte[] source, String name, String format) throws IOException {
+        if (FilenameUtils.getExtension(name).equals(format)) return source;
 
-//    public byte[] convert(byte[] source, String format) throws IOException {
-//        if(FilenameUtils.getExtension(source.getFilename()).equals(format)) return source;
-//
-//        File file = new File(defaultBaseFolder, source.getFilename());
-//            file.getParentFile().mkdirs();
-//        FileUtils.writeByteArrayToFile(file, source);
-//        }
-//
-//        return new FileSystemResource(convert(file, format));
-//    }
+        File file = new File(defaultBaseFolder, name);
+        file.getParentFile().mkdirs();
+        FileCopyUtils.copy(source, file);
+
+        return FileCopyUtils.copyToByteArray(convert(file, format));
+    }
 
 }

@@ -11,8 +11,8 @@ public abstract class ResourceStorageDecorator implements ResourceStorageService
     }
 
     @Override
-    public Resource upload(org.springframework.core.io.Resource source) throws Exception {
-        return storageService.upload(source);
+    public Resource upload(org.springframework.core.io.Resource source, String name) throws Exception {
+        return storageService.upload(source, name);
     }
 
     @Override

@@ -2,38 +2,93 @@ package com.epam.songservice.service.storage;
 
 import com.epam.songservice.feign.conversion.ConversionClient;
 import com.epam.songservice.model.Resource;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
+import org.springframework.web.client.RestTemplate;
+
+import javax.jms.BytesMessage;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
+import java.io.InputStream;
 
 public class ConversionDecorator extends ResourceStorageDecorator {
 
     private ConversionClient conversionService;
+
+    private RestTemplate restTemplate;
+
+    private JmsTemplate jmsTemplate;
 
     public ConversionDecorator(ResourceStorageService storageService, ConversionClient conversionService) {
         super(storageService);
         this.conversionService = conversionService;
     }
 
+    public ConversionDecorator(ResourceStorageService storageService, JmsTemplate jmsTemplate) {
+        super(storageService);
+        this.jmsTemplate = jmsTemplate;
+    }
+
     @Override
-    public Resource upload(org.springframework.core.io.Resource source) throws Exception {
-        if (FilenameUtils.getExtension(source.getFilename()).equals("wav")) {
-            //todo
-            FileItem fileItem = new DiskFileItemFactory().createItem("file",
-                    "text/plain", false, source.getFilename());
+    public Resource upload(final org.springframework.core.io.Resource source, String name) throws Exception {
+        String format = "mp3";
 
-//            new DiskFileItem(
-//                    "data",
-//                    "text/plain",
-//                    false,
-//                    source.getFilename(),
-//                    (int) source.contentLength(),
-//                    file.getParentFile());
+        if (!FilenameUtils.getExtension(source.getFilename()).equals(format)) {
 
-            source = conversionService.convert(new CommonsMultipartFile(fileItem), "mp3").getBody();
+////            todo sync feign
+//            FileItem fileItem = new DiskFileItemFactory().createItem("file",
+//                    "text/plain", false, source.getFilename());
+//
+////            new DiskFileItem(
+////                    "data",
+////                    "text/plain",
+////                    false,
+////                    source.getFilename(),
+////                    (int) source.contentLength(),
+////                    file.getParentFile());
+//
+//            source = conversionService.convert(new CommonsMultipartFile(fileItem), "mp3").getBody();
+
+            //sync mq
+            BytesMessage message = (BytesMessage) jmsTemplate.sendAndReceive("conversion.in", new MessageCreator() {
+                @Override
+                public Message createMessage(Session session) throws JMSException {
+                    try {
+                        BytesMessage bytesMessage = session.createBytesMessage();
+                        InputStream fileInputStream = source.getInputStream();
+                        final int BUFLEN = 64;
+                        byte[] buf1 = new byte[BUFLEN];
+                        int bytes_read = 0;
+                        while ((bytes_read = fileInputStream.read(buf1)) != -1) {
+                            bytesMessage.writeBytes(buf1, 0, bytes_read);
+                        }
+                        fileInputStream.close();
+
+                        bytesMessage.setStringProperty("name", name);
+                        bytesMessage.setStringProperty("format", format);
+
+                        bytesMessage.setJMSCorrelationID("123");
+
+                        return bytesMessage;
+                    } catch (Exception e) {
+                        return null;
+                    }
+
+                }
+            });
+
+            byte[] data = new byte[(int) message.getBodyLength()];
+            message.readBytes(data);
+
+            org.springframework.core.io.Resource newsource = new ByteArrayResource(data);
+            String newname = message.getStringProperty("name");
+
+            return super.upload(newsource, newname);
         }
-        return super.upload(source);
+        return super.upload(source, name);
     }
 
     @Override

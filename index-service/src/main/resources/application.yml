@@ -1,7 +1,7 @@
-activemq:
-  broker-url: tcp://localhost:61616
-  user: admin
-  password: admin
+server:
+  port: 8085
+  servlet:
+    context-path: /
 
 #feign:
 #  client:
@@ -12,18 +12,7 @@ activemq:
 #        loggerLevel: basic
 #        requestInterceptors: com.baeldung.cloud.openfeign.JSONPlaceHolderInterceptor
 
-server:
-  port: 8085
-  servlet:
-    context-path: /
-
 spring:
-#  elasticsearch:
-#    rest:
-#      uris:
-#      username:
-#      password:
-
 #  security:
 #    oauth2:
 #      client:
@@ -38,3 +27,16 @@ spring:
       file-size-threshold: 2KB
       max-file-size: 500MB
       max-request-size: 500MB
+
+  activemq:
+    broker-url: tcp://localhost:61616
+    user: admin
+    password: admin
+    packages:
+      trust-all: true
+
+#  elasticsearch:
+#    rest:
+#      uris:
+#      username:
+#      password:

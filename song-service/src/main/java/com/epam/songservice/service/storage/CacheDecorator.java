@@ -15,9 +15,9 @@ public class CacheDecorator extends ResourceStorageDecorator {
 
     @Override
 //    @CachePut(cacheNames = "cachetest")
-    public Resource upload(org.springframework.core.io.Resource source) throws Exception {
+    public Resource upload(org.springframework.core.io.Resource source, String name) throws Exception {
 //        return super.upload(source);
-        Resource resource = super.upload(source);
+        Resource resource = super.upload(source, name);
         cacheManager.getCache("test").put(source, resource);
         return resource;
     }

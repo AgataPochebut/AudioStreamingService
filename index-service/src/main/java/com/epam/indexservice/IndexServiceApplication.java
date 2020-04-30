@@ -7,12 +7,14 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
+import org.springframework.jms.annotation.EnableJms;
 
 @SpringBootApplication
 @EnableElasticsearchRepositories(includeFilters = @ComponentScan.Filter(
 		type = FilterType.ASSIGNABLE_TYPE, classes = ElasticsearchRepository.class))
 @EnableFeignClients
 //@EnableDiscoveryClient
+@EnableJms
 public class IndexServiceApplication {
 
 	public static void main(String[] args) {
