@@ -57,6 +57,7 @@ spring:
     packages:
       trust-all: true
 
+
 cloud:
   aws:
     region: eu-west-1
