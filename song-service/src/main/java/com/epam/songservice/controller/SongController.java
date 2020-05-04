@@ -5,21 +5,16 @@ import com.epam.songservice.feign.index.SongIndexClient;
 import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
 import com.epam.songservice.service.repository.SongRepositoryService;
-import com.epam.songservice.service.storage.ResourceStorageFactory;
+import com.epam.songservice.service.storage.StorageService;
 import org.apache.commons.io.FilenameUtils;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.*;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.core.MessageCreator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.ObjectMessage;
-import javax.jms.Session;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -33,11 +28,14 @@ import java.util.zip.ZipInputStream;
 @RequestMapping("/songs")
 public class SongController {
 
-    @Autowired
-    private SongRepositoryService repositoryService;
+//    @Autowired
+//    private ResourceStorageFactory storageServiceFactory;
 
     @Autowired
-    private ResourceStorageFactory storageServiceFactory;
+    private StorageService<Song, Long> storageService;
+
+    @Autowired
+    private SongRepositoryService repositoryService;
 
     @Autowired
     private SongIndexClient indexService;
@@ -70,8 +68,10 @@ public class SongController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<org.springframework.core.io.Resource> download(@PathVariable Long id) throws Exception {
         Song entity = repositoryService.findById(id);
+        org.springframework.core.io.Resource source = storageService.download(entity);
+//        org.springframework.core.io.Resource source = storageServiceFactory.getService().download(resource);
+
         Resource resource = entity.getResource();
-        org.springframework.core.io.Resource source = storageServiceFactory.getService().download(resource);
 
         HttpHeaders headers = new HttpHeaders();
         ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
@@ -158,61 +158,75 @@ public class SongController {
     @ResponseStatus(value = HttpStatus.OK)
     public void delete(@PathVariable Long id) {
         Song entity = repositoryService.findById(id);
-        Resource resource = entity.getResource();
 
-//        indexService.delete(id);
+        indexService.delete(id);
 
-        //sync mq
-        jmsTemplate.sendAndReceive("index.delete.song", new MessageCreator() {
-            @Override
-            public Message createMessage(Session session) throws JMSException {
-                try {
-                    ObjectMessage objectMessage = session.createObjectMessage();
-                    objectMessage.setObject(entity);
-
-                    objectMessage.setJMSCorrelationID("123");
-
-                    return objectMessage;
-                } catch (Exception e) {
-                    return null;
-                }
-            }
-        });
+//        //sync mq
+//        jmsTemplate.sendAndReceive("index.delete.song", new MessageCreator() {
+//            @Override
+//            public Message createMessage(Session session) throws JMSException {
+//                try {
+////                    ObjectMessage objectMessage = session.createObjectMessage();
+////                    objectMessage.setObject(entity);
+//
+//                    ObjectMapper Obj = new ObjectMapper();
+//                    String jsonStr = Obj.writeValueAsString(entity);
+//
+//                    TextMessage objectMessage = session.createTextMessage();
+//                    objectMessage.setText(jsonStr);
+//
+//                    objectMessage.setJMSCorrelationID("123");
+//
+//                    return objectMessage;
+//                } catch (Exception e) {
+//                    return null;
+//                }
+//            }
+//        });
 
         repositoryService.deleteById(id);
 
-        storageServiceFactory.getService().delete(resource);
+//        Resource resource = entity.getResource();
+//        storageServiceFactory.getService().delete(resource);
+        storageService.delete(entity);
     }
 
     private Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
-        Resource resource = storageServiceFactory.getService().upload(source, name);
-
-        Song entity = Song.builder()
-                .resource(resource)
-                .title("test")
-                .build();
+//        Resource resource = storageServiceFactory.getService().upload(source, name);
+//
+//        Song entity = Song.builder()
+//                .resource(resource)
+//                .title("test")
+//                .build();
+        Song entity = storageService.upload(source, name);
 
         entity = repositoryService.save(entity);
 
 //        indexService.create(entity);
 
-        //sync mq
-        Song finalEntity = entity;
-        jmsTemplate.sendAndReceive("index.create.song", new MessageCreator() {
-            @Override
-            public Message createMessage(Session session) throws JMSException {
-                try {
-                    ObjectMessage objectMessage = session.createObjectMessage();
-                    objectMessage.setObject(finalEntity);
-
-                    objectMessage.setJMSCorrelationID("123");
-
-                    return objectMessage;
-                } catch (Exception e) {
-                    return null;
-                }
-            }
-        });
+//        //sync mq
+//        Song finalEntity = entity;
+//        jmsTemplate.sendAndReceive("index.create.song", new MessageCreator() {
+//            @Override
+//            public Message createMessage(Session session) throws JMSException {
+//                try {
+////                    ObjectMessage objectMessage = session.createObjectMessage();
+////                    objectMessage.setObject(finalEntity);
+//
+//                    ObjectMapper Obj = new ObjectMapper();
+//                    String jsonStr = Obj.writeValueAsString(finalEntity);
+//
+//                    TextMessage objectMessage = session.createTextMessage();
+//                    objectMessage.setText(jsonStr);
+//
+//                    objectMessage.setJMSCorrelationID("123");
+//
+//                    return objectMessage;
+//                } catch (Exception e) {
+//                    return null;
+//                }
+//            }
+//        });
 
         return entity;
     }

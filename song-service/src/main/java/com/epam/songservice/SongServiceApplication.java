@@ -16,6 +16,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jms.annotation.EnableJms;
@@ -80,9 +81,29 @@ public class SongServiceApplication extends SpringBootServletInitializer {
                     }
                     return newbean;
                 }
+//                else if (bean instanceof SongStorageService){
+//                    SongStorageService newbean = (SongStorageService) bean;
+//                    {
+//                        newbean = new IORetryDecorator(newbean);
+//                        newbean = new DBInsertDecorator(newbean, repositoryService);
+//                        newbean = new DedupingDecorator(newbean, repositoryService);
+//                        newbean = new ConversionDecorator(newbean, jmsTemplate);
+//                        newbean = new CacheDecorator(newbean, cacheManager);
+//                    }
+//                    if (bean.getClass().isAnnotationPresent(StorageType.class)) {
+//                        storageServiceFactory.registerService(bean.getClass().getAnnotation(StorageType.class).value(), newbean);
+//                    }
+//                    return newbean;
+//                }
                 return bean;
             }
         };
+    }
+
+    @Bean
+    @Primary
+    ResourceStorageService resourceStorageService() {
+        return storageServiceFactory.getService();
     }
 
 //    @Bean
