@@ -5,20 +5,26 @@ import com.epam.songservice.feign.index.SongIndexClient;
 import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
 import com.epam.songservice.service.repository.SongRepositoryService;
-import com.epam.songservice.service.storage.StorageService;
+import com.epam.songservice.service.storage.SongStorageService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FilenameUtils;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.*;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -28,11 +34,8 @@ import java.util.zip.ZipInputStream;
 @RequestMapping("/songs")
 public class SongController {
 
-//    @Autowired
-//    private ResourceStorageFactory storageServiceFactory;
-
     @Autowired
-    private StorageService<Song, Long> storageService;
+    private SongStorageService storageService;
 
     @Autowired
     private SongRepositoryService repositoryService;
@@ -69,7 +72,6 @@ public class SongController {
     public ResponseEntity<org.springframework.core.io.Resource> download(@PathVariable Long id) throws Exception {
         Song entity = repositoryService.findById(id);
         org.springframework.core.io.Resource source = storageService.download(entity);
-//        org.springframework.core.io.Resource source = storageServiceFactory.getService().download(resource);
 
         Resource resource = entity.getResource();
 
@@ -159,75 +161,66 @@ public class SongController {
     public void delete(@PathVariable Long id) {
         Song entity = repositoryService.findById(id);
 
-        indexService.delete(id);
-
-//        //sync mq
-//        jmsTemplate.sendAndReceive("index.delete.song", new MessageCreator() {
-//            @Override
-//            public Message createMessage(Session session) throws JMSException {
-//                try {
-////                    ObjectMessage objectMessage = session.createObjectMessage();
-////                    objectMessage.setObject(entity);
-//
-//                    ObjectMapper Obj = new ObjectMapper();
-//                    String jsonStr = Obj.writeValueAsString(entity);
-//
-//                    TextMessage objectMessage = session.createTextMessage();
-//                    objectMessage.setText(jsonStr);
-//
-//                    objectMessage.setJMSCorrelationID("123");
-//
-//                    return objectMessage;
-//                } catch (Exception e) {
-//                    return null;
-//                }
-//            }
-//        });
+//        indexService.delete(id);
+        deleteIndex(entity);
 
         repositoryService.deleteById(id);
 
-//        Resource resource = entity.getResource();
-//        storageServiceFactory.getService().delete(resource);
         storageService.delete(entity);
     }
 
     private Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
-//        Resource resource = storageServiceFactory.getService().upload(source, name);
-//
-//        Song entity = Song.builder()
-//                .resource(resource)
-//                .title("test")
-//                .build();
         Song entity = storageService.upload(source, name);
-
         entity = repositoryService.save(entity);
 
 //        indexService.create(entity);
-
-//        //sync mq
-//        Song finalEntity = entity;
-//        jmsTemplate.sendAndReceive("index.create.song", new MessageCreator() {
-//            @Override
-//            public Message createMessage(Session session) throws JMSException {
-//                try {
-////                    ObjectMessage objectMessage = session.createObjectMessage();
-////                    objectMessage.setObject(finalEntity);
-//
-//                    ObjectMapper Obj = new ObjectMapper();
-//                    String jsonStr = Obj.writeValueAsString(finalEntity);
-//
-//                    TextMessage objectMessage = session.createTextMessage();
-//                    objectMessage.setText(jsonStr);
-//
-//                    objectMessage.setJMSCorrelationID("123");
-//
-//                    return objectMessage;
-//                } catch (Exception e) {
-//                    return null;
-//                }
-//            }
-//        });
+        createIndex(entity);
 
         return entity;
+    }
+
+    private void createIndex(final Song entity){
+        //sync mq
+        jmsTemplate.sendAndReceive("index.create", new MessageCreator() {
+            @Override
+            public Message createMessage(Session session) throws JMSException {
+                try {
+                    Message message = session.createMessage();
+
+                    message.setObjectProperty("type", "songs");
+                    message.setObjectProperty("id", entity.getId());
+
+                    ObjectMapper Obj = new ObjectMapper();
+//                    message.setObjectProperty("source", Obj.writeValueAsString(entity));
+                    message.setObjectProperty("source", Obj.convertValue(entity, Map.class));
+
+                    message.setJMSCorrelationID("123");
+                    return message;
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+        });
+    }
+
+    private void deleteIndex(final Song entity){
+        //sync mq
+        jmsTemplate.sendAndReceive("index.delete", new MessageCreator() {
+            @Override
+            public Message createMessage(Session session) throws JMSException {
+                try {
+                    Message message = session.createMessage();
+
+                    message.setObjectProperty("type", "songs");
+                    message.setObjectProperty("id", entity.getId());
+
+                    message.setJMSCorrelationID("123");
+                    return message;
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+        });
+
     }
 }

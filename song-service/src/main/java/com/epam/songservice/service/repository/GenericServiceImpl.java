@@ -3,6 +3,7 @@ package com.epam.songservice.service.repository;
 import com.epam.songservice.repository.GenericRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
@@ -24,11 +25,13 @@ public class GenericServiceImpl<T,U> implements GenericService<T, U> {
         return repository.findById(id).orElseThrow(() -> new RuntimeException());
     }
 
+    @CachePut(cacheNames = "cachetest")
     @Override
     public T save(T entity) throws Exception {
         return repository.save(entity);
     }
 
+    @CachePut(cacheNames = "cachetest")
     @Override
     public T update(T entity) throws Exception {
         return repository.save(entity);

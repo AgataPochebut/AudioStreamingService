@@ -1,19 +1,24 @@
-package com.epam.indexservice.dto.request;
+package com.epam.commonservice.dto.request;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.Set;
 
 @Data
 @NoArgsConstructor
-public class ArtistRequestDto {
+public class SongRequestDto {
 
     @NotNull
     @NotEmpty
-    private String name;
+    private String title;
+
+    @NotNull
+    @NotEmpty
+    private Date year;
 
     @NotNull
     @NotEmpty
@@ -21,6 +26,10 @@ public class ArtistRequestDto {
 
     @NotNull
     @NotEmpty
-    private Set<Long> genres;
+    private Long album;
+
+    @NotNull
+    @NotEmpty
+    private Long storage;
 
 }

@@ -1,4 +1,4 @@
-package com.epam.indexservice.dto.request;
+package com.epam.commonservice.dto.request;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,10 +8,10 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
-public class GenreRequestDto {
+public class ResourceRequestDto {
 
     @NotNull
     @NotEmpty
-    String name;
+    private String path;
 
 }
