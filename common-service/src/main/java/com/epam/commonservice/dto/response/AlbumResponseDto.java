@@ -1,4 +1,4 @@
-package com.epam.indexservice.dto.response;
+package com.epam.commonservice.dto.response;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +8,7 @@ import java.util.Set;
 
 @Data
 @NoArgsConstructor
-public class SongResponseDto {
+public class AlbumResponseDto {
 
     private Long id;
 
@@ -18,7 +18,6 @@ public class SongResponseDto {
 
     private Set<String> notes;
 
-    private AlbumResponseDto album;
+    private Set<ArtistResponseDto> artists;
 
-    private ResourceResponseDto resource;
 }

@@ -1,6 +1,5 @@
-package com.epam.indexservice.dto.request;
+package com.epam.commonservice.model;
 
-import com.epam.indexservice.model.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +11,9 @@ import javax.persistence.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResourceRequestDto extends BaseEntity {
+@Entity
+@Table(name="RESOURCES")
+public class Resource extends BaseEntity {
 
     private String name;
 
@@ -24,5 +25,8 @@ public class ResourceRequestDto extends BaseEntity {
 
     @Column(unique = true)
     private String checksum;
+
+    @Enumerated(EnumType.STRING)
+    private StorageTypes storageType;
 
 }

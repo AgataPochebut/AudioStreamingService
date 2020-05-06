@@ -66,3 +66,5 @@ cloud:
       accessKey: AKIAJWCFBXUCARGICLTQ
       secretKey: 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
 
+logging:
+  file: /Java/logs/song-service.log

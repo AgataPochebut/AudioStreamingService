@@ -1,15 +1,19 @@
 package com.epam.indexservice.jms;
 
-import com.epam.indexservice.model.Song;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.delete.DeleteRequest;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.jms.JMSException;
-import javax.jms.ObjectMessage;
+import javax.jms.Message;
+import java.io.IOException;
 
 @Component
 @Slf4j
@@ -19,32 +23,25 @@ public class Consumer {
     private JmsTemplate jmsTemplate;
 
     @Autowired
-    private ElasticsearchRestTemplate elasticsearchTemplate;
+    private RestHighLevelClient elasticsearchClient;
 
-    @JmsListener(destination = "index.in")
-    public void listenIndex(ObjectMessage message) throws JMSException, ClassNotFoundException {
-        elasticsearchTemplate.putMapping(Class.forName(message.getStringProperty("class")), message.getObject());
+    @JmsListener(destination = "index.create")
+    public void listenIndex(Message message) throws IOException, JMSException {
+        IndexRequest request = new IndexRequest();
+        request.index("service");
+        request.type(message.getStringProperty("type"));
+        request.id(message.getStringProperty("id"));
+        request.source(message.getObjectProperty("source"), XContentType.JSON);
+        elasticsearchClient.index(request, RequestOptions.DEFAULT);
     }
 
-    @JmsListener(destination = "index.create.song")
-    public void listenIndex(Song message) throws JMSException, ClassNotFoundException {
-        elasticsearchTemplate.putMapping(Song.class, message);
+    @JmsListener(destination = "index.delete")
+    public void listenDelete(Message message) throws IOException, JMSException {
+        DeleteRequest request = new DeleteRequest();
+        request.index("service");
+        request.type(message.getStringProperty("type"));
+        request.id(message.getStringProperty("id"));
+        elasticsearchClient.delete(request, RequestOptions.DEFAULT);
     }
 
-    @JmsListener(destination = "index.delete.song")
-    public void listenDelete(Song message){
-        elasticsearchTemplate.delete(Song.class, message.getId().toString());
-    }
-
-//    @JmsListener(destination = "index.search.song")
-//    public void listenDelete(String message){
-//
-//        QueryBuilder queryBuilder = QueryBuilders.matchAllQuery();
-//
-//        SearchQuery searchQuery = new NativeSearchQueryBuilder()
-//                .withQuery(queryBuilder)
-//                .build();
-//
-//        (List<T>) elasticsearchTemplate.queryForList(searchQuery, Song.class);
-//    }
 }

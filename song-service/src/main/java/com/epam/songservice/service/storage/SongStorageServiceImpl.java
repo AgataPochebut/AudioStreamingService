@@ -7,20 +7,24 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class SongStorageServiceImpl implements StorageService<Song, Long> {
+public class SongStorageServiceImpl implements SongStorageService {
+
 
     @Autowired
-    private ResourceStorageService storageService;
+    private ResourceStorageFactory resourceStorageFactory;
+
+//    @Autowired
+//    private ResourceStorageService storageService;
 
     @Override
     public org.springframework.core.io.Resource download(Song entity) throws Exception {
         Resource resource = entity.getResource();
-        return storageService.download(resource);
+        return resourceStorageFactory.getService().download(resource);
     }
 
     @Override
     public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
-        Resource resource = storageService.upload(source, name);
+        Resource resource = resourceStorageFactory.getService().upload(source, name);
         return Song.builder()
                 .resource(resource)
                 .title("test")
@@ -30,13 +34,13 @@ public class SongStorageServiceImpl implements StorageService<Song, Long> {
     @Override
     public void delete(Song entity) {
         Resource resource = entity.getResource();
-        storageService.delete(resource);
+        resourceStorageFactory.getService().delete(resource);
     }
 
     @Override
     public boolean exist(Song entity) {
         Resource resource = entity.getResource();
-        return storageService.exist(resource);
+        return resourceStorageFactory.getService().exist(resource);
     }
 
     @Override
