@@ -23,7 +23,7 @@ public class User extends BaseEntity implements UserDetails, OAuth2User {
 
     private String name;
 
-    private String email;
+    private String account;
 
     @ManyToMany
     @JoinTable(name = "User_Role",

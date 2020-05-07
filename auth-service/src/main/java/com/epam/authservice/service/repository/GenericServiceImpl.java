@@ -12,13 +12,13 @@ public class GenericServiceImpl<T,U> implements GenericService<T, U> {
     @Autowired
     private GenericRepository<T,U> repository;
 
-    @Cacheable(cacheNames = "cachetest")
+    @Cacheable(cacheNames = "auth-service-cache")
     @Override
     public List<T> findAll() {
         return repository.findAll();
     }
 
-    @Cacheable(cacheNames = "cachetest")
+    @Cacheable(cacheNames = "auth-service-cache")
     @Override
     public T findById(U id) {
         return repository.findById(id).orElseThrow(() -> new RuntimeException());
@@ -34,13 +34,13 @@ public class GenericServiceImpl<T,U> implements GenericService<T, U> {
         return repository.save(entity);
     }
 
-    @CacheEvict(cacheNames = "cachetest")
+    @CacheEvict(cacheNames = "auth-service-cache")
     @Override
     public void delete(T entity) {
         repository.delete(entity);
     }
 
-    @CacheEvict(cacheNames = "cachetest")
+    @CacheEvict(cacheNames = "auth-service-cache")
     @Override
     public void deleteById(U id) {
         if (repository.existsById(id)) {
