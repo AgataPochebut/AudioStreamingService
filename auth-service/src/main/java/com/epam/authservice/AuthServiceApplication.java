@@ -16,7 +16,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         type = FilterType.ASSIGNABLE_TYPE, classes = JpaRepository.class))
 @EnableFeignClients
 //@EnableDiscoveryClient
-@EnableResourceServer
+//@EnableResourceServer
 public class AuthServiceApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {

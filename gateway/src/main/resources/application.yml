@@ -2,16 +2,7 @@
 #  port: 8080
 #  servlet:
 #    context-path: /
-
-spring:
-  application:
-    name: gateway
-
-  cloud:
-    config:
-      fail-fast: true
-  #      uri: http://config:8888
-
+#
 #zuul:
 #  ignoredServices: '*'
 #  host:
