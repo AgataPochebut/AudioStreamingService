@@ -5,16 +5,8 @@
 #
 #conversion:
 #  defaultFolder: /Java/temp
-
-spring:
-  application:
-    name: conversion-service
-
-  cloud:
-    config:
-    fail-fast: true
-  #      uri: http://config:8888
-
+#
+#spring:
 #  servlet:
 #    multipart:
 #      enabled: true

@@ -35,6 +35,17 @@ zuul:
       serviceId: index-service
       stripPrefix: false
 
+    config:
+      path: /config-service/**
+      url: http://localhost:8088
+      serviceId: config-service
+      stripPrefix: false
+    discovery:
+      path: /discovery-service/**
+      url: http://localhost:8761
+      serviceId: discovery-service
+      stripPrefix: false
+
 ribbon:
   eureka:
     enabled: false

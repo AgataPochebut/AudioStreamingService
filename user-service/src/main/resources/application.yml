@@ -2,16 +2,8 @@
 #  port: 8083
 #  servlet:
 #    context-path: /user-service
-
-spring:
-  application:
-    name: user-service
-
-  cloud:
-    config:
-      fail-fast: true
-  #      uri: http://config:8888
-
+#
+#spring:
 #  datasource:
 #    url: jdbc:mysql://localhost:3306/user_service?useUnicode=true&serverTimezone=UTC
 #    username: root
