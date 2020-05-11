@@ -1,0 +1,40 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+zuul:
+  ignoredServices: '*'
+  host:
+    connect-timeout-millis: 20000
+    socket-timeout-millis: 20000
+  routes:
+    auth-service:
+      path: /auth-service/**
+      url: http://localhost:8081
+      serviceId: auth-service
+      stripPrefix: false
+    song-service:
+      path: /song-service/**
+      url: http://localhost:8082
+      serviceId: song-service
+      stripPrefix: false
+    user-service:
+      path: /user-service/**
+      url: http://localhost:8083
+      serviceId: user-service
+      stripPrefix: false
+    conversion-service:
+      path: /conversion-service/**
+      url: http://localhost:8084
+      serviceId: conversion-service
+      stripPrefix: false
+    index-service:
+      path: /index-service/**
+      url: http://localhost:8085
+      serviceId: index-service
+      stripPrefix: false
+
+ribbon:
+  eureka:
+    enabled: false

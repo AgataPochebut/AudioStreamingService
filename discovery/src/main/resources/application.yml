@@ -1,0 +1,20 @@
+#server:
+#  port: 8761
+#  servlet:
+#    context-path: /
+
+spring:
+  application:
+    name: discovery
+
+  cloud:
+    config:
+      fail-fast: true
+  #      uri: http://config:8888
+
+#eureka:
+#  client:
+#    eureka-server-connect-timeout-seconds: 5
+#    enabled: true
+#    fetch-registry: false
+#    register-with-eureka: false

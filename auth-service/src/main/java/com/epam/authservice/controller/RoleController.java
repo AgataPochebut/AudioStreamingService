@@ -3,7 +3,7 @@ package com.epam.authservice.controller;
 import com.epam.authservice.dto.request.RoleRequestDto;
 import com.epam.authservice.dto.response.RoleResponseDto;
 import com.epam.authservice.model.Role;
-import com.epam.authservice.service.repository.RoleService;
+import com.epam.authservice.service.repository.RoleRepositoryService;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class RoleController {
 
     @Autowired
-    private RoleService service;
+    private RoleRepositoryService service;
 
     @Autowired
     private Mapper mapper;

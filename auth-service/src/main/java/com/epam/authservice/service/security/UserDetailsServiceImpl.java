@@ -1,7 +1,7 @@
 package com.epam.authservice.service.security;
 
 import com.epam.authservice.model.User;
-import com.epam.authservice.service.repository.UserService;
+import com.epam.authservice.service.repository.UserRepositoryService;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private UserService userService;
+    private UserRepositoryService userService;
 
     @Autowired
     private Mapper mapper;
