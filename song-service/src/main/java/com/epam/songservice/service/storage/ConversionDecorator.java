@@ -1,6 +1,5 @@
 package com.epam.songservice.service.storage;
 
-import com.epam.songservice.feign.conversion.ConversionClient;
 import com.epam.songservice.model.Resource;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.core.io.ByteArrayResource;
@@ -16,15 +15,13 @@ import java.io.InputStream;
 
 public class ConversionDecorator extends ResourceStorageDecorator {
 
-    private ConversionClient conversionService;
-
     private RestTemplate restTemplate;
 
     private JmsTemplate jmsTemplate;
 
-    public ConversionDecorator(ResourceStorageService storageService, ConversionClient conversionService) {
+    public ConversionDecorator(ResourceStorageService storageService, RestTemplate restTemplate) {
         super(storageService);
-        this.conversionService = conversionService;
+        this.restTemplate = restTemplate;
     }
 
     public ConversionDecorator(ResourceStorageService storageService, JmsTemplate jmsTemplate) {
@@ -37,20 +34,6 @@ public class ConversionDecorator extends ResourceStorageDecorator {
         String format = "mp3";
 
         if (!FilenameUtils.getExtension(source.getFilename()).equals(format)) {
-
-////            todo sync feign
-//            FileItem fileItem = new DiskFileItemFactory().createItem("file",
-//                    "text/plain", false, source.getFilename());
-//
-////            new DiskFileItem(
-////                    "data",
-////                    "text/plain",
-////                    false,
-////                    source.getFilename(),
-////                    (int) source.contentLength(),
-////                    file.getParentFile());
-//
-//            source = conversionService.convert(new CommonsMultipartFile(fileItem), "mp3").getBody();
 
             //sync mq
             BytesMessage message = (BytesMessage) jmsTemplate.sendAndReceive("conversion.in", new MessageCreator() {

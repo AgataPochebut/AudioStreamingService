@@ -3,11 +3,12 @@ package com.epam.authservice.controller;
 import com.epam.authservice.dto.request.UserRequestDto;
 import com.epam.authservice.dto.response.UserResponseDto;
 import com.epam.authservice.model.User;
-import com.epam.authservice.service.repository.UserService;
+import com.epam.authservice.service.repository.UserRepositoryService;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 public class UserController {
 
     @Autowired
-    private UserService service;
+    private UserRepositoryService service;
 
     @Autowired
     private Mapper mapper;
@@ -27,6 +28,8 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> readAll() {
         final List<User> entity = service.findAll();
+
+        SecurityContextHolder.getContext();
 
         final List<UserResponseDto> responseDto = entity.stream()
                 .map((i) -> mapper.map(i, UserResponseDto.class))
