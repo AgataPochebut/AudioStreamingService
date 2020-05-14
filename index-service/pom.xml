@@ -20,7 +20,6 @@
 		<jackson.core>2.9.9</jackson.core>
 		<dozer>5.5.1</dozer>
 		<swagger>2.9.2</swagger>
-		<logback>1.2.3</logback>
 		<lombok>1.18.12</lombok>
 		<hibernate.validator>6.0.16.Final</hibernate.validator>
 	</properties>
@@ -93,12 +92,6 @@
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-bean-validators</artifactId>
 			<version>${swagger}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>${logback}</version>
 		</dependency>
 
 		<dependency>

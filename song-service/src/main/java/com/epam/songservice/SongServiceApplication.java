@@ -30,8 +30,8 @@ import org.springframework.jms.core.JmsTemplate;
         type = FilterType.ASSIGNABLE_TYPE, classes = JpaRepository.class))
 //@EntityScan({"com.epam.commonservice.model"})
 @EnableFeignClients
-//@EnableDiscoveryClient
 @EnableJms
+//@EnableDiscoveryClient
 public class SongServiceApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {

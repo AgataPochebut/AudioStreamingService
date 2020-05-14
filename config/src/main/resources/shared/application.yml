@@ -1,0 +1,43 @@
+security:
+  oauth2:
+    resource:
+      #      jwk:
+      #        key-set-uri: https://www.googleapis.com/oauth2/v3/certs # get JWK & verify the JWT in the Resource Service
+      #      jwt:
+      #        key-uri: https://oauth2.googleapis.com/token # or token-info-uri # get JWK & verify the JWT in the Resource Service
+      #        key-value: # get JWK & verify the JWT in the Resource Service
+      #      token-info-uri: # or key-uri # To indicate opaque, simply specify the Authorization Server endpoint that knows how to decode the token
+      user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo  # info about auth user
+  #      user-info-uri: https://api.github.com/user
+
+spring:
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+##          issuer-uri: https://accounts.google.com
+#          jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs #key-set-uri
+##          public-key-location: classpath:public key.txt #key-value
+
+  activemq:
+    broker-url: tcp://localhost:61616
+    user: admin
+    password: admin
+    packages:
+      trust-all: true
+
+#feign:
+#  client:
+#    config:
+#      default:
+#        connectTimeout: 5000
+#        readTimeout: 5000
+#        loggerLevel: basic
+#        requestInterceptors: com.baeldung.cloud.openfeign.JSONPlaceHolderInterceptor
+
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#  client:
+#    serviceUrl:
+#      defaultZone: http://discovery-service/eureka/
