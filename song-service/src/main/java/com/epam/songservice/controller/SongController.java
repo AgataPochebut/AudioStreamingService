@@ -1,7 +1,6 @@
 package com.epam.songservice.controller;
 
 import com.epam.songservice.dto.response.SongResponseDto;
-import com.epam.songservice.feign.index.IndexClient;
 import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
 import com.epam.songservice.service.repository.SongRepositoryService;
@@ -40,8 +39,8 @@ public class SongController {
     @Autowired
     private SongRepositoryService repositoryService;
 
-    @Autowired
-    private IndexClient indexService;
+//    @Autowired
+//    private IndexClient indexService;
 
     @Autowired
     private JmsTemplate jmsTemplate;
