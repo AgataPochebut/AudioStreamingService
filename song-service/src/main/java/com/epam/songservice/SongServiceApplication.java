@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -24,14 +25,14 @@ import org.springframework.jms.core.JmsTemplate;
 //1. jmstemplate
 //2. invoker + interface
 @SpringBootApplication
-@EnableCaching
 @EnableJpaRepositories
         (includeFilters = @ComponentScan.Filter(
         type = FilterType.ASSIGNABLE_TYPE, classes = JpaRepository.class))
 //@EntityScan({"com.epam.commonservice.model"})
-@EnableFeignClients
+@EnableCaching
 @EnableJms
-//@EnableDiscoveryClient
+@EnableFeignClients
+@EnableDiscoveryClient
 public class SongServiceApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {

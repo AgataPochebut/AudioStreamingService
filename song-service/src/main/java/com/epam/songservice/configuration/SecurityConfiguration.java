@@ -1,9 +1,7 @@
 package com.epam.songservice.configuration;
 
-import com.epam.songservice.component.AuthorizationHeaderFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,10 +21,7 @@ import java.io.IOException;
 @EnableResourceServer
 public class SecurityConfiguration extends ResourceServerConfigurerAdapter {
 
-    @Autowired
-    private AuthorizationHeaderFilter filter;
-
-    @Override
+   @Override
     public void configure(HttpSecurity http) throws Exception {
 
         http
@@ -64,9 +59,5 @@ public class SecurityConfiguration extends ResourceServerConfigurerAdapter {
                     }
                 }) //check autorization //либо authenticationEntryPoint либо loginPage
         ;
-
-//        http
-//                .addFilterBefore(filter, HeaderWriterFilter.class);
-
     }
 }
