@@ -1,3 +1,19 @@
+spring:
+  #  security:
+  #    oauth2:
+  #      resourceserver:
+  #        jwt:
+  ##          issuer-uri: https://accounts.google.com
+  #          jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs #key-set-uri
+  ##          public-key-location: classpath:public key.txt #key-value
+
+  activemq:
+    broker-url: tcp://localhost:61616
+    user: admin
+    password: admin
+    packages:
+      trust-all: true
+
 security:
   oauth2:
     resource:
@@ -10,22 +26,6 @@ security:
       user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo  # info about auth user
   #      user-info-uri: https://api.github.com/user
 
-spring:
-#  security:
-#    oauth2:
-#      resourceserver:
-#        jwt:
-##          issuer-uri: https://accounts.google.com
-#          jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs #key-set-uri
-##          public-key-location: classpath:public key.txt #key-value
-
-  activemq:
-    broker-url: tcp://localhost:61616
-    user: admin
-    password: admin
-    packages:
-      trust-all: true
-
 #feign:
 #  client:
 #    config:
@@ -35,9 +35,14 @@ spring:
 #        loggerLevel: basic
 #        requestInterceptors: com.baeldung.cloud.openfeign.JSONPlaceHolderInterceptor
 
-#eureka:
-#  instance:
-#    prefer-ip-address: true
+eureka:
+  instance:
+    prefer-ip-address: true
 #  client:
 #    serviceUrl:
-#      defaultZone: http://discovery-service/eureka/
+#      defaultZone: http://localhost:8761/eureka
+
+logging:
+  level:
+    com.netflix.eureka: 'OFF'
+    com.netflix.discovery: 'OFF'

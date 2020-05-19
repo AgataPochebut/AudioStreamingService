@@ -13,13 +13,8 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
-
 @Component
 public class AuthorizationHeaderFilter extends ZuulFilter {
-
-//    @Autowired
-//    private OAuth2RestOperations restTemplate;
 
     @Autowired
     private OAuth2AuthorizedClientService authorizedClientService;
@@ -28,20 +23,12 @@ public class AuthorizationHeaderFilter extends ZuulFilter {
     public Object run() {
         final RequestContext ctx = RequestContext.getCurrentContext();
 
-        HttpServletRequest request = ctx.getRequest();
-
         // Always remove provided authorization header to not pass through any authorization provided from outside.
         ctx.getZuulRequestHeaders().remove(HttpHeaders.AUTHORIZATION);
 
         // Do provide OAuth2 access token using authorization header,
         // in case there is such token available in current security context.
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        ctx.addZuulRequestHeader(HttpHeaders.AUTHORIZATION, "bearer HereShouldBeToken");
-
-        //old
-//        OAuth2AccessToken existingToken = restTemplate.getOAuth2ClientContext()
-//                .getAccessToken();
 
         if (authentication instanceof OAuth2AuthenticationToken) {
             OAuth2AuthorizedClient authorizedClient = authorizedClientService.loadAuthorizedClient(
@@ -54,13 +41,6 @@ public class AuthorizationHeaderFilter extends ZuulFilter {
                 ctx.addZuulRequestHeader(HttpHeaders.AUTHORIZATION, accessToken.getTokenType().getValue() + ' ' + accessToken.getTokenValue());
             }
         }
-//        else if (authentication instanceof OAuth2AccessTokenAuthentication) {
-//            final OAuth2AccessToken accessToken = ((OAuth2AccessTokenAuthentication) authentication).getoAuth2AccessToken();
-//
-//            if (accessToken != null) {
-//                ctx.addZuulRequestHeader(HttpHeaders.AUTHORIZATION, accessToken.getTokenType() + ' ' + accessToken.getValue());
-//            }
-//        }
 
         return null;
     }

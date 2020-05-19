@@ -222,4 +222,9 @@ public class SongController {
         });
 
     }
+
+    @GetMapping(value = "/test")
+    public String test() {
+        return "test";
+    }
 }
