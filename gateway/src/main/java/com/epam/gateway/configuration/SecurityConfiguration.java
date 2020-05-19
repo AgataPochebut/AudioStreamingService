@@ -1,85 +1,42 @@
 package com.epam.gateway.configuration;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
+import org.springframework.security.oauth2.client.web.server.ServerOAuth2AuthorizedClientRepository;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
-@Slf4j
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityConfiguration {
 
     @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+        http.authorizeExchange()
+                .anyExchange()
+                .authenticated()
+                .and()
+                .oauth2Login();
+        return http.build();
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+//    @Bean
+//    @Primary
+//    WebClient webClientForAuthorized(ReactiveClientRegistrationRepository clientRegistrations, ServerOAuth2AuthorizedClientRepository authorizedClients) {
+//        ServerOAuth2AuthorizedClientExchangeFilterFunction oauth = new ServerOAuth2AuthorizedClientExchangeFilterFunction(clientRegistrations, authorizedClients);
+//        oauth.setDefaultOAuth2AuthorizedClient(true);
+//        return WebClient.builder()
+//                .filter(oauth)
+//                .build();
+//    }
 
-        http
-//                .csrf().disable().cors()
-//
-//                .and()
-                .authorizeRequests()
-//                .mvcMatchers("/**").permitAll()
-//                .antMatchers("/api/v2/api-docs","/v2/api-docs","/api/swagger-resources/**", "/swagger-resources/**", "/api/swagger-ui.html**", "/api/webjars/**").permitAll()
-//                .antMatchers("/auth/**").permitAll()
-//                .antMatchers("/songs/**").permitAll()
-                .anyRequest().authenticated()
-
-//                .and()
-//                .exceptionHandling()
-//                .accessDeniedHandler(new AccessDeniedHandler() {
-//                    @Override
-//                    public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException, ServletException {
-//                        String errorMessage = e.getMessage();
-//
-//                        log.error(errorMessage, e);
-//
-//                        new ObjectMapper().writeValue(httpServletResponse.getWriter(), errorMessage);
-//                    }
-//                })//check roles
-//                .authenticationEntryPoint(new AuthenticationEntryPoint() {
-//                    @Override
-//                    public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-//
-//                        String errorMessage = e.getMessage();
-//
-//                        log.error(errorMessage, e);
-//
-//                        new ObjectMapper().writeValue(httpServletResponse.getWriter(), errorMessage);
-//                    }
-//                }) //check autorization //либо authenticationEntryPoint либо loginPage
-
-                .and()
-                .oauth2Login()
-//                .oauth2Client()
-
-//                .successHandler(new AuthenticationSuccessHandler() {
-//                    @Override
-//                    public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
-//                        String message = authentication.getDetails().toString();
-//
-//                        log.debug(message);
-//
-//                        new ObjectMapper().writeValue(httpServletResponse.getWriter(), message);
-//                    }
-//                })
-//                .failureHandler(new AuthenticationFailureHandler() {
-//                    @Override
-//                    public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-//                        String errorMessage = e.getMessage();
-//
-//                        log.error(errorMessage, e);
-//
-//                        new ObjectMapper().writeValue(httpServletResponse.getWriter(), errorMessage);
-//                    }
-//                })
-        ;
+    @Bean
+    WebClient otherWebClient(ReactiveClientRegistrationRepository clientRegistrations, ServerOAuth2AuthorizedClientRepository authorizedClients) {
+        ServerOAuth2AuthorizedClientExchangeFilterFunction oauth = new ServerOAuth2AuthorizedClientExchangeFilterFunction(clientRegistrations, authorizedClients);
+        return WebClient.builder()
+                .filter(oauth)
+                .build();
     }
 }
-

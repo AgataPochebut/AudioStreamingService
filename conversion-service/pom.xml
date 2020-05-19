@@ -17,6 +17,7 @@
 
 	<properties>
 		<java.version>11</java.version>
+		<spring-cloud.version>Hoxton.SR4</spring-cloud.version>
 		<swagger>2.9.2</swagger>
 		<lombok>1.18.12</lombok>
 	</properties>
@@ -26,7 +27,7 @@
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>Hoxton.SR3</version>
+				<version>${spring-cloud.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -40,13 +41,18 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-activemq</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
 		<dependency>
@@ -88,11 +94,6 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.6</version>
 		</dependency>
-		<!--		<dependency>-->
-		<!--			<groupId>commons-fileupload</groupId>-->
-		<!--			<artifactId>commons-fileupload</artifactId>-->
-		<!--			<version>1.4</version>-->
-		<!--		</dependency>-->
 
 		<dependency>
 			<groupId>net.bramp.ffmpeg</groupId>

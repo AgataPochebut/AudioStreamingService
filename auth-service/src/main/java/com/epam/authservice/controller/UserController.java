@@ -3,12 +3,11 @@ package com.epam.authservice.controller;
 import com.epam.authservice.dto.request.UserRequestDto;
 import com.epam.authservice.dto.response.UserResponseDto;
 import com.epam.authservice.model.User;
-import com.epam.authservice.service.repository.UserRepositoryService;
+import com.epam.authservice.service.UserService;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,16 +19,14 @@ import java.util.stream.Collectors;
 public class UserController {
 
     @Autowired
-    private UserRepositoryService service;
+    private UserService service;
 
     @Autowired
     private Mapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<UserResponseDto>> readAll() {
+    public ResponseEntity<List<UserResponseDto>> getAll() {
         final List<User> entity = service.findAll();
-
-        SecurityContextHolder.getContext();
 
         final List<UserResponseDto> responseDto = entity.stream()
                 .map((i) -> mapper.map(i, UserResponseDto.class))
@@ -38,7 +35,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<UserResponseDto> read(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDto> getById(@PathVariable Long id) {
         User entity = service.findById(id);
 
         final UserResponseDto responseDto = mapper.map(entity, UserResponseDto.class);
@@ -46,7 +43,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponseDto> create(@Valid @RequestBody UserRequestDto requestDto) throws Exception {
+    public ResponseEntity<UserResponseDto> create(@RequestBody UserRequestDto requestDto) throws Exception {
         final User entity = mapper.map(requestDto, User.class);
         service.save(entity);
 
@@ -67,5 +64,21 @@ public class UserController {
     @ResponseStatus(value = HttpStatus.OK)
     public void delete(@PathVariable Long id) {
         service.deleteById(id);
+    }
+
+    @GetMapping(value = "/test")
+    public String test() {
+        return "test";
+    }
+
+    @GetMapping("/byAccount")
+//    @GetMapping(params = {"byAccount"})
+    public ResponseEntity<UserResponseDto> getByAccount(@RequestParam("account") String account){
+        User entity = service.findByAccount(account);
+
+        if (entity == null) return new ResponseEntity<>(null, HttpStatus.OK);
+
+        final UserResponseDto responseDto = mapper.map(entity, UserResponseDto.class);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 }

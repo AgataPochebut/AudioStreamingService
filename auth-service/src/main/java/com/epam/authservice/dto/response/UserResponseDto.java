@@ -1,16 +1,18 @@
 package com.epam.authservice.dto.response;
 
-import java.util.Date;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.Set;
 
+@Data
+@NoArgsConstructor
 public class UserResponseDto {
 
     private Long id;
 
-    private String title;
+    private String name;
 
-    private Date year;
-
-    private Set<String> notes;
+    private Set<RoleResponseDto> roles;
 
 }
