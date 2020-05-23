@@ -21,6 +21,6 @@ public class UserRequestDto {
 
     @NotNull
     @NotEmpty
-    private  Set<Long> roles;
+    private Set<Long> roles;
 
 }

@@ -14,8 +14,26 @@ import org.springframework.jms.annotation.EnableJms;
 @EnableDiscoveryClient
 public class GatewayApplication {
 
+//	@Bean
+//	public Encoder encoder() {
+//		return new FormEncoder();
+//	}
+
+//	@Bean
+//	public Encoder springEncoder() {
+//		ObjectFactory<HttpMessageConverters> objectFactory = () ->
+//				new HttpMessageConverters(new FormHttpMessageConverter());
+//		return new SpringEncoder(objectFactory);
+//	}
+
+//	@Bean
+//	public Encoder encoder() {
+//		return new GsonEncoder();
+//	}
+
 	public static void main(String[] args) {
 		SpringApplication.run(GatewayApplication.class, args);
 	}
 
+//	OAuth2AuthenticationToken
 }

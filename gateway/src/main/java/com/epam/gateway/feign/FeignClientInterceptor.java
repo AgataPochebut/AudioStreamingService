@@ -20,6 +20,9 @@ public class FeignClientInterceptor implements RequestInterceptor {
 
     @Override
     public void apply(RequestTemplate requestTemplate) {
+
+        if(requestTemplate.headers().containsKey(HttpHeaders.AUTHORIZATION)) return;
+
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication instanceof OAuth2AuthenticationToken) {

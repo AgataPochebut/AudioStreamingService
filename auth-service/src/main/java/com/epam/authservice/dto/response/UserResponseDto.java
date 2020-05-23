@@ -11,6 +11,8 @@ public class UserResponseDto {
 
     private Long id;
 
+    private String account;
+
     private String name;
 
     private Set<RoleResponseDto> roles;

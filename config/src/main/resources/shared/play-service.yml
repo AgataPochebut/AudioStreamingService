@@ -1,11 +1,12 @@
 server:
-  port: 8083
+#  port: 8083
+  port: 0
   servlet:
     context-path: /
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/user_service?useUnicode=true&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/play_service?useUnicode=true&serverTimezone=UTC
     username: root
     password: root
 
