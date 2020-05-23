@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Role extends BaseEntity {//implements GrantedAuthority {
+public class Role extends BaseEntity {// implements GrantedAuthority {
 
     private String name;
 
-    /*@Override
-    public String getAuthority() {
-            return "ROLE_" + name.toUpperCase();
-    }*/
+//    @Override
+//    public String getAuthority() {
+//            return "ROLE_" + name.toUpperCase();
+//    }
 }

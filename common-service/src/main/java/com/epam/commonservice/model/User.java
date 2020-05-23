@@ -1,4 +1,4 @@
-package com.epam.gateway.model;
+package com.epam.commonservice.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

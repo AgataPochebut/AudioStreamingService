@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,8 +51,9 @@ public class UserController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<UserResponseDto> update(@PathVariable Long id, @Valid @RequestBody UserRequestDto requestDto) throws Exception {
+    public ResponseEntity<UserResponseDto> update(@PathVariable Long id, @RequestBody UserRequestDto requestDto) throws Exception {
         final User entity = mapper.map(requestDto, User.class);
+        entity.setId(id);
         service.update(entity);
 
         final UserResponseDto responseDto = mapper.map(entity, UserResponseDto.class);
@@ -66,11 +66,6 @@ public class UserController {
         service.deleteById(id);
     }
 
-    @GetMapping(value = "/test")
-    public String test() {
-        return "test";
-    }
-
     @GetMapping("/byAccount")
 //    @GetMapping(params = {"byAccount"})
     public ResponseEntity<UserResponseDto> getByAccount(@RequestParam("account") String account){
@@ -81,4 +76,20 @@ public class UserController {
         final UserResponseDto responseDto = mapper.map(entity, UserResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/test")
+    public String test() {
+        return "test";
+    }
+
+    @PostMapping(value = "/test1")
+    public String test1(@RequestBody Object test) {
+        return "test";
+    }
+
+    @PostMapping(value = "/test2")
+    public String test2(@RequestBody String test) {
+        return test;
+    }
+
 }
