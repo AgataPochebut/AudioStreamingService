@@ -20,15 +20,12 @@ public class PlaylistServiceImpl extends GenericServiceImpl<Playlist, Long> impl
 
     @Override
     public List<Playlist> findAll() {
-        //в репозитори нужно передавать юзера а не ид
-        //юзера из бд
-        //значит нужно получать юзера из репозитори по ид
         return repository.findAll(authUserService.getCurrentUser());
     }
 
     @Override
     public Playlist findById(Long id) {
-        return repository.findById(authUserService.getCurrentUser().getId(), id).orElseThrow(() -> new RuntimeException());
+        return repository.findById(authUserService.getCurrentUser(), id).orElseThrow(() -> new RuntimeException());
     }
 
 }

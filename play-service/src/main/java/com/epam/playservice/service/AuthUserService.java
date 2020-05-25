@@ -1,7 +1,7 @@
 package com.epam.playservice.service;
 
-import com.epam.commonservice.model.User;
 import com.epam.playservice.feign.AuthServiceClient;
+import com.epam.playservice.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,7 +26,8 @@ public class AuthUserService {
 
             if(userAuthentication instanceof UsernamePasswordAuthenticationToken){
                 Map<String, Object> details = (Map<String, Object>) userAuthentication.getDetails();
-                return authServiceClient.getUserByAccount(details.get("email").toString()).getBody();
+                User user = authServiceClient.getUserByAccount(details.get("email").toString()).getBody();
+                return user;
             }
         }
         return null;

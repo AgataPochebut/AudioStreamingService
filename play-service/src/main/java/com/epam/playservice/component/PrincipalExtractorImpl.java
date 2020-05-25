@@ -1,6 +1,6 @@
 package com.epam.playservice.component;
 
-import com.epam.commonservice.model.User;
+import com.epam.playservice.model.User;
 import com.epam.playservice.feign.AuthServiceClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
