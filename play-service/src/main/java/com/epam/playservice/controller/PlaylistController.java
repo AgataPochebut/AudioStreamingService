@@ -1,6 +1,6 @@
 package com.epam.playservice.controller;
 
-import com.epam.commonservice.model.User;
+import com.epam.playservice.model.User;
 import com.epam.playservice.dto.request.PlaylistRequestDto;
 import com.epam.playservice.dto.response.PlaylistResponseDto;
 import com.epam.playservice.model.Playlist;
