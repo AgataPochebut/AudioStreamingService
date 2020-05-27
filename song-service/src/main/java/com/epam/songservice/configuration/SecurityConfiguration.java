@@ -25,9 +25,9 @@ public class SecurityConfiguration extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
 
         http
-//                .csrf().disable().cors()
-//
-//                .and()
+                .csrf().disable().cors()
+
+                .and()
                 .authorizeRequests()
 //                .mvcMatchers("/**").permitAll()
 //                .antMatchers("/api/v2/api-docs","/v2/api-docs","/api/swagger-resources/**", "/swagger-resources/**", "/api/swagger-ui.html**", "/api/webjars/**").permitAll()
@@ -41,20 +41,15 @@ public class SecurityConfiguration extends ResourceServerConfigurerAdapter {
                     @Override
                     public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException, ServletException {
                         String errorMessage = e.getMessage();
-
                         log.error(errorMessage, e);
-
                         new ObjectMapper().writeValue(httpServletResponse.getWriter(), errorMessage);
                     }
                 })//check roles
                 .authenticationEntryPoint(new AuthenticationEntryPoint() {
                     @Override
                     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-
                         String errorMessage = e.getMessage();
-
                         log.error(errorMessage, e);
-
                         new ObjectMapper().writeValue(httpServletResponse.getWriter(), errorMessage);
                     }
                 }) //check autorization //либо authenticationEntryPoint либо loginPage

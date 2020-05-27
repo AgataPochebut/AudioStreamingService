@@ -8,10 +8,7 @@ import org.springframework.http.*;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.jms.core.MessagePostProcessor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.jms.BytesMessage;
@@ -31,18 +28,10 @@ public class TestController {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-//    @PostMapping("/1")
-//    public void test(@RequestParam("data") MultipartFile multipartFile) throws IOException {
-//        ConversionService service = context.getBean(ConversionService.class);
-//        Resource resource = service.convert(multipartFile.getResource(), "mp3");
-//    }
-//
-//    @PostMapping("/2")
-//    public String test(@RequestParam("name") String name) throws IOException {
-//        ConversionService service = context.getBean(ConversionService.class);
-//        String result = service.test(name);
-//        return result;
-//    }
+    @GetMapping("/test")
+    public String test() throws IOException {
+        return "song test";
+    }
 
     @PostMapping("/3")
     public void test3(@RequestParam("data") MultipartFile multipartFile) throws IOException {
