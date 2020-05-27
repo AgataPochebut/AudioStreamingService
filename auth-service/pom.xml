@@ -55,16 +55,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.nimbusds</groupId>
-            <artifactId>oauth2-oidc-sdk</artifactId>
-            <version>8.4</version>
-            <scope>runtime</scope>
-        </dependency>
-        <!--		or-->
 <!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-oauth2</artifactId>-->
+<!--            <groupId>com.nimbusds</groupId>-->
+<!--            <artifactId>oauth2-oidc-sdk</artifactId>-->
+<!--            <version>8.4</version>-->
+<!--            <scope>runtime</scope>-->
 <!--        </dependency>-->
 
         <dependency>
