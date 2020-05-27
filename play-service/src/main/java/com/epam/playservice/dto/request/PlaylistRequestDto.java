@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 import java.util.Set;
 
 @Data
@@ -18,14 +17,10 @@ public class PlaylistRequestDto {
 
     @NotNull
     @NotEmpty
-    private Date year;
+    private Set<Long> songs;
 
-    @NotNull
-    @NotEmpty
-    private  Set<String> notes;
-
-    @NotNull
-    @NotEmpty
-    private Set<Long> artists;
+//    @NotNull
+//    @NotEmpty
+//    private Long user;
 
 }

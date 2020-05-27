@@ -1,6 +1,5 @@
 package com.epam.playservice.controller;
 
-import com.epam.playservice.model.User;
 import com.epam.playservice.dto.request.PlaylistRequestDto;
 import com.epam.playservice.dto.response.PlaylistResponseDto;
 import com.epam.playservice.model.Playlist;
@@ -71,17 +70,10 @@ public class PlaylistController {
     @Autowired
     private AuthUserService authUserService;
 
-    @RequestMapping(value = "/username", method = RequestMethod.GET)
-    public void currentUserName() {
-
-        User user = authUserService.getCurrentUser();
-        System.out.println(user);
-
 //        OAuth2AuthenticationProcessingFilter
 //        OAuth2AuthenticationManager
 //        UserInfoTokenServices
 //        UsernamePasswordAuthenticationToken
 //        OAuth2Authentication
 
-    }
 }
