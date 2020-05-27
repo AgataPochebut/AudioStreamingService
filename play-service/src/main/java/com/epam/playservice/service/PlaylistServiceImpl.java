@@ -28,4 +28,32 @@ public class PlaylistServiceImpl extends GenericServiceImpl<Playlist, Long> impl
         return repository.findById(authUserService.getCurrentUser(), id).orElseThrow(() -> new RuntimeException());
     }
 
+    @Override
+    public Playlist save(Playlist entity) {
+        entity.setUser(authUserService.getCurrentUser());
+        return repository.save(entity);
+    }
+
+    @Override
+    public Playlist update(Playlist entity) {
+        if(entity.getUser().equals(authUserService.getCurrentUser())) {
+            return repository.save(entity);
+        }
+        return entity;
+    }
+
+    @Override
+    public void delete(Playlist entity) {
+        if(entity.getUser().equals(authUserService.getCurrentUser())) {
+            repository.delete(entity);
+        }
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        if(findById(id).getUser().equals(authUserService.getCurrentUser())) {
+            repository.deleteById(id);
+        }
+    }
+
 }

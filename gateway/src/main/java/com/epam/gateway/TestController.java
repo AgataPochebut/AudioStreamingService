@@ -15,6 +15,11 @@ public class TestController {
     @Autowired
     private AuthServiceClient authServiceClient;
 
+    @GetMapping("/test")
+    public String test() throws IOException {
+        return "gateway test";
+    }
+
     @GetMapping("/testAuth")
     public void testAuth() throws IOException {
         String test = authServiceClient.testUser();
