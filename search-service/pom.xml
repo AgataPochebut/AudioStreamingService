@@ -9,11 +9,11 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.epam</groupId>
-	<artifactId>index-service</artifactId>
+	<artifactId>search-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>index-service</name>
-	<description>index-service</description>
+	<name>search-service</name>
+	<description>search-service</description>
 
 	<properties>
 		<java.version>11</java.version>
@@ -52,8 +52,8 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-oauth2</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
 		</dependency>
 
 		<dependency>

@@ -34,7 +34,6 @@ spring:
       max-file-size: 500MB
       max-request-size: 500MB
 
-
 security:
   oauth2:
     client:
@@ -69,3 +68,18 @@ logging:
   level:
     com.netflix.eureka: 'OFF'
     com.netflix.discovery: 'OFF'
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: false
+      circuitBreaker:
+        enabled: false
