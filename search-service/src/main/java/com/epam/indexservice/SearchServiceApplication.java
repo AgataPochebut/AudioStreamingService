@@ -15,10 +15,10 @@ import org.springframework.jms.annotation.EnableJms;
 @EnableFeignClients
 //@EnableDiscoveryClient
 @EnableJms
-public class IndexServiceApplication {
+public class SearchServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(IndexServiceApplication.class, args);
+		SpringApplication.run(SearchServiceApplication.class, args);
 	}
 
 }

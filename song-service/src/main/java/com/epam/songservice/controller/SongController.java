@@ -1,6 +1,7 @@
 package com.epam.songservice.controller;
 
 import com.epam.songservice.dto.response.SongResponseDto;
+import com.epam.songservice.feign.index.IndexClient;
 import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
 import com.epam.songservice.service.repository.SongRepositoryService;
@@ -39,8 +40,8 @@ public class SongController {
     @Autowired
     private SongRepositoryService repositoryService;
 
-//    @Autowired
-//    private IndexClient indexService;
+    @Autowired
+    private IndexClient indexService;
 
     @Autowired
     private JmsTemplate jmsTemplate;
@@ -179,6 +180,9 @@ public class SongController {
     }
 
     private void createIndex(final Song entity){
+
+        indexService.create(entity);
+
         //sync mq
         jmsTemplate.sendAndReceive("index.create", new MessageCreator() {
             @Override
@@ -203,6 +207,9 @@ public class SongController {
     }
 
     private void deleteIndex(final Song entity){
+
+        indexService.delete(entity);
+
         //sync mq
         jmsTemplate.sendAndReceive("index.delete", new MessageCreator() {
             @Override
@@ -220,11 +227,6 @@ public class SongController {
                 }
             }
         });
-
     }
 
-    @GetMapping(value = "/test")
-    public String test() {
-        return "test";
-    }
 }

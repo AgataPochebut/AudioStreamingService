@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @RestController
-@RequestMapping("/test")
+@RequestMapping
 public class TestController {
 
     @Autowired
@@ -33,7 +33,7 @@ public class TestController {
         return "song test";
     }
 
-    @PostMapping("/3")
+    @PostMapping("/test/3")
     public void test3(@RequestParam("data") MultipartFile multipartFile) throws IOException {
 
         jmsTemplate.send("conversion.in", new MessageCreator() {
@@ -61,7 +61,7 @@ public class TestController {
         });
     }
 
-    @PostMapping(value = "/4", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @PostMapping(value = "/test/4", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<Resource> test4(@RequestParam("data") MultipartFile multipartFile) throws IOException, JMSException {
 
         Resource source = multipartFile.getResource();
@@ -110,7 +110,7 @@ public class TestController {
 
     }
 
-    @PostMapping("/5")
+    @PostMapping("/test/5")
     public void test5(@RequestParam("data") MultipartFile multipartFile) throws IOException {
 
         jmsTemplate.convertAndSend("conversion.in", multipartFile.getBytes(), new MessagePostProcessor() {

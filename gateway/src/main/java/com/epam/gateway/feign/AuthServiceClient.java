@@ -7,7 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(value = "auth-service")
+@FeignClient(value = "auth-service", fallbackFactory = FallbackFactoryImpl.class)
 public interface AuthServiceClient {
 
     @GetMapping(value = "users/byAccount")
