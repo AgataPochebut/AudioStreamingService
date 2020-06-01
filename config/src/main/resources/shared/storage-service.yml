@@ -1,0 +1,33 @@
+server:
+#  port: 8086
+  port: 0
+  servlet:
+    context-path: /
+
+s3:
+  accessKey: AKIAJWCFBXUCARGICLTQ
+  secretKey: hJHb2Smt5ByRGeBKnOtIYD8PnR8yd/rFgl2iNZgb
+  bucketName: your-bucket-name
+  defaultFolder: /Java/temp
+
+fs:
+  defaultFolder: /Java/files
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/storage_service?useUnicode=true&serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: false
+    hibernate.ddl-auto: update
+
+cloud:
+  aws:
+    region: eu-west-1
+    credentials:
+      accessKey: AKIAJWCFBXUCARGICLTQ
+      secretKey: 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

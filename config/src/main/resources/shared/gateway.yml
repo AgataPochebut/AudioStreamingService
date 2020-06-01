@@ -35,3 +35,8 @@ zuul:
       serviceId: search-service
 #      url: http://localhost:8085
 #      stripPrefix: false
+    storage-service:
+      path: /storage-service/**
+      serviceId: storage-service
+#      url: http://localhost:8086
+#      stripPrefix: false
