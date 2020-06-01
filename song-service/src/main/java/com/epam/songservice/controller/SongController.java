@@ -84,6 +84,12 @@ public class SongController {
         return new ResponseEntity<>(source, headers, HttpStatus.OK);
     }
 
+    //1. future post
+    //2. (sync) send source to jms + return resource from jms
+    //or
+    //2. (async) send source to jms + listen resource from jms + how to collate song and resource?
+    //or
+    //2. send song&source to jms + listen song from jms + save to db song
 
     // Content type 'multipart/form-data;boundary
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
