@@ -1,4 +1,4 @@
-package com.epam.songservice.configuration;
+package com.epam.storageservice.configuration;
 
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;

@@ -13,10 +13,10 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name="RESOURCES")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
-//@MappedSuperclass
-public class Resource extends BaseEntity {
+public class Resource {//extends BaseEntity {
+
+    @Id
+    private Long id;
 
     private String name;
 
@@ -25,11 +25,9 @@ public class Resource extends BaseEntity {
     @Column(unique = true)
     private String checksum;
 
-//    @Enumerated(EnumType.STRING)
-//    private StorageTypes storageType;
-//
-//    private String parent;
-//
-//    private String path;
+    @Enumerated(EnumType.STRING)
+    private StorageTypes storageType;
+
+    private String path;
 
 }

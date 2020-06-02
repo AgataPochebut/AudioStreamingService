@@ -1,4 +1,4 @@
-package com.epam.songservice.model;
+package com.epam.storageservice.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

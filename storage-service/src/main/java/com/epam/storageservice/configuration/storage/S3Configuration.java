@@ -1,4 +1,4 @@
-package com.epam.songservice.configuration.storage;
+package com.epam.storageservice.configuration.storage;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;

@@ -1,4 +1,4 @@
-package com.epam.songservice.configuration;
+package com.epam.storageservice.configuration;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;

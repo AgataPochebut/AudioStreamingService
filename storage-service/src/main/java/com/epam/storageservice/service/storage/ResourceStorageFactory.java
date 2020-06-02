@@ -1,6 +1,6 @@
-package com.epam.songservice.service.storage;
+package com.epam.storageservice.service.storage;
 
-import com.epam.songservice.model.StorageTypes;
+import com.epam.storageservice.model.StorageTypes;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

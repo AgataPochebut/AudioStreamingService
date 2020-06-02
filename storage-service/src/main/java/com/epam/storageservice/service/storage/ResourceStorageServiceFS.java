@@ -1,10 +1,10 @@
-package com.epam.songservice.service.storage;
+package com.epam.storageservice.service.storage;
 
-import com.epam.songservice.annotation.Decorate;
-import com.epam.songservice.annotation.StorageType;
-import com.epam.songservice.model.FSResource;
-import com.epam.songservice.model.Resource;
-import com.epam.songservice.model.StorageTypes;
+import com.epam.storageservice.annotation.Decorate;
+import com.epam.storageservice.annotation.StorageType;
+import com.epam.storageservice.model.FSResource;
+import com.epam.storageservice.model.Resource;
+import com.epam.storageservice.model.StorageTypes;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -31,7 +31,7 @@ public class ResourceStorageServiceFS implements ResourceStorageService {
         if (source.isFile()) {
             file = source.getFile();
         } else {
-            file = new File(defaultBaseFolder, source.getFilename());
+            file = new File(defaultBaseFolder, name);
             file.getParentFile().mkdirs();
             FileCopyUtils.copy(source.getInputStream(), new FileOutputStream(file));
         }

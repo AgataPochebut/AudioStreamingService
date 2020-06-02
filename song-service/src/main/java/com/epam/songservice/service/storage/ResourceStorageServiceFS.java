@@ -2,7 +2,6 @@ package com.epam.songservice.service.storage;
 
 import com.epam.songservice.annotation.Decorate;
 import com.epam.songservice.annotation.StorageType;
-import com.epam.songservice.model.FSResource;
 import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.StorageTypes;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -36,26 +35,18 @@ public class ResourceStorageServiceFS implements ResourceStorageService {
             FileCopyUtils.copy(source.getInputStream(), new FileOutputStream(file));
         }
 
-        FSResource resource = new FSResource();
-        resource.setName(file.getName());
-        resource.setSize(file.length());
-        resource.setChecksum(DigestUtils.md5Hex(new FileInputStream(file)));
-        resource.setPath(file.getAbsolutePath());
-        return resource;
-
-//        return new FSResource().builder()
-//                .path(file.getAbsolutePath())
-////                .parent(file.getParent())
-//                .name(file.getName())
-//                .size(file.length())
-//                .checksum(DigestUtils.md5Hex(new FileInputStream(file)))
-//                .storageType(StorageTypes.FS)
-//                .build();
+        return Resource.builder()
+                .path(file.getAbsolutePath())
+                .name(file.getName())
+                .size(file.length())
+                .checksum(DigestUtils.md5Hex(new FileInputStream(file)))
+                .storageType(StorageTypes.FS)
+                .build();
     }
 
     @Override
     public org.springframework.core.io.Resource download(Resource resource) {
-        return new FileSystemResource(((FSResource)resource).getPath());
+        return new FileSystemResource(resource.getPath());
     }
 
 //    @Override
@@ -66,7 +57,7 @@ public class ResourceStorageServiceFS implements ResourceStorageService {
 
     @Override
     public void delete(Resource resource) {
-        new File(((FSResource)resource).getPath()).delete();
+        new File(resource.getPath()).delete();
     }
 
 //    @Override
@@ -77,7 +68,7 @@ public class ResourceStorageServiceFS implements ResourceStorageService {
 
     @Override
     public boolean exist(Resource resource) {
-        return new File(((FSResource)resource).getPath()).exists();
+        return new File(resource.getPath()).exists();
     }
 
 //    @Override

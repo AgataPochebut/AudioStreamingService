@@ -6,7 +6,6 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.epam.songservice.annotation.Decorate;
 import com.epam.songservice.annotation.StorageType;
 import com.epam.songservice.model.Resource;
-import com.epam.songservice.model.S3Resource;
 import com.epam.songservice.model.StorageTypes;
 import com.epam.songservice.service.repository.ResourceRepositoryService;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -49,27 +48,17 @@ public class ResourceStorageServiceS3 implements ResourceStorageService {
 
         amazonS3Client.putObject(defaultBucketName, file.getName(), file);
 
-        S3Resource resource = new S3Resource();
-        resource.setName(file.getName());
-        resource.setSize(file.length());
-        resource.setChecksum(DigestUtils.md5Hex(new FileInputStream(file)));
-        resource.setBucketName(defaultBucketName);
-        resource.setKeyName(file.getName());
-        return resource;
-
-//        return Resource.builder()
-//                .path(amazonS3Client.getUrl(defaultBucketName, file.getName()).toString())
-////                .parent(defaultBucketName)
-//                .name(file.getName())
-//                .storageType(StorageTypes.S3)
-//                .size(file.length())
-//                .checksum(DigestUtils.md5Hex(new FileInputStream(file)))
-//                .build();
+        return Resource.builder()
+                .path(amazonS3Client.getUrl(defaultBucketName, file.getName()).toString())
+                .name(file.getName())
+                .storageType(StorageTypes.S3)
+                .size(file.length())
+                .checksum(DigestUtils.md5Hex(new FileInputStream(file)))
+                .build();
     }
 
     public org.springframework.core.io.Resource download(Resource resource) {
-        S3Resource currentResource = (S3Resource)resource;
-        S3Object s3object = amazonS3Client.getObject(currentResource.getBucketName(), currentResource.getKeyName());
+        S3Object s3object = amazonS3Client.getObject(defaultBucketName, resource.getName());
         S3ObjectInputStream inputStream = s3object.getObjectContent();
         return new InputStreamResource(inputStream);
     }
@@ -82,8 +71,7 @@ public class ResourceStorageServiceS3 implements ResourceStorageService {
 
     @Override
     public void delete(Resource resource) {
-        S3Resource currentResource = (S3Resource)resource;
-        amazonS3Client.deleteObject(currentResource.getBucketName(), currentResource.getKeyName());
+        amazonS3Client.deleteObject(defaultBucketName, resource.getName());
     }
 
 //    @Override

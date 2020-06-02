@@ -1,6 +1,6 @@
-package com.epam.songservice.service.repository;
+package com.epam.storageservice.service.repository;
 
-import com.epam.songservice.repository.GenericRepository;
+import com.epam.storageservice.repository.GenericRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 

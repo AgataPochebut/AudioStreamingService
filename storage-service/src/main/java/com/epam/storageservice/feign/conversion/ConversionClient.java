@@ -1,4 +1,4 @@
-package com.epam.songservice.feign.conversion;
+package com.epam.storageservice.feign.conversion;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.core.io.Resource;

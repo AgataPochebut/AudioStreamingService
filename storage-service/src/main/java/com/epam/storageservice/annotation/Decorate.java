@@ -1,4 +1,4 @@
-package com.epam.songservice.annotation;
+package com.epam.storageservice.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

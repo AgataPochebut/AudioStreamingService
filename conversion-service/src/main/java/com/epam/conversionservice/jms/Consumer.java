@@ -32,7 +32,7 @@ public class Consumer {
     @Value("${conversion.defaultFolder}")
     private String defaultBaseFolder;
 
-    @JmsListener(destination = "conversion.in")
+    @JmsListener(destination = "conversion")
 //    @SendTo("conversion.out")
 //    public Message listen(byte[] message, @Header("name") String name, @Header("format") String format) throws IOException {
     public void listen(BytesMessage message) throws JMSException, IOException {

@@ -1,4 +1,4 @@
-package com.epam.songservice.feign;
+package com.epam.storageservice.feign;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;

@@ -1,14 +1,14 @@
-package com.epam.songservice.service.storage;
+package com.epam.storageservice.service.storage;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import com.epam.songservice.annotation.Decorate;
-import com.epam.songservice.annotation.StorageType;
-import com.epam.songservice.model.Resource;
-import com.epam.songservice.model.S3Resource;
-import com.epam.songservice.model.StorageTypes;
-import com.epam.songservice.service.repository.ResourceRepositoryService;
+import com.epam.storageservice.annotation.Decorate;
+import com.epam.storageservice.annotation.StorageType;
+import com.epam.storageservice.model.Resource;
+import com.epam.storageservice.model.S3Resource;
+import com.epam.storageservice.model.StorageTypes;
+import com.epam.storageservice.service.repository.ResourceRepositoryService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

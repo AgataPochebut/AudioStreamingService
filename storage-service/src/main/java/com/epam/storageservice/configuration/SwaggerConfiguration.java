@@ -1,4 +1,4 @@
-package com.epam.songservice.configuration;
+package com.epam.storageservice.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

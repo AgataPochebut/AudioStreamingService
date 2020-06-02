@@ -1,7 +1,7 @@
-package com.epam.songservice.service.repository;
+package com.epam.storageservice.service.repository;
 
-import com.epam.songservice.repository.ResourceRepository;
-import com.epam.songservice.model.Resource;
+import com.epam.storageservice.model.Resource;
+import com.epam.storageservice.repository.ResourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,5 +21,5 @@ public class ResourceRepositoryServiceImpl extends GenericServiceImpl<Resource, 
     @Override
     public boolean existByChecksum(String checksum){
         return !repository.findByChecksum(checksum).isEmpty();
-    }
+}
 }
