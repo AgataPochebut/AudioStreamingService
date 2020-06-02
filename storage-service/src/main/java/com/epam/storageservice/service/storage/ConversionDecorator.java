@@ -1,7 +1,7 @@
-package com.epam.songservice.service.storage;
+package com.epam.storageservice.service.storage;
 
-import com.epam.songservice.feign.conversion.ConversionClient;
-import com.epam.songservice.model.Resource;
+import com.epam.storageservice.feign.conversion.ConversionClient;
+import com.epam.storageservice.model.Resource;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.jms.core.JmsTemplate;
@@ -41,10 +41,10 @@ public class ConversionDecorator extends ResourceStorageDecorator {
     public Resource upload(final org.springframework.core.io.Resource source, String name) throws Exception {
         String format = "mp3";
 
-        if (!FilenameUtils.getExtension(source.getFilename()).equals(format)) {
+        if (!FilenameUtils.getExtension(name).equals(format)) {
 
             //sync mq
-            BytesMessage message = (BytesMessage) jmsTemplate.sendAndReceive("conversion.in", new MessageCreator() {
+            BytesMessage message = (BytesMessage) jmsTemplate.sendAndReceive("conversion", new MessageCreator() {
                 @Override
                 public Message createMessage(Session session) throws JMSException {
                     try {

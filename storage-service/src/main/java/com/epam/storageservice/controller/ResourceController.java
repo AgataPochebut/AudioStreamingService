@@ -1,9 +1,9 @@
-package com.epam.songservice.controller;
+package com.epam.storageservice.controller;
 
-import com.epam.songservice.dto.response.ResourceResponseDto;
-import com.epam.songservice.model.Resource;
-import com.epam.songservice.service.repository.ResourceRepositoryService;
-import com.epam.songservice.service.storage.ResourceStorageFactory;
+import com.epam.storageservice.dto.response.ResourceResponseDto;
+import com.epam.storageservice.model.Resource;
+import com.epam.storageservice.service.repository.ResourceRepositoryService;
+import com.epam.storageservice.service.storage.ResourceStorageFactory;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;

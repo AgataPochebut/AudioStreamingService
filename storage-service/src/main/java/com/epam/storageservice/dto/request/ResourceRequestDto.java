@@ -1,4 +1,4 @@
-package com.epam.songservice.dto.request;
+package com.epam.storageservice.dto.request;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

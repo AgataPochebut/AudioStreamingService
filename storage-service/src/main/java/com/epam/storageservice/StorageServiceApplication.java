@@ -1,10 +1,10 @@
-package com.epam.songservice;
+package com.epam.storageservice;
 
-import com.epam.songservice.annotation.Decorate;
-import com.epam.songservice.annotation.StorageType;
-import com.epam.songservice.feign.conversion.ConversionClient;
-import com.epam.songservice.service.repository.ResourceRepositoryService;
-import com.epam.songservice.service.storage.*;
+import com.epam.storageservice.annotation.Decorate;
+import com.epam.storageservice.annotation.StorageType;
+import com.epam.storageservice.feign.conversion.ConversionClient;
+import com.epam.storageservice.service.repository.ResourceRepositoryService;
+import com.epam.storageservice.service.storage.*;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -24,6 +24,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.client.RestTemplate;
+
 
 //1. jmstemplate
 //2. invoker + interface

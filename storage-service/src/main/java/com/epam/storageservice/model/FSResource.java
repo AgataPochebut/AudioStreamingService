@@ -1,4 +1,4 @@
-package com.epam.songservice.model;
+package com.epam.storageservice.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +12,7 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 @Entity
 @DiscriminatorValue("FS")
-//@Table(name="RESOURCES1")
+//@Table(name="FSResource")
 public class FSResource extends Resource {
 
     private String path;

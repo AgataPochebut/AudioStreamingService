@@ -1,4 +1,4 @@
-package com.epam.songservice.component;
+package com.epam.storageservice.component;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;

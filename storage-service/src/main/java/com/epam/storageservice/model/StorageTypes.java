@@ -1,4 +1,4 @@
-package com.epam.songservice.model;
+package com.epam.storageservice.model;
 
 public enum StorageTypes {
     FS, S3

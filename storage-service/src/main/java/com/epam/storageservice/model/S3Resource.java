@@ -1,4 +1,4 @@
-package com.epam.songservice.model;
+package com.epam.storageservice.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +12,7 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 @Entity
 @DiscriminatorValue("S3")
-//@Table(name="RESOURCES2")
+//@Table(name="S3Resource")
 public class S3Resource extends Resource {
 
     private String bucketName;

@@ -1,11 +1,11 @@
-package com.epam.songservice.repository;
+package com.epam.storageservice.repository;
 
-import com.epam.songservice.model.Resource;
-import org.springframework.stereotype.Repository;
+import com.epam.storageservice.model.Resource;
+import org.springframework.data.repository.NoRepositoryBean;
 
 import java.util.Optional;
 
-@Repository
+@NoRepositoryBean
 public interface ResourceRepository extends GenericRepository<Resource, Long> {
 
     Optional<Resource> findByChecksum(String checksum);

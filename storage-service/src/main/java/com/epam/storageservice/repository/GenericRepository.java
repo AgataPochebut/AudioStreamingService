@@ -1,4 +1,4 @@
-package com.epam.songservice.repository;
+package com.epam.storageservice.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;

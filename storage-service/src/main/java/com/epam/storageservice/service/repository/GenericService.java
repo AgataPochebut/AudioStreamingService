@@ -1,4 +1,4 @@
-package com.epam.songservice.service.repository;
+package com.epam.storageservice.service.repository;
 
 import java.util.List;
 

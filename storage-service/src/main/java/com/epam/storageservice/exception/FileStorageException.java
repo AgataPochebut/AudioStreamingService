@@ -1,4 +1,4 @@
-package com.epam.songservice.exception;
+package com.epam.storageservice.exception;
 
 public class FileStorageException extends RuntimeException {
     public FileStorageException(String message) {

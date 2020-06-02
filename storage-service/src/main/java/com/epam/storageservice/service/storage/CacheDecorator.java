@@ -1,6 +1,6 @@
-package com.epam.songservice.service.storage;
+package com.epam.storageservice.service.storage;
 
-import com.epam.songservice.model.Resource;
+import com.epam.storageservice.model.Resource;
 import org.springframework.cache.CacheManager;
 
 public class CacheDecorator extends ResourceStorageDecorator {

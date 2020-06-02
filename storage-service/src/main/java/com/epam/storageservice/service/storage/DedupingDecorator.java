@@ -1,7 +1,7 @@
-package com.epam.songservice.service.storage;
+package com.epam.storageservice.service.storage;
 
-import com.epam.songservice.model.Resource;
-import com.epam.songservice.service.repository.ResourceRepositoryService;
+import com.epam.storageservice.model.Resource;
+import com.epam.storageservice.service.repository.ResourceRepositoryService;
 import org.apache.commons.codec.digest.DigestUtils;
 
 public class DedupingDecorator extends ResourceStorageDecorator {

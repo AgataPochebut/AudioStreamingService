@@ -1,4 +1,4 @@
-package com.epam.songservice.exception;
+package com.epam.storageservice.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

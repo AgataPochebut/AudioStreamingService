@@ -36,7 +36,7 @@ public class ConversionDecorator extends ResourceStorageDecorator {
         if (!FilenameUtils.getExtension(source.getFilename()).equals(format)) {
 
             //sync mq
-            BytesMessage message = (BytesMessage) jmsTemplate.sendAndReceive("conversion.in", new MessageCreator() {
+            BytesMessage message = (BytesMessage) jmsTemplate.sendAndReceive("conversion", new MessageCreator() {
                 @Override
                 public Message createMessage(Session session) throws JMSException {
                     try {

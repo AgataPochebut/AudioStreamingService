@@ -4,6 +4,7 @@ import com.epam.songservice.dto.response.SongResponseDto;
 import com.epam.songservice.feign.index.IndexClient;
 import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
+import com.epam.songservice.service.repository.ResourceRepositoryService;
 import com.epam.songservice.service.repository.SongRepositoryService;
 import com.epam.songservice.service.storage.SongStorageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,11 +18,10 @@ import org.springframework.jms.core.MessageCreator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.Session;
+import javax.jms.*;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +39,9 @@ public class SongController {
 
     @Autowired
     private SongRepositoryService repositoryService;
+
+    @Autowired
+    private ResourceRepositoryService resourceRepositoryService;
 
     @Autowired
     private IndexClient indexService;
@@ -90,6 +93,15 @@ public class SongController {
     //2. (async) send source to jms + listen resource from jms + how to collate song and resource?
     //or
     //2. send song&source to jms + listen song from jms + save to db song
+
+    // Content type 'multipart/form-data;boundary
+    @PostMapping(value = "/1", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<SongResponseDto> upload1(@RequestParam("data") MultipartFile multipartFile) throws Exception {
+        Song entity = upload1(multipartFile.getResource(), multipartFile.getOriginalFilename());
+
+        final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
 
     // Content type 'multipart/form-data;boundary
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -176,11 +188,57 @@ public class SongController {
     }
 
     private Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
+
+//        Song entity = Song.builder()
+//                .resource(resource)
+//                .title("test")
+//                .build();
+
         Song entity = storageService.upload(source, name);
         entity = repositoryService.save(entity);
 
-//        indexService.create(entity);
         createIndex(entity);
+
+        return entity;
+    }
+
+    private Song upload1(org.springframework.core.io.Resource source, String name) throws Exception {
+
+        //sync mq
+        TextMessage message = (TextMessage) jmsTemplate.sendAndReceive("storage", new MessageCreator() {
+            @Override
+            public Message createMessage(Session session) throws JMSException {
+                try {
+                    BytesMessage bytesMessage = session.createBytesMessage();
+                    InputStream fileInputStream = source.getInputStream();
+                    final int BUFLEN = 64;
+                    byte[] buf1 = new byte[BUFLEN];
+                    int bytes_read = 0;
+                    while ((bytes_read = fileInputStream.read(buf1)) != -1) {
+                        bytesMessage.writeBytes(buf1, 0, bytes_read);
+                    }
+                    fileInputStream.close();
+
+                    bytesMessage.setStringProperty("name", name);
+
+                    bytesMessage.setJMSCorrelationID("123");
+
+                    return bytesMessage;
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+        });
+
+        ObjectMapper Obj = new ObjectMapper();
+        Resource resource = Obj.readValue(message.getText(), Resource.class);
+        resource = resourceRepositoryService.save(resource);
+
+        Song entity = Song.builder()
+                .resource(resource)
+                .title("test")
+                .build();
+        entity = repositoryService.save(entity);
 
         return entity;
     }
