@@ -33,7 +33,7 @@ public class ConversionDecorator extends ResourceStorageDecorator {
     public Resource upload(final org.springframework.core.io.Resource source, String name) throws Exception {
         String format = "mp3";
 
-        if (!FilenameUtils.getExtension(source.getFilename()).equals(format)) {
+        if (!FilenameUtils.getExtension(name).equals(format)) {
 
             //sync mq
             BytesMessage message = (BytesMessage) jmsTemplate.sendAndReceive("conversion", new MessageCreator() {

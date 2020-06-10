@@ -1,4 +1,4 @@
-package com.epam.indexservice.component;
+package com.epam.searchservice.component;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

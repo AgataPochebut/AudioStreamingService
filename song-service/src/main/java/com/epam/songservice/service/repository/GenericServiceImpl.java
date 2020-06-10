@@ -2,7 +2,6 @@ package com.epam.songservice.service.repository;
 
 import com.epam.songservice.repository.GenericRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class GenericServiceImpl<T,U> implements GenericService<T, U> {
         repository.delete(entity);
     }
 
-    @CacheEvict(cacheNames = "cachetest")
+//    @CacheEvict(cacheNames = "cachetest")
     @Override
     public void deleteById(U id) {
         if (repository.existsById(id)) {

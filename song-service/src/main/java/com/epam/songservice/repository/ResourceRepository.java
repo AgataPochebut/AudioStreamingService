@@ -8,6 +8,6 @@ import java.util.Optional;
 @Repository
 public interface ResourceRepository extends GenericRepository<Resource, Long> {
 
-    Optional<Resource> findByChecksum(String checksum);
+    Optional<Resource> findByChecksum(String s);
 
 }

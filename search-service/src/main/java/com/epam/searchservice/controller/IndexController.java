@@ -1,4 +1,4 @@
-package com.epam.indexservice.controller;
+package com.epam.searchservice.controller;
 
 import org.dozer.Mapper;
 import org.elasticsearch.client.RestHighLevelClient;

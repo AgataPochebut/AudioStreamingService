@@ -1,4 +1,4 @@
-package com.epam.indexservice.configuration;
+package com.epam.searchservice.configuration;
 
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
