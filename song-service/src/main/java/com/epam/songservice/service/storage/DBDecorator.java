@@ -3,11 +3,11 @@ package com.epam.songservice.service.storage;
 import com.epam.songservice.model.Resource;
 import com.epam.songservice.service.repository.ResourceRepositoryService;
 
-public class DBInsertDecorator extends ResourceStorageDecorator {
+public class DBDecorator extends ResourceStorageDecorator {
 
     private ResourceRepositoryService repositoryService;
 
-    public DBInsertDecorator(ResourceStorageService storageService, ResourceRepositoryService repositoryService) {
+    public DBDecorator(ResourceStorageService storageService, ResourceRepositoryService repositoryService) {
         super(storageService);
         this.repositoryService = repositoryService;
     }

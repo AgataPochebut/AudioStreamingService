@@ -2,8 +2,11 @@ package com.epam.songservice;
 
 import com.epam.songservice.annotation.Decorate;
 import com.epam.songservice.annotation.StorageType;
-import com.epam.songservice.service.repository.ResourceRepositoryService;
+import com.epam.songservice.feign.index.IndexClient;
+import com.epam.songservice.service.repository.*;
 import com.epam.songservice.service.storage.*;
+import com.epam.songservice.service.storage.Song.*;
+import org.dozer.Mapper;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -40,7 +43,7 @@ public class SongServiceApplication extends SpringBootServletInitializer {
     }
 
     @Autowired
-    private ResourceRepositoryService repositoryService;
+    private ResourceRepositoryService resourceRepositoryService;
 
 //    @Autowired
 //    private ConversionClient conversionService;
@@ -63,6 +66,18 @@ public class SongServiceApplication extends SpringBootServletInitializer {
     private ResourceStorageFactory resourceStorageFactory;
 
 
+    @Autowired
+    private IndexClient indexService;
+
+//    @Autowired
+//    private JmsTemplate jmsTemplate;
+
+    @Autowired
+    private Mapper mapper;
+
+    @Autowired
+    private SongRepositoryService songRepositoryService;
+
     @Bean
     public BeanPostProcessor entityManagerBeanPostProcessor() {
         return new BeanPostProcessor() {
@@ -74,15 +89,27 @@ public class SongServiceApplication extends SpringBootServletInitializer {
                     ResourceStorageService newbean = (ResourceStorageService) bean;
                     if (bean.getClass().isAnnotationPresent(Decorate.class)
                             && bean.getClass().getAnnotation(Decorate.class).value() == ResourceStorageDecorator.class) {
-                        newbean = new IORetryDecorator(newbean);
-                        newbean = new DBInsertDecorator(newbean, repositoryService);
-                        newbean = new CleanupDecorator(newbean, repositoryService);
-                        newbean = new DedupingDecorator(newbean, repositoryService);
-                        newbean = new ConversionDecorator(newbean, jmsTemplate);
-                        newbean = new CacheDecorator(newbean, cacheManager);
+//                        newbean = new IORetryDecorator(newbean);
+                        newbean = new DBDecorator(newbean, resourceRepositoryService);
+//                        newbean = new CleanupDecorator(newbean, resourceRepositoryService);
+                        newbean = new DedupingDecorator(newbean, resourceRepositoryService);
+//                        newbean = new ConversionDecorator(newbean, jmsTemplate);
+//                        newbean = new CacheDecorator(newbean, cacheManager);
                     }
                     if (bean.getClass().isAnnotationPresent(StorageType.class)) {
                         resourceStorageFactory.registerService(bean.getClass().getAnnotation(StorageType.class).value(), newbean);
+                    }
+                    return newbean;
+                }
+
+                else if (bean instanceof SongStorageService){
+                    SongStorageService newbean = (SongStorageService) bean;
+                    if (bean.getClass().isAnnotationPresent(Decorate.class)
+                            && bean.getClass().getAnnotation(Decorate.class).value() == SongStorageDecorator.class) {
+//                        newbean = new MetadataDecorator(newbean, mapper);
+                        newbean = new SongDBDecorator(newbean, songRepositoryService);
+//                        newbean = new IndexDecorator(newbean, jmsTemplate);
+                        newbean = new SongDedupingDecorator(newbean, songRepositoryService);
                     }
                     return newbean;
                 }

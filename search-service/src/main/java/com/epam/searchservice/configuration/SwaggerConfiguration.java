@@ -1,4 +1,4 @@
-package com.epam.indexservice.configuration;
+package com.epam.searchservice.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,6 +1,6 @@
-package com.epam.indexservice.controller;
+package com.epam.searchservice.controller;
 
-import com.epam.indexservice.dto.response.SearchResponseDto;
+import com.epam.searchservice.dto.response.SearchResponseDto;
 import org.dozer.Mapper;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;

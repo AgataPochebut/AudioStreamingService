@@ -1,4 +1,4 @@
-package com.epam.indexservice.dto.response;
+package com.epam.searchservice.dto.response;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

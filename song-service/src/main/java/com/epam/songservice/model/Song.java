@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Set;
 
@@ -17,9 +19,9 @@ import java.util.Set;
 @Table(name="SONGS")
 public class Song extends BaseEntity {
 
-//    @NotNull
-//    @NotEmpty
-//    @Column(nullable = false)
+    @NotNull
+    @NotEmpty
+    @Column(nullable = false)
     private String title;
 
 //    @NotNull

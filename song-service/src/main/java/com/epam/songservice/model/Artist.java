@@ -20,17 +20,17 @@ public class Artist extends BaseEntity {
 
     @NotNull
     @NotEmpty
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String name;
 
-    @NotNull
-    @NotEmpty
+//    @NotNull
+//    @NotEmpty
     @ElementCollection
     @CollectionTable(name = "notes", joinColumns = @JoinColumn(name = "source_id"))
     private Set<String> notes;
 
-    @NotNull
-    @NotEmpty
+//    @NotNull
+//    @NotEmpty
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "Artist_Genre",
             joinColumns = {@JoinColumn(name = "artist_id")},

@@ -1,30 +1,23 @@
 package com.epam.songservice.controller;
 
 import com.epam.songservice.dto.response.SongResponseDto;
-import com.epam.songservice.feign.index.IndexClient;
+import com.epam.songservice.jms.Producer;
 import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
-import com.epam.songservice.service.repository.ResourceRepositoryService;
 import com.epam.songservice.service.repository.SongRepositoryService;
-import com.epam.songservice.service.storage.SongStorageService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.epam.songservice.service.storage.Song.SongStorageService;
 import org.apache.commons.io.FilenameUtils;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.*;
-import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.core.MessageCreator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.jms.*;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -41,13 +34,7 @@ public class SongController {
     private SongRepositoryService repositoryService;
 
     @Autowired
-    private ResourceRepositoryService resourceRepositoryService;
-
-    @Autowired
-    private IndexClient indexService;
-
-    @Autowired
-    private JmsTemplate jmsTemplate;
+    private Producer producer;
 
     @Autowired
     private Mapper mapper;
@@ -95,34 +82,12 @@ public class SongController {
     //2. send song&source to jms + listen song from jms + save to db song
 
     // Content type 'multipart/form-data;boundary
-    @PostMapping(value = "/1", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<SongResponseDto> upload1(@RequestParam("data") MultipartFile multipartFile) throws Exception {
-        Song entity = upload1(multipartFile.getResource(), multipartFile.getOriginalFilename());
-
-        final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
-
-    // Content type 'multipart/form-data;boundary
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<SongResponseDto> upload(@RequestParam("data") MultipartFile multipartFile) throws Exception {
         Song entity = upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
 
         final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
-
-    // Content type 'multipart/form-data;boundary
-    @PostMapping(value = "/future", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public CompletableFuture<ResponseEntity<SongResponseDto>> uploadFuture(@RequestParam("data") MultipartFile multipartFile) throws Exception {
-        return CompletableFuture.supplyAsync(()-> {
-            try {
-                return upload(multipartFile);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        });
     }
 
     // Content type 'multipart/form-data;boundary
@@ -161,9 +126,22 @@ public class SongController {
     }
 
     // Content type 'multipart/form-data;boundary
+    @PostMapping(value = "/future", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public CompletableFuture<ResponseEntity<SongResponseDto>> uploadFuture(@RequestParam("data") MultipartFile multipartFile) throws Exception {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return upload(multipartFile);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        });
+    }
+
+    // Content type 'multipart/form-data;boundary
     @PostMapping(value = "/zip/future", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public CompletableFuture<ResponseEntity<List<SongResponseDto>>> uploadZipFuture(@RequestParam("data") MultipartFile multipartFile) throws Exception {
-        return CompletableFuture.supplyAsync(()-> {
+        return CompletableFuture.supplyAsync(() -> {
             try {
                 return uploadZip(multipartFile);
             } catch (Exception e) {
@@ -173,124 +151,33 @@ public class SongController {
         });
     }
 
+    // Content type 'multipart/form-data;boundary
+    @PostMapping(value = "/async", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public void uploadAsync(@RequestParam("data") MultipartFile multipartFile) throws Exception {
+        uploadAsync(multipartFile.getResource(), multipartFile.getOriginalFilename());
+    }
+
 
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public void delete(@PathVariable Long id) {
         Song entity = repositoryService.findById(id);
 
-//        indexService.delete(id);
-        deleteIndex(entity);
+//        deleteIndex(entity);
 
-        repositoryService.deleteById(id);
+//        repositoryService.deleteById(id);
 
         storageService.delete(entity);
     }
 
     private Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
-
-//        Song entity = Song.builder()
-//                .resource(resource)
-//                .title("test")
-//                .build();
-
         Song entity = storageService.upload(source, name);
-        entity = repositoryService.save(entity);
-
-        createIndex(entity);
 
         return entity;
     }
 
-    private Song upload1(org.springframework.core.io.Resource source, String name) throws Exception {
-
-        //sync mq
-        TextMessage message = (TextMessage) jmsTemplate.sendAndReceive("storage", new MessageCreator() {
-            @Override
-            public Message createMessage(Session session) throws JMSException {
-                try {
-                    BytesMessage bytesMessage = session.createBytesMessage();
-                    InputStream fileInputStream = source.getInputStream();
-                    final int BUFLEN = 64;
-                    byte[] buf1 = new byte[BUFLEN];
-                    int bytes_read = 0;
-                    while ((bytes_read = fileInputStream.read(buf1)) != -1) {
-                        bytesMessage.writeBytes(buf1, 0, bytes_read);
-                    }
-                    fileInputStream.close();
-
-                    bytesMessage.setStringProperty("name", name);
-
-                    bytesMessage.setJMSCorrelationID("123");
-
-                    return bytesMessage;
-                } catch (Exception e) {
-                    return null;
-                }
-            }
-        });
-
-        ObjectMapper Obj = new ObjectMapper();
-        Resource resource = Obj.readValue(message.getText(), Resource.class);
-        resource = resourceRepositoryService.save(resource);
-
-        Song entity = Song.builder()
-                .resource(resource)
-                .title("test")
-                .build();
-        entity = repositoryService.save(entity);
-
-        return entity;
-    }
-
-    private void createIndex(final Song entity){
-
-        indexService.create(entity);
-
-        //sync mq
-        jmsTemplate.sendAndReceive("index.create", new MessageCreator() {
-            @Override
-            public Message createMessage(Session session) throws JMSException {
-                try {
-                    Message message = session.createMessage();
-
-                    message.setObjectProperty("type", "songs");
-                    message.setObjectProperty("id", entity.getId());
-
-                    ObjectMapper Obj = new ObjectMapper();
-//                    message.setObjectProperty("source", Obj.writeValueAsString(entity));
-                    message.setObjectProperty("source", Obj.convertValue(entity, Map.class));
-
-                    message.setJMSCorrelationID("123");
-                    return message;
-                } catch (Exception e) {
-                    return null;
-                }
-            }
-        });
-    }
-
-    private void deleteIndex(final Song entity){
-
-        indexService.delete(entity);
-
-        //sync mq
-        jmsTemplate.sendAndReceive("index.delete", new MessageCreator() {
-            @Override
-            public Message createMessage(Session session) throws JMSException {
-                try {
-                    Message message = session.createMessage();
-
-                    message.setObjectProperty("type", "songs");
-                    message.setObjectProperty("id", entity.getId());
-
-                    message.setJMSCorrelationID("123");
-                    return message;
-                } catch (Exception e) {
-                    return null;
-                }
-            }
-        });
+    private void uploadAsync(org.springframework.core.io.Resource source, String name) throws Exception {
+        producer.send(source, name);
     }
 
 }

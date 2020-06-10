@@ -4,8 +4,8 @@ import com.epam.songservice.model.Resource;
 
 public interface ResourceRepositoryService extends GenericService<Resource, Long> {
 
-    Resource findByChecksum(String checksum);
+    Resource findByChecksum(String s);
 
-    boolean existByChecksum(String checksum);
+    boolean existByChecksum(String s);
 
 }
