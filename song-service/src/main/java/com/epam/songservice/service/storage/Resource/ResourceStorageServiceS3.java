@@ -1,4 +1,4 @@
-package com.epam.songservice.service.storage;
+package com.epam.songservice.service.storage.Resource;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.S3Object;

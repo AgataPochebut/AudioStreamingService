@@ -2,7 +2,9 @@ package com.epam.songservice.jms;
 
 import com.epam.songservice.dto.response.ResourceResponseDto;
 import com.epam.songservice.model.Resource;
-import com.epam.songservice.service.storage.ResourceStorageFactory;
+import com.epam.songservice.model.Song;
+import com.epam.songservice.service.repository.SongRepositoryService;
+import com.epam.songservice.service.storage.Resource.ResourceStorageFactory;
 import com.epam.songservice.service.storage.Song.SongStorageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,9 @@ import java.util.zip.ZipInputStream;
 public class Consumer {
 
     @Autowired
+    private SongRepositoryService songRepositoryService;
+
+    @Autowired
     private SongStorageService songStorageService;
 
     @Autowired
@@ -39,8 +44,8 @@ public class Consumer {
     private Mapper mapper;
 
     //принять поток создать ресурс и песню
-    @JmsListener(destination = "storage")
-    public void listen(BytesMessage message) throws Exception {
+    @JmsListener(destination = "upload")
+    public void upload(BytesMessage message) throws Exception {
 
         //bytemessage + name => Resource source + name
         //SongStorageService.upload
@@ -77,6 +82,17 @@ public class Consumer {
         } else {
             songStorageService.upload(source, name);
         }
+    }
+
+    @JmsListener(destination = "download")
+    public void download(Message message) throws Exception {
+        Long id = message.getLongProperty("id");
+
+        Song entity = songRepositoryService.findById(id);
+        org.springframework.core.io.Resource source = songStorageService.download(entity);
+
+//        Resource resource = entity.getResource();
+//        resource.getName()
     }
 
     //sync response

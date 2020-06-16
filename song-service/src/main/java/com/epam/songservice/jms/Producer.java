@@ -8,10 +8,7 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Component;
 
-import javax.jms.BytesMessage;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.Session;
+import javax.jms.*;
 import java.io.InputStream;
 
 @Component
@@ -21,9 +18,9 @@ public class Producer {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    public void send(Resource source, String name) {
+    public void upload(Resource source, String name) {
 
-        jmsTemplate.send("storage", new MessageCreator() {
+        jmsTemplate.send("upload", new MessageCreator() {
             @Override
             public Message createMessage(Session session) throws JMSException {
                 try {
@@ -41,6 +38,26 @@ public class Producer {
 
                     bytesMessage.setJMSCorrelationID(RandomStringUtils.randomAscii(24));
                     bytesMessage.setJMSMessageID("1");
+
+                    return bytesMessage;
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+        });
+    }
+
+    public void download(Long id) {
+
+        jmsTemplate.send("download", new MessageCreator() {
+            @Override
+            public Message createMessage(Session session) throws JMSException {
+                try {
+                    Message bytesMessage = session.createMessage();
+
+                    bytesMessage.setLongProperty("id", id);
+
+                    bytesMessage.setJMSCorrelationID(RandomStringUtils.randomAscii(24));
 
                     return bytesMessage;
                 } catch (Exception e) {

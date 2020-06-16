@@ -1,4 +1,4 @@
-package com.epam.songservice.service.storage;
+package com.epam.songservice.service.storage.Resource;
 
 import com.epam.songservice.annotation.Decorate;
 import com.epam.songservice.annotation.StorageType;
