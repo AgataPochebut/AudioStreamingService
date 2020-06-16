@@ -91,6 +91,7 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+<!--		если включено то работает templates, иначе static-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>

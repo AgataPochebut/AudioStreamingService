@@ -4,8 +4,8 @@ import com.epam.songservice.annotation.Decorate;
 import com.epam.songservice.annotation.StorageType;
 import com.epam.songservice.feign.index.IndexClient;
 import com.epam.songservice.service.repository.*;
-import com.epam.songservice.service.storage.*;
 import com.epam.songservice.service.storage.Song.*;
+import com.epam.songservice.service.storage.Resource.*;
 import org.dozer.Mapper;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +24,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 //1. jmstemplate
 //2. invoker + interface
@@ -33,6 +34,7 @@ import org.springframework.jms.core.JmsTemplate;
         type = FilterType.ASSIGNABLE_TYPE, classes = JpaRepository.class))
 //@EntityScan({"com.epam.commonservice.model"})
 @EnableCaching
+@EnableAsync
 @EnableJms
 @EnableFeignClients
 @EnableDiscoveryClient
@@ -68,9 +70,6 @@ public class SongServiceApplication extends SpringBootServletInitializer {
 
     @Autowired
     private IndexClient indexService;
-
-//    @Autowired
-//    private JmsTemplate jmsTemplate;
 
     @Autowired
     private Mapper mapper;

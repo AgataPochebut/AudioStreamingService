@@ -1,4 +1,4 @@
-package com.epam.songservice.service.storage;
+package com.epam.songservice.service.storage.Resource;
 
 import com.epam.songservice.model.Resource;
 import org.springframework.cache.CacheManager;

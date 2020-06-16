@@ -3,7 +3,7 @@ package com.epam.songservice.service.storage.Song;
 import com.epam.songservice.annotation.Decorate;
 import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
-import com.epam.songservice.service.storage.ResourceStorageFactory;
+import com.epam.songservice.service.storage.Resource.ResourceStorageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
@@ -22,9 +22,7 @@ public class SongStorageServiceImpl implements SongStorageService {
     //receive from jms
     @Override
     public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
-
         Resource resource = resourceStorageFactory.getService().upload(source, name);
-
         return Song.builder()
                 .resource(resource)
                 .build();
