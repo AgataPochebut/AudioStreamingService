@@ -37,10 +37,4 @@ public class MainController {
 
         return "index";
     }
-
-    @RequestMapping(value = { "/upload" }, method = RequestMethod.GET)
-    public String songs(Model model) {
-        return "upload";
-    }
-
 }
