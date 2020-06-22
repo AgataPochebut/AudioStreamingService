@@ -1,6 +1,7 @@
 package com.epam.songservice.service.storage.Song;
 
 import com.epam.songservice.model.Song;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
@@ -17,11 +18,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Transactional
-public class MetadataDecorator extends SongStorageDecorator {
+public class SongMetadataDecorator extends SongStorageDecorator {
 
     private Mapper mapper;
 
-    public MetadataDecorator(SongStorageService storageService, Mapper mapper) {
+    public SongMetadataDecorator(SongStorageService storageService, Mapper mapper) {
         super(storageService);
         this.mapper = mapper;
     }
@@ -38,7 +39,11 @@ public class MetadataDecorator extends SongStorageDecorator {
         parser.parse(input, handler, metadata, parseCtx);
 
         Map<String, Object> metadataMap = new HashMap<>();
-        metadataMap.put("Title", metadata.get("title"));
+        if (metadata.get("title") != null && !metadata.get("title").isEmpty()) {
+            metadataMap.put("Title", metadata.get("title"));
+        } else {
+            metadataMap.put("Title", FilenameUtils.removeExtension(name));
+        }
         metadataMap.put("Year", metadata.get("xmpDM:releaseDate"));
 
         if (metadata.get("xmpDM:album") != null && !metadata.get("xmpDM:album").isEmpty()) {

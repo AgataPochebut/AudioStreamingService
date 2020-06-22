@@ -1,6 +1,7 @@
 package com.epam.songservice.service.storage.Song;
 
 import com.epam.songservice.feign.index.IndexClient;
+import com.epam.songservice.feign.index.SongIndexClient;
 import com.epam.songservice.model.Song;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,20 +13,28 @@ import javax.jms.Message;
 import javax.jms.Session;
 import java.util.Map;
 
-public class IndexDecorator extends SongStorageDecorator {
+public class SongIndexDecorator extends SongStorageDecorator {
 
     @Autowired
     private IndexClient indexService;
 
     @Autowired
+    private SongIndexClient indexClient;
+
+    @Autowired
     private JmsTemplate jmsTemplate;
 
-    public IndexDecorator(SongStorageService storageService, IndexClient indexService) {
+    public SongIndexDecorator(SongStorageService storageService, IndexClient indexService) {
         super(storageService);
         this.indexService = indexService;
     }
 
-    public IndexDecorator(SongStorageService storageService, JmsTemplate jmsTemplate) {
+    public SongIndexDecorator(SongStorageService storageService, SongIndexClient indexService) {
+        super(storageService);
+        this.indexClient = indexService;
+    }
+
+    public SongIndexDecorator(SongStorageService storageService, JmsTemplate jmsTemplate) {
         super(storageService);
         this.jmsTemplate = jmsTemplate;
     }
@@ -35,6 +44,8 @@ public class IndexDecorator extends SongStorageDecorator {
         Song entity = super.upload(source, name);
 
 //        indexService.create(entity);
+        //or
+//        indexClient.create(entity);
 
         //or
 
@@ -68,6 +79,8 @@ public class IndexDecorator extends SongStorageDecorator {
         super.delete(entity);
 
 //        indexService.delete(entity);
+        //or
+//        indexClient.delete(entity.getId());
 
         //or
 
@@ -92,7 +105,7 @@ public class IndexDecorator extends SongStorageDecorator {
 
     @Override
     public String test() {
-        return super.test() + " DBInsert";
+        return super.test() + " Index";
     }
 
 }

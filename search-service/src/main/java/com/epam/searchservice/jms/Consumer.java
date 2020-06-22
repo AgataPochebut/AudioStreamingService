@@ -26,7 +26,7 @@ public class Consumer {
     private RestHighLevelClient elasticsearchClient;
 
     @JmsListener(destination = "index.create")
-    public void listenIndex(Message message) throws IOException, JMSException {
+    public void create(Message message) throws IOException, JMSException {
         IndexRequest request = new IndexRequest();
         request.index("service");
         request.type(message.getStringProperty("type"));
@@ -36,7 +36,7 @@ public class Consumer {
     }
 
     @JmsListener(destination = "index.delete")
-    public void listenDelete(Message message) throws IOException, JMSException {
+    public void delete(Message message) throws IOException, JMSException {
         DeleteRequest request = new DeleteRequest();
         request.index("service");
         request.type(message.getStringProperty("type"));

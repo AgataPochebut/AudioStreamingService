@@ -16,7 +16,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="ALBUMS")
 public class Album extends BaseEntity {
 
     @NotNull
@@ -33,12 +32,12 @@ public class Album extends BaseEntity {
     @CollectionTable(name = "notes", joinColumns = @JoinColumn(name = "source_id"))
     private Set<String> notes;
 
-    @NotNull
-    @NotEmpty
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "Album_Artist",
-            joinColumns = {@JoinColumn(name = "album_id")},
-            inverseJoinColumns = {@JoinColumn(name = "artist_id")})
-    private Set<Artist> artists;
+//    @NotNull
+//    @NotEmpty
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(name = "Album_Artist",
+//            joinColumns = {@JoinColumn(name = "album_id")},
+//            inverseJoinColumns = {@JoinColumn(name = "artist_id")})
+//    private Set<Artist> artists;
 
 }

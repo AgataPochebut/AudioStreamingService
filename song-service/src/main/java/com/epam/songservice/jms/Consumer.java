@@ -1,26 +1,27 @@
 package com.epam.songservice.jms;
 
-import com.epam.songservice.dto.response.ResourceResponseDto;
-import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
+import com.epam.songservice.service.repository.ResourceRepositoryService;
 import com.epam.songservice.service.repository.SongRepositoryService;
 import com.epam.songservice.service.storage.Resource.ResourceStorageFactory;
 import com.epam.songservice.service.storage.Song.SongStorageService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Component;
 
 import javax.jms.*;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -33,6 +34,9 @@ public class Consumer {
 
     @Autowired
     private SongStorageService songStorageService;
+
+    @Autowired
+    private ResourceRepositoryService resourceRepositoryService;
 
     @Autowired
     private ResourceStorageFactory resourceStorageFactory;
@@ -96,30 +100,54 @@ public class Consumer {
     }
 
     //sync response
-    @JmsListener(destination = "storage1")
-    public void listen1(BytesMessage message) throws Exception {
+    @JmsListener(destination = "zip")
+    public void zip(Message message) throws Exception {
+        Long id = message.getLongProperty("id");
 
-        //bytemessage + name => Resource source + name
-        //SongStorageService.upload
+        com.epam.songservice.model.Resource resource = resourceRepositoryService.findById(id);
+        Resource source = resourceStorageFactory.getService().download(resource);
 
-        byte[] data = new byte[(int) message.getBodyLength()];
-        message.readBytes(data);
+        final List<Song> entity = new ArrayList<>();
 
-        org.springframework.core.io.Resource source = new ByteArrayResource(data);
-        String name = message.getStringProperty("name");
+        try (ZipInputStream zin = new ZipInputStream(source.getInputStream())) {
+            ZipEntry entry;
+            String name;
+            int c;
+            while ((entry = zin.getNextEntry()) != null) {
+                name = entry.getName(); // получим название файла
 
-        Resource entity = resourceStorageFactory.getService().upload(source, name);
+                if (!entry.isDirectory() && FilenameUtils.getExtension(name).equals("mp3")) {
+//                    File file = new File("/temp", FilenameUtils.getName(name));
+//                    file.getParentFile().mkdirs();
+//                    try (FileOutputStream fout = new FileOutputStream(file)) {
+//                        while ((c = zin.read()) >= 0) {
+//                            fout.write(c);
+//                        }
+//                    }
+
+                    //загрузит оперативу. попробовать побайтово
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    IOUtils.copy(zin, out);
+
+                    entity.add(songStorageService.upload(new ByteArrayResource(out.toByteArray()), name));
+                }
+                zin.closeEntry();
+            }
+        }
+
+        finally{
+            message.setJMSDestination(null);
+            resourceStorageFactory.getService().delete(resource);
+        }
 
         jmsTemplate.send(message.getJMSReplyTo(), new MessageCreator() {
             @Override
             public Message createMessage(Session session) throws JMSException {
                 try {
-                    TextMessage textMessage = session.createTextMessage();
+                    ObjectMessage sendMessage = session.createObjectMessage();
+                    sendMessage.setObject((Serializable) entity);
 
-                    ObjectMapper Obj = new ObjectMapper();
-                    textMessage.setText(Obj.writeValueAsString(mapper.map(entity, ResourceResponseDto.class)));
-
-                    return textMessage;
+                    return sendMessage;
                 } catch (Exception e) {
                     return null;
                 }

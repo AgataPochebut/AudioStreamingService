@@ -14,37 +14,22 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="SONGS")
-//@Document(indexName = "service", type = "songs")
 public class Song extends BaseEntity {
 
-//    @NotNull
-//    @NotEmpty
-//    @Column(nullable = false)
-    private String title;
+   private String title;
 
-//    @NotNull
-//    @NotEmpty
-//    @Column(nullable = false)
     private Date year;
 
-//    @NotNull
-//    @NotEmpty
     @ElementCollection
     @CollectionTable(name = "notes", joinColumns = @JoinColumn(name = "source_id"))
     private Set<String> notes;
 
-//    @NotNull
-//    @NotEmpty
     @ManyToOne
     @JoinColumn(name = "album_id")
-//    @Field(type = FieldType.Nested, includeInParent = true)
     private Album album;
 
-//    @NotNull
-//    @NotEmpty
-    @OneToOne
-    @JoinColumn(name = "resource_id")
-    private Resource resource;
+//    @OneToOne
+//    @JoinColumn(name = "resource_id")
+//    private Resource resource;
 
 }

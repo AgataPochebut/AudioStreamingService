@@ -3,6 +3,7 @@ package com.epam.songservice;
 import com.epam.songservice.annotation.Decorate;
 import com.epam.songservice.annotation.StorageType;
 import com.epam.songservice.feign.index.IndexClient;
+import com.epam.songservice.feign.index.SongIndexClient;
 import com.epam.songservice.service.repository.*;
 import com.epam.songservice.service.storage.Song.*;
 import com.epam.songservice.service.storage.Resource.*;
@@ -49,14 +50,6 @@ public class SongServiceApplication extends SpringBootServletInitializer {
 
 //    @Autowired
 //    private ConversionClient conversionService;
-//
-//    //or
-//
-//    @LoadBalanced
-//    @Bean
-//    RestTemplate restTemplate() {
-//        return new RestTemplate();
-//    }
 
     @Autowired
     private JmsTemplate jmsTemplate;
@@ -70,6 +63,9 @@ public class SongServiceApplication extends SpringBootServletInitializer {
 
     @Autowired
     private IndexClient indexService;
+
+    @Autowired
+    private SongIndexClient songIndexClient;
 
     @Autowired
     private Mapper mapper;
@@ -105,9 +101,10 @@ public class SongServiceApplication extends SpringBootServletInitializer {
                     SongStorageService newbean = (SongStorageService) bean;
                     if (bean.getClass().isAnnotationPresent(Decorate.class)
                             && bean.getClass().getAnnotation(Decorate.class).value() == SongStorageDecorator.class) {
-//                        newbean = new MetadataDecorator(newbean, mapper);
+                        newbean = new SongMetadataDecorator(newbean, mapper);
                         newbean = new SongDBDecorator(newbean, songRepositoryService);
-//                        newbean = new IndexDecorator(newbean, jmsTemplate);
+//                        newbean = new SongIndexDecorator(newbean, jmsTemplate);
+                        newbean = new SongCleanupDecorator(newbean, resourceRepositoryService);
                         newbean = new SongDedupingDecorator(newbean, songRepositoryService);
                     }
                     return newbean;

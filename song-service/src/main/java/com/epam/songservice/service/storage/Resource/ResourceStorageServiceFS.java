@@ -6,10 +6,10 @@ import com.epam.songservice.model.FSResource;
 import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.StorageTypes;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,14 +27,9 @@ public class ResourceStorageServiceFS implements ResourceStorageService {
 
     @Override
     public Resource upload(org.springframework.core.io.Resource source, String name) throws IOException {
-        File file;
-        if (source.isFile()) {
-            file = source.getFile();
-        } else {
-            file = new File(defaultBaseFolder, name);
-            file.getParentFile().mkdirs();
-            FileCopyUtils.copy(source.getInputStream(), new FileOutputStream(file));
-        }
+        File file = new File(defaultBaseFolder, name);
+        file.getParentFile().mkdirs();
+        IOUtils.copy(source.getInputStream(), new FileOutputStream(file));
 
         FSResource resource = new FSResource();
         resource.setName(file.getName());
@@ -42,15 +37,6 @@ public class ResourceStorageServiceFS implements ResourceStorageService {
         resource.setChecksum(DigestUtils.md5Hex(new FileInputStream(file)));
         resource.setPath(file.getAbsolutePath());
         return resource;
-
-//        return new FSResource().builder()
-//                .path(file.getAbsolutePath())
-////                .parent(file.getParent())
-//                .name(file.getName())
-//                .size(file.length())
-//                .checksum(DigestUtils.md5Hex(new FileInputStream(file)))
-//                .storageType(StorageTypes.FS)
-//                .build();
     }
 
     @Override

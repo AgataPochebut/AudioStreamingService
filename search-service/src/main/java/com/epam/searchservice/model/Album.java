@@ -6,8 +6,8 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import java.util.Date;
 
 @Data
-@Document(indexName="songs")
-public class Song extends BaseEntity {
+@Document(indexName="album")
+public class Album extends BaseEntity {
 
     private String title;
 
@@ -15,7 +15,6 @@ public class Song extends BaseEntity {
 
 //    private Set<String> notes;
 
-//    @Field//(type = FieldType.Nested, includeInParent = false)
-    private Album album;
+//    private Set<Artist> artists;
 
 }
