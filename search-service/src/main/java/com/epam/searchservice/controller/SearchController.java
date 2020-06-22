@@ -42,7 +42,8 @@ public class SearchController {
     @GetMapping("/client/{keyword}")
     public ResponseEntity<List<SearchResponseDto>> searchClient(@PathVariable String keyword) throws IOException {
 
-        QueryBuilder queryBuilder = QueryBuilders.matchAllQuery();
+        QueryBuilder queryBuilder = QueryBuilders.queryStringQuery(keyword);
+
 
         SearchRequest searchRequest = new SearchRequest("service");
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
@@ -60,10 +61,10 @@ public class SearchController {
     @GetMapping("/template/{keyword}")
     public ResponseEntity<List<SearchResponseDto>> searchTemplate(@PathVariable String keyword) throws IOException {
 
-        QueryBuilder queryBuilder = QueryBuilders.matchAllQuery();
+        QueryBuilder queryBuilder = QueryBuilders.queryStringQuery(keyword);
 
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
-                .withIndices("service")
+                .withIndices("test")
                 .withQuery(queryBuilder)
                 .build();
 

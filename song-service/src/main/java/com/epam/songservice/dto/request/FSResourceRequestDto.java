@@ -5,12 +5,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ResourceRequestDto {
+public class FSResourceRequestDto extends ResourceRequestDto {
 
-    private String name;
-
-    private Long size;
-
-    private String checksum;
+    private String path;
 
 }

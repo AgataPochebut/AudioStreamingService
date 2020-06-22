@@ -1,10 +1,17 @@
 $(document).ready(function () {
 
-    $("#btnSubmit").click(function (event) {
+    $("#btnUpload").click(function (event) {
         //stop submit the form, we will post it manually.
         event.preventDefault();
 
         ajax_upload();
+    });
+
+    $("#btnUploadZip").click(function (event) {
+        //stop submit the form, we will post it manually.
+        event.preventDefault();
+
+        ajax_upload_zip();
     });
 
     $("#btnDownload").click(function (event) {
@@ -23,9 +30,7 @@ function ajax_upload() {
 
     var data = new FormData(form);
 
-    data.append("CustomField", "This is some extra data, testing");
-
-    $("#btnSubmit").prop("disabled", true);
+    $("#btnUpload").prop("disabled", true);
 
     $.ajax({
         type: "POST",
@@ -41,14 +46,51 @@ function ajax_upload() {
 
             $("#result").text(data);
             console.log("SUCCESS : ", data);
-            $("#btnSubmit").prop("disabled", false);
+            $("#btnUpload").prop("disabled", false);
 
         },
         error: function (e) {
 
             $("#result").text(e.responseText);
             console.log("ERROR : ", e);
-            $("#btnSubmit").prop("disabled", false);
+            $("#btnUpload").prop("disabled", false);
+
+        }
+    });
+
+}
+
+function ajax_upload_zip() {
+
+    //Get form
+    var form = $('#fileUploadForm')[0];
+
+    var data = new FormData(form);
+
+    $("#btnUploadZip").prop("disabled", true);
+
+    $.ajax({
+        type: "POST",
+        enctype: 'multipart/form-data',
+        url: "/song-service/songs/upload/zip",
+        data: data,
+        processData: false,//prevent jQuery from automatically transforming the data into a query string
+        contentType: false,
+        cache: false,
+        timeout: 600000,
+
+        success: function (data) {
+
+            $("#result").text(data);
+            console.log("SUCCESS : ", data);
+            $("#btnUploadZip").prop("disabled", false);
+
+        },
+        error: function (e) {
+
+            $("#result").text(e.responseText);
+            console.log("ERROR : ", e);
+            $("#btnUploadZip").prop("disabled", false);
 
         }
     });
@@ -59,8 +101,6 @@ function ajax_download() {
 
     //Get form
     var url = $(this).attr('href');
-
-    $("#btnSubmit").prop("disabled", true);
 
     $.ajax({
         type: "GET",

@@ -3,6 +3,7 @@ package com.epam.songservice;
 import com.epam.songservice.dto.response.SongResponseDto;
 import com.epam.songservice.model.Song;
 import com.epam.songservice.service.repository.SongRepositoryService;
+import lombok.extern.slf4j.Slf4j;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
+@Slf4j
 public class MainController {
 
     @Autowired
@@ -24,6 +26,7 @@ public class MainController {
 
     @RequestMapping(value = { "/", "/index" }, method = RequestMethod.GET)
     public String index(Model model) {
+        log.info("1234567890");
 
         model.addAttribute("username", "user");
 

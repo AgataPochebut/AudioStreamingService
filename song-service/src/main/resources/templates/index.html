@@ -6,14 +6,22 @@
     <!--    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>-->
 </head>
 <body>
-<h2>Hello,[[${username}]]!</h2>
+<h2>Hello, [[${username}]]!</h2>
+
+<div>
+    <p>
+        <a href="/login">login</a>
+        <a href="/logout">logout</a>
+    </p>
+</div>
 
 <form method="POST" enctype="multipart/form-data" id="fileUploadForm">
     <!--    <input type="text" name="extraField"/><br/><br/>-->
     <!--    <input type="file" name="files"/><br/><br/>-->
     <!--    <input type="file" name="files"/><br/><br/>-->
     <input type="file" name="data"/><br/><br/>
-    <input type="submit" value="Submit" id="btnSubmit"/>
+    <input type="submit" value="Upload" id="btnUpload"/>
+    <input type="submit" value="Upload zip" id="btnUploadZip"/>
 </form>
 
 <h2>Ajax Post Result</h2>
@@ -44,8 +52,6 @@
                     </tbody>
                 </table>
             </div>
-            <p class="my-5"><a href="/login" class="btn btn-primary"><i class="fas fa-user-plus ml-2"></i>login</a></p>
-            <p class="my-5"><a href="/logout" class="btn btn-primary"><i class="fas fa-user-plus ml-2"></i>logout</a></p>
         </div>
     </div>
 </div>

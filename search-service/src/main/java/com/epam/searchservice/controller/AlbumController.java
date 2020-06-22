@@ -1,31 +1,24 @@
 package com.epam.searchservice.controller;
 
-import com.epam.searchservice.model.Song;
-import com.epam.searchservice.service.SongRepositoryService;
+import com.epam.searchservice.model.Album;
+import com.epam.searchservice.service.AlbumRepositoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
-@RequestMapping("/songs")
-public class SongController {
+@RequestMapping("/albums")
+public class AlbumController {
 
     @Autowired
-    private SongRepositoryService repositoryService;
-
-    @GetMapping
-    @ResponseBody
-    public List<Song> read() {
-        return repositoryService.findAll();
-    }
+    private AlbumRepositoryService repositoryService;
 
     @PostMapping
-    @ResponseBody
-    public Song create(@RequestBody Song entity) throws Exception {
-        return repositoryService.save(entity);
+    @ResponseStatus(value = HttpStatus.OK)
+    public void create(@RequestBody Album entity) throws Exception {
+        repositoryService.save(entity);
     }
 
     @DeleteMapping(value = "/{id}")
