@@ -65,7 +65,12 @@
 			<version>${hibernate.validator}</version>
 		</dependency>
 
-    </dependencies>
+		<dependency>
+			<groupId>jakarta.persistence</groupId>
+			<artifactId>jakarta.persistence-api</artifactId>
+		</dependency>
+
+	</dependencies>
 
 	<build>
 		<plugins>

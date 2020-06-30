@@ -18,25 +18,18 @@ zuul:
     song-service:
       path: /song-service/**
       serviceId: song-service
-#      url: http://localhost:8082
-#      stripPrefix: false
     play-service:
       path: /play-service/**
       serviceId: play-service
-#      url: http://localhost:8083
-#      stripPrefix: false
     conversion-service:
       path: /conversion-service/**
       serviceId: conversion-service
-#      url: http://localhost:8084
-#      stripPrefix: false
     search-service:
       path: /search-service/**
       serviceId: search-service
-#      url: http://localhost:8085
-#      stripPrefix: false
     storage-service:
       path: /storage-service/**
       serviceId: storage-service
-#      url: http://localhost:8086
-#      stripPrefix: false
+    ui:
+      path: /ui/**
+      serviceId: ui

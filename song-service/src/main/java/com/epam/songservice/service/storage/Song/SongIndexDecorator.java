@@ -1,6 +1,5 @@
 package com.epam.songservice.service.storage.Song;
 
-import com.epam.songservice.feign.index.IndexClient;
 import com.epam.songservice.feign.index.SongIndexClient;
 import com.epam.songservice.model.Song;
 import com.fasterxml.jackson.databind.ObjectMapper;
