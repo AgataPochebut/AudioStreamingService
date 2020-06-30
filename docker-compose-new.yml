@@ -8,30 +8,30 @@ volumes:
 
 services:
 
-#  mysql:
-#    image: mysql:8.0
-#    environment:
-#      MYSQL_ROOT_PASSWORD: root
-#    ports:
-#      - 3306:3306
-#    volumes:
-#      - mysql-data:/var/lib/mysql
-#
-#  redis:
-#    image: redis:3.0
-#    ports:
-#      - 6379:6379
-#    volumes:
-#      - redis-data:/var/lib/redis
-#
-#  activemq:
-#    image: rmohr/activemq:5.14.5-alpine
-#    ports:
-#      - 8161:8161
-#    volumes:
-#      - activemq-data:/var/lib/activemq
-#    #      - activemq-data:/opt/activemq/conf
-#    #      - activemq-data:/opt/activemq/data
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  redis:
+    image: redis:3.0
+    ports:
+      - 6379:6379
+    volumes:
+      - redis-data:/var/lib/redis
+
+  activemq:
+    image: rmohr/activemq:5.14.5-alpine
+    ports:
+      - 8161:8161
+    volumes:
+      - activemq-data:/var/lib/activemq
+    #      - activemq-data:/opt/activemq/conf
+    #      - activemq-data:/opt/activemq/data
 
   elasticsearch:
     container_name: elasticsearch
@@ -56,3 +56,55 @@ services:
       - 5601:5601
     depends_on:
       - elasticsearch
+
+
+  config:
+    build: ./config
+
+  discovery:
+    build: ./discovery
+    ports:
+      - 8761:8761
+    depends_on:
+      - config
+
+  gateway:
+    build: ./gateway
+    ports:
+      - 8080:8080
+    depends_on:
+      - config
+      - discovery
+      - auth-service
+
+  auth-service:
+    build: ./auth-service
+    depends_on:
+      - config
+      - mysql
+#
+#  song-service:
+#    build: ./song-service
+#    depends_on:
+#      - config
+#      - conversion-service
+#      - mysql
+#      - redis
+#      - activemq
+#
+#  conversion-service:
+#    build: ./conversion-service
+#    depends_on:
+#      - config
+#
+#  search-service:
+#    build: ./search-service
+#    depends_on:
+#      - config
+#      - elasticsearch
+#
+#  play-service:
+#    build: ./play-service
+#    depends_on:
+#      - config
+#      - mysql
