@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-
 @Builder
 @Data
 @AllArgsConstructor
@@ -17,7 +15,6 @@ public class Resource extends BaseEntity {
 
     private Long size;
 
-    @Column(unique = true)
     private String checksum;
 
 //    @Enumerated(EnumType.STRING)

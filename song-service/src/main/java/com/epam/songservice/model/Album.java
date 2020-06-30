@@ -24,19 +24,12 @@ public class Album extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-//    @NotNull
-//    @NotEmpty
-//    @Column(nullable = false)
     private Date year;
 
-//    @NotNull
-//    @NotEmpty
     @ElementCollection
     @CollectionTable(name = "notes", joinColumns = @JoinColumn(name = "source_id"))
     private Set<String> notes;
 
-//    @NotNull
-//    @NotEmpty
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "Album_Artist",
             joinColumns = {@JoinColumn(name = "album_id")},

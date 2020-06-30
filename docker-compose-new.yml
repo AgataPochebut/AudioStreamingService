@@ -1,0 +1,58 @@
+version: '3.1'
+
+volumes:
+  mysql-data:
+  redis-data:
+  activemq-data:
+  es-data:
+
+services:
+
+#  mysql:
+#    image: mysql:8.0
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root
+#    ports:
+#      - 3306:3306
+#    volumes:
+#      - mysql-data:/var/lib/mysql
+#
+#  redis:
+#    image: redis:3.0
+#    ports:
+#      - 6379:6379
+#    volumes:
+#      - redis-data:/var/lib/redis
+#
+#  activemq:
+#    image: rmohr/activemq:5.14.5-alpine
+#    ports:
+#      - 8161:8161
+#    volumes:
+#      - activemq-data:/var/lib/activemq
+#    #      - activemq-data:/opt/activemq/conf
+#    #      - activemq-data:/opt/activemq/data
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
+    environment:
+      #      - bootstrap.memory_lock=true
+      #      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - cluster.name=docker-cluster
+      - discovery.type=single-node
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:7.8.0
+    environment:
+      SERVER_HOST: 0.0.0.0
+      ELASTICSEACH_URL: http://elasticsearch:9200
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch

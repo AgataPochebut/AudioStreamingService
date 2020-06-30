@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
@@ -15,8 +17,12 @@ import javax.persistence.Entity;
 //@Table(name="S3Resource")
 public class S3Resource extends Resource {
 
+    @NotNull
+    @NotEmpty
     private String bucketName;
 
+    @NotNull
+    @NotEmpty
     private String keyName;
 
 }

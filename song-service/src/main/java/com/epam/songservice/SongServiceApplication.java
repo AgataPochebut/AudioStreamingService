@@ -2,7 +2,6 @@ package com.epam.songservice;
 
 import com.epam.songservice.annotation.Decorate;
 import com.epam.songservice.annotation.StorageType;
-import com.epam.songservice.feign.index.IndexClient;
 import com.epam.songservice.feign.index.SongIndexClient;
 import com.epam.songservice.service.repository.*;
 import com.epam.songservice.service.storage.Song.*;
@@ -27,13 +26,10 @@ import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-//1. jmstemplate
-//2. invoker + interface
 @SpringBootApplication
 @EnableJpaRepositories
         (includeFilters = @ComponentScan.Filter(
         type = FilterType.ASSIGNABLE_TYPE, classes = JpaRepository.class))
-//@EntityScan({"com.epam.commonservice.model"})
 @EnableCaching
 @EnableAsync
 @EnableJms
@@ -59,7 +55,6 @@ public class SongServiceApplication extends SpringBootServletInitializer {
 
     @Autowired
     private ResourceStorageFactory resourceStorageFactory;
-
 
     @Autowired
     private IndexClient indexService;
