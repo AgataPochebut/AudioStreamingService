@@ -1,167 +1,128 @@
 version: '3.1'
-#networks:
-#  wp-proxy:
-#    driver: bridge
-#  wp-db:
-#    driver: bridge
-#
+
 volumes:
-  db-mysql:
-#  wp-uploads:
-#  wp-plugins:
+  mysql-data:
+  redis-data:
+  activemq-data:
+  es-data:
 
 services:
+
   mysql:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_ROOT_PASSWORD: root
     ports:
-      - "3306:3306"
+      - 3306:3306
     volumes:
-      - db-mysql:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
 
   redis:
     image: redis:3.0
-    restart: always
     ports:
-      - "6379:6379"
+      - 6379:6379
+    volumes:
+      - redis-data:/var/lib/redis
 
   activemq:
     image: rmohr/activemq:5.14.5-alpine
-    restart: always
     ports:
-      # ui
-      - "8161:8161"
-#      # amqp
-#      - "5672:5672"
-#      # stomp
-#      - "61613:61613"
-#      # ws
-#      - "61614:61614"
-#      # mqtt
-#      - "1883:1883"
-#      # jms
-#      - "61616:61616"
-#    volumes:
-#      - "activemq-data:/opt/activemq/conf"
-#      - "activemq-data:/opt/activemq/conf"
-#      - "activemq-data:/opt/activemq/data"
+      - 8161:8161
+    volumes:
+      - activemq-data:/var/lib/activemq
+    #      - activemq-data:/opt/activemq/conf
+    #      - activemq-data:/opt/activemq/data
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
-    volumes:
-      - 'es_data:/usr/share/elasticsearch/data'
-    ports:
-      - "9200:9200"
     environment:
-      - bootstrap.memory_lock=true
-      - cluster.name=springelasticgenie
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - "discovery.type=single-node"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-
-  elastichq:
-    image: elastichq/elasticsearch-hq
-    ports:
-      - "5000:5000"
-    links:
-      - elasticsearch
-    depends_on:
-      - elasticsearch
-
-  logstash:
-    image: docker.elastic.co/logstash/logstash:7.8.0
+      - cluster.name=docker-cluster
+      - discovery.type=single-node
     volumes:
-      - ./logstash/config-dir:/usr/share/logstash/config-dir
-      - ./logstash/drivers/:/usr/share/logstash/drivers
-    command: logstash -f /usr/share/logstash/config-dir/logstash.conf
-    env_file:
-      - core.env
-    links:
-      - elasticsearch
-    depends_on:
-      - elasticsearch
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:7.8.0
+      - es-data:/usr/share/elasticsearch/data
     ports:
-      - "5601:5601"
-    environment:
-      - ELASTICSEACH_URL=http://elasticsearch:9200
-    links:
-      - elasticsearch
-    depends_on:
-      - elasticsearch
+      - 9200:9200
 
-  config:
-    build: ./config
-    restart: always
+#  kibana:
+#    image: docker.elastic.co/kibana/kibana:7.8.0
+#    environment:
+#      ELASTICSEACH_URL: http://elasticsearch:9200
+#    restart: on-failure
+#    ports:
+#      - 5601:5601
+#    depends_on:
+#      - elasticsearch
 
   discovery:
-    depends_on:
-      - config
     build: ./discovery
-    restart: always
     ports:
       - 8761:8761
 
+  config:
+    build: ./config
+    ports:
+      - 8888:8888
+
   gateway:
-    depends_on:
-      - config
-      - discovery
-#      - auth-service
     build: ./gateway
-    restart: always
+    environment:
+      CONFIG_SERVER: http://config:8888
+      DISCOVERY_SERVER: http://discovery:8761/eureka
+    restart: on-failure
     ports:
       - 8080:8080
+    depends_on:
+      - config
 
   auth-service:
+    build: ./auth-service
+    environment:
+      CONFIG_SERVER: http://config:8888
+      DISCOVERY_SERVER: http://discovery:8761/eureka
+    restart: on-failure
     depends_on:
       - config
       - mysql
-    build:
-      context:
-      dockerfile:
 
   song-service:
+    build: ./song-service
+    environment:
+      CONFIG_SERVER: http://config:8888
+      DISCOVERY_SERVER: http://discovery:8761/eureka
+    restart: on-failure
     depends_on:
       - config
       - conversion-service
+      - search-service
       - mysql
       - redis
       - activemq
 
   conversion-service:
+    build: ./conversion-service
+    environment:
+      CONFIG_SERVER: http://config:8888
+      DISCOVERY_SERVER: http://discovery:8761/eureka
+    restart: on-failure
     depends_on:
       - config
 
   search-service:
+    build: ./search-service
+    environment:
+      CONFIG_SERVER: http://config:8888
+      DISCOVERY_SERVER: http://discovery:8761/eureka
+    restart: on-failure
     depends_on:
       - config
       - elasticsearch
 
   play-service:
+    build: ./play-service
+    environment:
+      CONFIG_SERVER: http://config:8888
+      DISCOVERY_SERVER: http://discovery:8761/eureka
+    restart: on-failure
     depends_on:
       - config
       - mysql
-
-
-  backend:
-    image: endgamebackend:v1
-    environment:
-      DB_USER: john
-      DB_PASS: example
-      DB: endgame
-      DB_HOST: db
-    links:
-      - db
-
-  frontend:
-    image: endgamefrontend:v1
-    ports:
-      - 80:5000
-    links:
-      - backend
