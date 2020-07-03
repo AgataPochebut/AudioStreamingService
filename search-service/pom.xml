@@ -11,7 +11,7 @@
 	<groupId>com.epam</groupId>
 	<artifactId>search-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>search-service</name>
 	<description>search-service</description>
 
@@ -122,15 +122,11 @@
 			<version>${hibernate.validator}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.epam</groupId>
-			<artifactId>common-service</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-
 	</dependencies>
 
 	<build>
+		<finalName>search-service</finalName>
+
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
