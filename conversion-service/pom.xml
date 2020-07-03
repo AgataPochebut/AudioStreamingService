@@ -11,7 +11,7 @@
 	<groupId>com.epam</groupId>
 	<artifactId>conversion-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>conversion-service</name>
 	<description>conversion-service</description>
 
@@ -113,6 +113,8 @@
 	</dependencies>
 
 	<build>
+		<finalName>conversion-service</finalName>
+
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

@@ -11,7 +11,7 @@
     <groupId>com.epam</groupId>
     <artifactId>play-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>play-service</name>
     <description>play-service</description>
 
@@ -145,6 +145,8 @@
     </dependencies>
 
     <build>
+        <finalName>play-service</finalName>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

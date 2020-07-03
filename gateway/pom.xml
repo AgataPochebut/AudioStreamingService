@@ -11,7 +11,7 @@
 	<groupId>com.epam</groupId>
 	<artifactId>gateway</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>gateway</name>
 	<description>Demo project for Spring Boot</description>
 
@@ -152,6 +152,8 @@
     </dependencies>
 
 	<build>
+		<finalName>gateway</finalName>
+
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

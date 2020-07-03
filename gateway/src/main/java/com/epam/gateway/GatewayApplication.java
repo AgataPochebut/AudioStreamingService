@@ -14,12 +14,10 @@ import org.springframework.jms.annotation.EnableJms;
 @EnableFeignClients
 @EnableDiscoveryClient
 @EnableHystrixDashboard
-//@ComponentScan
 public class GatewayApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(GatewayApplication.class, args);
 	}
 
-//	OAuth2AuthenticationToken
 }
