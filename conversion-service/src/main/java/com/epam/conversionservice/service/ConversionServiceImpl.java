@@ -36,32 +36,5 @@ public class ConversionServiceImpl implements ConversionService {
         return newfile;
     }
 
-    @Override
-    public Resource convert(Resource source, String format) throws IOException {
-        if(FilenameUtils.getExtension(source.getFilename()).equals(format)) return source;
-
-        File file;
-        if (source.isFile()) {
-            file = source.getFile();
-        }
-        else {
-            file = new File(defaultBaseFolder, source.getFilename());
-            file.getParentFile().mkdirs();
-            FileCopyUtils.copy(source.getInputStream(), new FileOutputStream(file));
-        }
-
-        return new FileSystemResource(convert(file, format));
-    }
-
-    @Override
-    public byte[] convert(byte[] source, String name, String format) throws IOException {
-        if (FilenameUtils.getExtension(name).equals(format)) return source;
-
-        File file = new File(defaultBaseFolder, name);
-        file.getParentFile().mkdirs();
-        FileCopyUtils.copy(source, file);
-
-        return FileCopyUtils.copyToByteArray(convert(file, format));
-    }
 
 }
