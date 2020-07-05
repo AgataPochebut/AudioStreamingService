@@ -1,25 +1,25 @@
 package com.epam.songservice.jms;
 
 import com.epam.songservice.model.Song;
-import com.epam.songservice.service.repository.ResourceRepositoryService;
-import com.epam.songservice.service.repository.SongRepositoryService;
-import com.epam.songservice.service.storage.Resource.ResourceStorageFactory;
 import com.epam.songservice.service.storage.Song.SongStorageService;
+import com.epam.resourceservice.model.Resource;
+import com.epam.resourceservice.service.storage.ResourceStorageFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Component;
 
-import javax.jms.*;
-import java.io.*;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.ObjectMessage;
+import javax.jms.Session;
+import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -30,13 +30,7 @@ import java.util.zip.ZipInputStream;
 public class Consumer {
 
     @Autowired
-    private SongRepositoryService songRepositoryService;
-
-    @Autowired
     private SongStorageService songStorageService;
-
-    @Autowired
-    private ResourceRepositoryService resourceRepositoryService;
 
     @Autowired
     private ResourceStorageFactory resourceStorageFactory;
@@ -44,108 +38,21 @@ public class Consumer {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    @Autowired
-    private Mapper mapper;
-
-    //принять поток создать ресурс и песню
-    @JmsListener(destination = "upload")
-    public void upload(BytesMessage message) throws Exception {
-
-        //bytemessage + name => Resource source + name
-        //SongStorageService.upload
-
-        byte[] data = new byte[(int) message.getBodyLength()];
-        message.readBytes(data);
-
-        org.springframework.core.io.Resource source = new ByteArrayResource(data);
-        String name = message.getStringProperty("name");
-
-        if (FilenameUtils.getExtension(name).equals("zip")) {
-            try (ZipInputStream zin = new ZipInputStream(source.getInputStream())) {
-                ZipEntry entry;
-                String filename;
-                int c;
-                while ((entry = zin.getNextEntry()) != null) {
-
-                    filename = entry.getName(); // получим название файла
-
-                    if (!entry.isDirectory() && FilenameUtils.getExtension(filename).equals("mp3")) {
-                        File file = new File("/temp", FilenameUtils.getName(filename));
-                        file.getParentFile().mkdirs();
-                        try (FileOutputStream fout = new FileOutputStream(file)) {
-                            while ((c = zin.read()) >= 0) {
-                                fout.write(c);
-                            }
-                        }
-
-                        songStorageService.upload(new FileSystemResource(file), file.getName());
-                    }
-                    zin.closeEntry();
-                }
-            }
-        } else {
-            songStorageService.upload(source, name);
-        }
-    }
-
-    @JmsListener(destination = "download")
-    public void download(Message message) throws Exception {
-        Long id = message.getLongProperty("id");
-
-        Song entity = songRepositoryService.findById(id);
-        org.springframework.core.io.Resource source = songStorageService.download(entity);
-
-//        Resource resource = entity.getResource();
-//        resource.getName()
-    }
-
-    //sync response
     @JmsListener(destination = "zip")
-    public void zip(Message message) throws Exception {
-        Long id = message.getLongProperty("id");
+    public void upload(ObjectMessage message) throws Exception {
 
-        com.epam.songservice.model.Resource resource = resourceRepositoryService.findById(id);
-        Resource source = resourceStorageFactory.getService().download(resource);
+        final List<Song> result = new ArrayList<>();
 
-        final List<Song> entity = new ArrayList<>();
+        Resource resource = (Resource) message.getObject();
 
-        try (ZipInputStream zin = new ZipInputStream(source.getInputStream())) {
-            ZipEntry entry;
-            String name;
-            int c;
-            while ((entry = zin.getNextEntry()) != null) {
-                name = entry.getName(); // получим название файла
-
-                if (!entry.isDirectory() && FilenameUtils.getExtension(name).equals("mp3")) {
-//                    File file = new File("/temp", FilenameUtils.getName(name));
-//                    file.getParentFile().mkdirs();
-//                    try (FileOutputStream fout = new FileOutputStream(file)) {
-//                        while ((c = zin.read()) >= 0) {
-//                            fout.write(c);
-//                        }
-//                    }
-
-                    //загрузит оперативу. попробовать побайтово
-                    ByteArrayOutputStream out = new ByteArrayOutputStream();
-                    IOUtils.copy(zin, out);
-
-                    entity.add(songStorageService.upload(new ByteArrayResource(out.toByteArray()), name));
-                }
-                zin.closeEntry();
-            }
-        }
-
-        finally{
-            message.setJMSDestination(null);
-            resourceStorageFactory.getService().delete(resource);
-        }
+        upload(resource, result);
 
         jmsTemplate.send(message.getJMSReplyTo(), new MessageCreator() {
             @Override
             public Message createMessage(Session session) throws JMSException {
                 try {
                     ObjectMessage sendMessage = session.createObjectMessage();
-                    sendMessage.setObject((Serializable) entity);
+                    sendMessage.setObject((Serializable) result);
 
                     return sendMessage;
                 } catch (Exception e) {
@@ -155,5 +62,41 @@ public class Consumer {
         });
     }
 
+    public void upload(Resource resource, List<Song> result) throws Exception {
+        //1. zip - уже имеем id ресурса, получаем поток, распаковываем, для каждого файла: создается ресурс, сохраняется в storage, id ресурса закидывается в jms
+        //2. файл - уже имеем id ресурса, создаем песню на основании ресурса
+        //возвращаем массив песен
 
+        if (FilenameUtils.getExtension(resource.getName()).equals("zip")) {
+            org.springframework.core.io.Resource source = resourceStorageFactory.getService().download(resource);
+
+            ZipInputStream zin = new ZipInputStream(source.getInputStream());
+            ZipEntry entry;
+            String name;
+            int c;
+            while ((entry = zin.getNextEntry()) != null) {
+                if (!entry.isDirectory()) {
+                    name = entry.getName(); // получим название файла
+
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    IOUtils.copy(zin, out);
+                    org.springframework.core.io.Resource source1 = new ByteArrayResource(out.toByteArray());
+
+                    Resource resource1 = null;
+                    try {
+                        resource1 = resourceStorageFactory.getService().upload(source1, name);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                        continue;
+                    }
+
+                    upload(resource1, result);
+                }
+                zin.closeEntry();
+            }
+            resourceStorageFactory.getService().delete(resource);
+        } else {
+            result.add(songStorageService.upload(resource));
+        }
+    }
 }

@@ -181,6 +181,12 @@
             <version>2.2.4</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.epam</groupId>
+            <artifactId>storage-service</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 
     <build>

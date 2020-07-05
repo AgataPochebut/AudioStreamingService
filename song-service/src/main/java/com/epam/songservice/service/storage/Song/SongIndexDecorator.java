@@ -14,8 +14,8 @@ import java.util.Map;
 
 public class SongIndexDecorator extends SongStorageDecorator {
 
-    @Autowired
-    private IndexClient indexService;
+//    @Autowired
+//    private IndexClient indexService;
 
     @Autowired
     private SongIndexClient indexClient;
@@ -23,10 +23,10 @@ public class SongIndexDecorator extends SongStorageDecorator {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    public SongIndexDecorator(SongStorageService storageService, IndexClient indexService) {
-        super(storageService);
-        this.indexService = indexService;
-    }
+//    public SongIndexDecorator(SongStorageService storageService, IndexClient indexService) {
+//        super(storageService);
+//        this.indexService = indexService;
+//    }
 
     public SongIndexDecorator(SongStorageService storageService, SongIndexClient indexService) {
         super(storageService);
