@@ -1,6 +1,7 @@
 package com.epam.songservice.service.storage.Song;
 
 import com.epam.songservice.model.Song;
+import com.epam.resourceservice.model.Resource;
 
 public abstract class SongStorageDecorator implements SongStorageService {
 
@@ -13,6 +14,11 @@ public abstract class SongStorageDecorator implements SongStorageService {
     @Override
     public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
         return storageService.upload(source, name);
+    }
+
+    @Override
+    public Song upload(Resource resource) throws Exception {
+        return storageService.upload(resource);
     }
 
     @Override
