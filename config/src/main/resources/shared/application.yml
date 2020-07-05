@@ -62,7 +62,7 @@ eureka:
     prefer-ip-address: true
   client:
     service-url:
-      defaultZone: ${DISCOVERY_SERVER:http://localhost:8762/eureka}
+      defaultZone: ${DISCOVERY_SERVER:http://localhost:8761/eureka}
 
 logging:
   level:
