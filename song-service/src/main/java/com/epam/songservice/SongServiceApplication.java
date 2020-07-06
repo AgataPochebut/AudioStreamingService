@@ -22,7 +22,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableJms
 @EnableFeignClients
 @EnableDiscoveryClient
-@ComponentScan(basePackages = {"com.epam.resourceservice"})
+@ComponentScan(basePackages = {"com.epam.storageservice"})
 public class SongServiceApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {

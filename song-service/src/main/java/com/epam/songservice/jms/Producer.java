@@ -1,7 +1,7 @@
 package com.epam.songservice.jms;
 
-import com.epam.resourceservice.model.Resource;
 import com.epam.songservice.model.Song;
+import com.epam.storageservice.model.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

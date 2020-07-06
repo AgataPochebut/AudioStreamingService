@@ -1,0 +1,31 @@
+<configuration debug="true">
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>/Java/logs/storage-service.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+<!--    <appender name="LOGSTASH" class="ch.qos.logback.classic.net.SyslogAppender">-->
+<!--        <file>D:/Java/logs/song-service-logstash.log</file>-->
+<!--        <syslogHost>{logstash host }</syslogHost>-->
+<!--        <port>{ logstash port 25826 }</port>-->
+<!--        <facility>LOCAL1</facility>-->
+<!--        <suffixPattern>[%thread] %logger %msg</suffixPattern>-->
+<!--    </appender>-->
+
+    <root>
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+<!--        <appender-ref ref="LOGSTASH"/>-->
+    </root>
+
+</configuration>

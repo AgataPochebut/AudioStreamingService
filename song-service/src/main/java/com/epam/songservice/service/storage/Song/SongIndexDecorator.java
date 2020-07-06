@@ -2,7 +2,7 @@ package com.epam.songservice.service.storage.Song;
 
 import com.epam.songservice.feign.index.SongIndexClient;
 import com.epam.songservice.model.Song;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.epam.storageservice.model.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
@@ -10,23 +10,14 @@ import org.springframework.jms.core.MessageCreator;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
-import java.util.Map;
 
 public class SongIndexDecorator extends SongStorageDecorator {
-
-//    @Autowired
-//    private IndexClient indexService;
 
     @Autowired
     private SongIndexClient indexClient;
 
     @Autowired
     private JmsTemplate jmsTemplate;
-
-//    public SongIndexDecorator(SongStorageService storageService, IndexClient indexService) {
-//        super(storageService);
-//        this.indexService = indexService;
-//    }
 
     public SongIndexDecorator(SongStorageService storageService, SongIndexClient indexService) {
         super(storageService);
@@ -39,37 +30,9 @@ public class SongIndexDecorator extends SongStorageDecorator {
     }
 
     @Override
-    public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
-        Song entity = super.upload(source, name);
-
-//        indexService.create(entity);
-        //or
-//        indexClient.create(entity);
-
-        //or
-
-        //sync mq
-        jmsTemplate.sendAndReceive("index.create", new MessageCreator() {
-            @Override
-            public Message createMessage(Session session) throws JMSException {
-                try {
-                    Message message = session.createMessage();
-
-                    message.setObjectProperty("type", "songs");
-                    message.setObjectProperty("id", entity.getId());
-
-                    ObjectMapper Obj = new ObjectMapper();
-//                    message.setObjectProperty("source", Obj.writeValueAsString(entity));
-                    message.setObjectProperty("source", Obj.convertValue(entity, Map.class));
-
-                    message.setJMSCorrelationID("123");
-                    return message;
-                } catch (Exception e) {
-                    return null;
-                }
-            }
-        });
-
+    public Song upload1(Resource resource) throws Exception {
+        Song entity = super.upload1(resource);
+        indexClient.create(entity);
         return entity;
     }
 

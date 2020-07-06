@@ -2,11 +2,11 @@ package com.epam.songservice.controller;
 
 import com.epam.songservice.dto.response.SongResponseDto;
 import com.epam.songservice.jms.Producer;
-import com.epam.resourceservice.model.Resource;
 import com.epam.songservice.model.Song;
 import com.epam.songservice.service.repository.SongRepositoryService;
 import com.epam.songservice.service.storage.Song.SongStorageService;
-import com.epam.resourceservice.service.storage.ResourceStorageFactory;
+import com.epam.storageservice.model.Resource;
+import com.epam.storageservice.service.ResourceStorageFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +44,7 @@ public class SongController {
 
         Resource resource = resourceStorageFactory.getService().upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
 
-        Song entity = songStorageService.upload(resource);
-//        Song entity = storageService.upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
+        Song entity = songStorageService.upload1(resource);
 
         final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -99,8 +98,8 @@ public class SongController {
     public ResponseEntity<org.springframework.core.io.Resource> download(@PathVariable Long id) throws Exception {
         Song entity = songRepositoryService.findById(id);
 
-        org.springframework.core.io.Resource source = songStorageService.download(entity);
-        Resource resource = entity.getResource();
+        Resource resource = songStorageService.download1(entity);
+        org.springframework.core.io.Resource source = resourceStorageFactory.getService().download(resource);
 
         HttpHeaders headers = new HttpHeaders();
         ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
@@ -109,17 +108,6 @@ public class SongController {
         headers.setContentDisposition(contentDisposition);
 
         return new ResponseEntity<>(source, headers, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/download1/{id}", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
-    public void download1(@PathVariable Long id) throws Exception {
-        Song entity = songRepositoryService.findById(id);
-
-//        producer.download(id);
-        //1.отослать id
-        //2.принять ид, положить в очередь файл стримом
-        //1.взять файл из очереди стримом постепенно по мере поступления
-        //1.вернуть response в виде стрима
     }
 
     @DeleteMapping(value = "/{id}")

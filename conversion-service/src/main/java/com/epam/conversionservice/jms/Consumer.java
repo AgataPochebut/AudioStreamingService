@@ -1,8 +1,8 @@
 package com.epam.conversionservice.jms;
 
 import com.epam.conversionservice.service.ConversionService;
-import com.epam.resourceservice.model.Resource;
-import com.epam.resourceservice.service.storage.ResourceStorageFactory;
+import com.epam.storageservice.model.Resource;
+import com.epam.storageservice.service.ResourceStorageFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

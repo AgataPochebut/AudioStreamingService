@@ -2,8 +2,8 @@ package com.epam.songservice.jms;
 
 import com.epam.songservice.model.Song;
 import com.epam.songservice.service.storage.Song.SongStorageService;
-import com.epam.resourceservice.model.Resource;
-import com.epam.resourceservice.service.storage.ResourceStorageFactory;
+import com.epam.storageservice.model.Resource;
+import com.epam.storageservice.service.ResourceStorageFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -30,13 +30,13 @@ import java.util.zip.ZipInputStream;
 public class Consumer {
 
     @Autowired
+    private JmsTemplate jmsTemplate;
+
+    @Autowired
     private SongStorageService songStorageService;
 
     @Autowired
     private ResourceStorageFactory resourceStorageFactory;
-
-    @Autowired
-    private JmsTemplate jmsTemplate;
 
     @JmsListener(destination = "zip")
     public void upload(ObjectMessage message) throws Exception {
@@ -96,7 +96,7 @@ public class Consumer {
             }
             resourceStorageFactory.getService().delete(resource);
         } else {
-            result.add(songStorageService.upload(resource));
+            result.add(songStorageService.upload1(resource));
         }
     }
 }

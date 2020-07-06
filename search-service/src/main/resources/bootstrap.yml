@@ -5,6 +5,4 @@ spring:
   cloud:
     config:
       fail-fast: true
-#      discovery:
-#        enabled: true
-#        service-id: config
+      uri: ${CONFIG_SERVER:http://localhost:8888}

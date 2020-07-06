@@ -11,7 +11,7 @@ import org.springframework.jms.annotation.EnableJms;
 @SpringBootApplication
 @EnableJms
 @EnableDiscoveryClient
-@ComponentScan(basePackages = {"com.epam.resourceservice"})
+@ComponentScan(basePackages = {"com.epam.storageservice"})
 public class ConversionServiceApplication {
 
 	public static void main(String[] args) {
