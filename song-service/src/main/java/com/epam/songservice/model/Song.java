@@ -1,6 +1,5 @@
 package com.epam.songservice.model;
 
-import com.epam.resourceservice.model.Resource;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

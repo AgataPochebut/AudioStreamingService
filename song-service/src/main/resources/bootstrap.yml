@@ -6,4 +6,3 @@ spring:
     config:
       fail-fast: true
       uri: ${CONFIG_SERVER:http://localhost:8888}
-

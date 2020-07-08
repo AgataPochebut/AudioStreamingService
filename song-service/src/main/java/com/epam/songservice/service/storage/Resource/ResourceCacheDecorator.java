@@ -1,14 +1,13 @@
-package com.epam.resourceservice.service.storage;
+package com.epam.songservice.service.storage.Resource;
 
-import com.epam.resourceservice.model.Resource;
+import com.epam.songservice.model.Resource;
 import org.springframework.cache.CacheManager;
 
-public class CacheDecorator extends ResourceStorageDecorator {
-//можно сюда вставит репозиторий кэша
+public class ResourceCacheDecorator extends ResourceStorageDecorator {
 
     private CacheManager cacheManager;
 
-    public CacheDecorator(ResourceStorageService storageService, CacheManager cacheManager) {
+    public ResourceCacheDecorator(ResourceStorageService storageService, CacheManager cacheManager) {
         super(storageService);
         this.cacheManager = cacheManager;
     }
@@ -18,7 +17,7 @@ public class CacheDecorator extends ResourceStorageDecorator {
     public Resource upload(org.springframework.core.io.Resource source, String name) throws Exception {
 //        return super.upload(source);
         Resource resource = super.upload(source, name);
-        cacheManager.getCache("test").put(source, resource);
+        cacheManager.getCache("resources").put(resource, source);
         return resource;
     }
 
@@ -27,10 +26,10 @@ public class CacheDecorator extends ResourceStorageDecorator {
     public org.springframework.core.io.Resource download(Resource resource) throws Exception {
 //        return super.download(resource);
         org.springframework.core.io.Resource source = null;
-        source = cacheManager.getCache("test").get(resource, org.springframework.core.io.Resource.class);
+        source = cacheManager.getCache("resources").get(resource, org.springframework.core.io.Resource.class);
         if (source==null){
             source = super.download(resource);
-            cacheManager.getCache("test").put(resource, source);
+            cacheManager.getCache("resources").put(resource, source);
         }
         return source;
     }
@@ -38,7 +37,7 @@ public class CacheDecorator extends ResourceStorageDecorator {
     @Override
 //    @CacheEvict(cacheNames = "cachetest")
     public void delete(Resource resource) {
-        cacheManager.getCache("test").evictIfPresent(resource);
+        cacheManager.getCache("resources").evictIfPresent(resource);
         super.delete(resource);
     }
 

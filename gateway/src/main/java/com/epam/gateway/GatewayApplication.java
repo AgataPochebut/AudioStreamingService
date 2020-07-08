@@ -9,10 +9,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.jms.annotation.EnableJms;
 
 @SpringBootApplication
-@EnableZuulProxy
 @EnableJms
-@EnableFeignClients
 @EnableDiscoveryClient
+@EnableFeignClients
+@EnableZuulProxy
 @EnableHystrixDashboard
 public class GatewayApplication {
 
