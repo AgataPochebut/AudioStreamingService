@@ -1,7 +1,7 @@
 package com.epam.songservice.service.storage.Song;
 
+import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
-import com.epam.resourceservice.model.Resource;
 
 public abstract class SongStorageDecorator implements SongStorageService {
 
@@ -12,28 +12,23 @@ public abstract class SongStorageDecorator implements SongStorageService {
     }
 
     @Override
-    public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
-        return storageService.upload(source, name);
-    }
-
-    @Override
     public Song upload(Resource resource) throws Exception {
         return storageService.upload(resource);
     }
 
     @Override
-    public org.springframework.core.io.Resource download(Song resource) throws Exception {
-        return storageService.download(resource);
+    public Resource download(Song entity) throws Exception {
+        return storageService.download(entity);
     }
 
     @Override
-    public void delete(Song resource) {
-        storageService.delete(resource);
+    public void delete(Song entity) {
+        storageService.delete(entity);
     }
 
     @Override
-    public boolean exist(Song resource) {
-        return storageService.exist(resource);
+    public boolean exist(Song entity) {
+        return storageService.exist(entity);
     }
 
     @Override

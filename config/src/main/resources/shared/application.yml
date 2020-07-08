@@ -48,14 +48,10 @@ security:
 #      token-info-uri: https://oauth2.googleapis.com/tokeninfo
       user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo  # info about auth user
 
-feign:
-  client:
-    config:
-      default:
-        connectTimeout: 160000000
-        readTimeout: 160000000
-#        loggerLevel: basic
-#        requestInterceptors: com.baeldung.cloud.openfeign.JSONPlaceHolderInterceptor
+logging:
+  level:
+    com.netflix.eureka: 'OFF'
+    com.netflix.discovery: 'OFF'
 
 eureka:
   instance:
@@ -64,33 +60,40 @@ eureka:
     service-url:
       defaultZone: ${DISCOVERY_SERVER:http://localhost:8761/eureka}
 
-logging:
-  level:
-    com.netflix.eureka: 'OFF'
-    com.netflix.discovery: 'OFF'
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 160000000
+        readTimeout: 160000000
+  hystrix:
+    enabled: true
 
+hystrix:
+  shareSecurityContext: true
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 160000000
+
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+
+#dashboard
 management:
   endpoints:
     web:
       exposure:
         include: hystrix.stream
 
-hystrix:
-  command:
-    default:
-      execution:
-        timeout:
-          enabled: false
-      circuitBreaker:
-        enabled: false
-
 s3:
-  bucketName: your-bucket-name
-  defaultFolder: /Java/temp
+  defaultBucket: files
+  tempBucket: temp
 
 fs:
   defaultFolder: /Java/files
-
-conversion:
-  defaultFolder: /Java/temp
+  tempFolder: /Java/temp
 

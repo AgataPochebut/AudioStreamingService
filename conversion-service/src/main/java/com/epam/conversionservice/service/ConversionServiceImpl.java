@@ -1,26 +1,22 @@
 package com.epam.conversionservice.service;
 
+import com.epam.conversionservice.exception.IncorrectFormatException;
 import net.bramp.ffmpeg.FFmpegExecutor;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 @Service
 public class ConversionServiceImpl implements ConversionService {
 
-    @Value("${conversion.defaultFolder}")
+    @Value("${fs.tempFolder}")
     private String defaultBaseFolder;
 
-    public File convert(File file, String format) throws IOException {
-        if(FilenameUtils.getExtension(file.getName()).equals(format)) return file;
+    public File convert(File file, String format) throws Exception {
+        if(FilenameUtils.getExtension(file.getName()).equals(format)) throw new IncorrectFormatException("The same format");
 
         File newfile = new File(defaultBaseFolder, FilenameUtils.removeExtension(file.getName()) + "." + format);
         newfile.getParentFile().mkdirs();

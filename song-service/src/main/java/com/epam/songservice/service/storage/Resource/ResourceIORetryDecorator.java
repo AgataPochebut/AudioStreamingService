@@ -1,10 +1,10 @@
-package com.epam.resourceservice.service.storage;
+package com.epam.songservice.service.storage.Resource;
 
-import com.epam.resourceservice.model.Resource;
+import com.epam.songservice.model.Resource;
 
-public class IORetryDecorator extends ResourceStorageDecorator {
+public class ResourceIORetryDecorator extends ResourceStorageDecorator {
 
-    public IORetryDecorator(ResourceStorageService storageService) {
+    public ResourceIORetryDecorator(ResourceStorageService storageService) {
         super(storageService);
     }
 
