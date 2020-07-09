@@ -11,9 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SongConversionDecorator extends SongStorageDecorator {
 
     private ConversionClient conversionClient;
@@ -40,10 +37,7 @@ public class SongConversionDecorator extends SongStorageDecorator {
 
     @Override
     public Song upload(Resource resource) throws Exception {
-        List<String> formats = new ArrayList<>();
-        formats.add("wav");
-
-        if (formats.contains(FilenameUtils.getExtension(resource.getName()))) {
+        if (!FilenameUtils.getExtension(resource.getName()).equals("mp3")) {
 
             org.springframework.core.io.Resource source = resourceStorageFactory.getService().download(resource);
             String name = resource.getName();

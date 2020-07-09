@@ -6,3 +6,9 @@ spring:
     config:
       fail-fast: true
       uri: ${CONFIG_SERVER:http://localhost:8888}
+
+  cache:
+    type: redis
+  redis:
+    host: localhost
+    port: 6379

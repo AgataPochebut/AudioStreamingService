@@ -79,8 +79,8 @@ hystrix:
             timeoutInMilliseconds: 160000000
 
 ribbon:
-  ReadTimeout: 60000
-  ConnectTimeout: 60000
+  ReadTimeout: 80000000
+  ConnectTimeout: 80000000
 
 #dashboard
 management:

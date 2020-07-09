@@ -21,7 +21,7 @@ public abstract class ResourceStorageDecorator implements ResourceStorageService
     }
 
     @Override
-    public void delete(Resource resource) {
+    public void delete(Resource resource) throws Exception {
         storageService.delete(resource);
     }
 

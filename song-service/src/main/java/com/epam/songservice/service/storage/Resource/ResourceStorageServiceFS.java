@@ -6,6 +6,7 @@ import com.epam.songservice.model.FSResource;
 import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.StorageTypes;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -27,8 +28,15 @@ public class ResourceStorageServiceFS implements ResourceStorageService {
 
     @Override
     public Resource upload(org.springframework.core.io.Resource source, String name) throws IOException {
+
+        int count = 0;
         File file = new File(defaultBaseFolder, name);
+        while (file.exists()){
+            count++;
+            file = new File(defaultBaseFolder, FilenameUtils.removeExtension(name) + " ("+ count + ")" + "." + FilenameUtils.getExtension(name));
+        }
         file.getParentFile().mkdirs();
+
         IOUtils.copy(source.getInputStream(), new FileOutputStream(file));
 
         FSResource resource = new FSResource();

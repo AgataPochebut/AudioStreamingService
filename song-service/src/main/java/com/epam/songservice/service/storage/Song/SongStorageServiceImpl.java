@@ -33,9 +33,6 @@ public class SongStorageServiceImpl implements SongStorageService {
 
     @Override
     public Song upload(Resource resource) throws Exception {
-        Song entity = Song.builder().build();
-        entity.setResource(resource);
-
         org.springframework.core.io.Resource source = resourceStorageFactory.getService().download(resource);
 
         InputStream input = source.getInputStream();
@@ -82,7 +79,8 @@ public class SongStorageServiceImpl implements SongStorageService {
             metadataMap.put("Album", albumMap);
         }
 
-        mapper.map(mapper.map(metadataMap, Song.class), entity);
+        Song entity = mapper.map(metadataMap, Song.class);
+        entity.setResource(resource);
 
         return entity;
     }
@@ -93,7 +91,7 @@ public class SongStorageServiceImpl implements SongStorageService {
     }
 
     @Override
-    public void delete(Song entity) {
+    public void delete(Song entity) throws Exception {
         Resource resource = entity.getResource();
         resourceStorageFactory.getService().delete(resource);
     }

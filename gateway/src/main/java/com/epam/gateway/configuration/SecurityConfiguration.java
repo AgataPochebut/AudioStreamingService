@@ -43,8 +43,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
 //                .mvcMatchers("/**").permitAll()
 //                .antMatchers("/api/v2/api-docs","/v2/api-docs","/api/swagger-resources/**", "/swagger-resources/**", "/api/swagger-ui.html**", "/api/webjars/**").permitAll()
-//                .antMatchers("/auth/**").permitAll()
-//                .antMatchers("/songs/**").permitAll()
                 .anyRequest().authenticated()
 
 //                .and()
@@ -115,15 +113,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                         Set<GrantedAuthority> authorities = new LinkedHashSet();
                         authorities.add(new OAuth2UserAuthority(attributes));
-
-                        //token info
-//                        OAuth2AccessToken token = userRequest.getAccessToken();
-//                        Iterator var8 = token.getScopes().iterator();
-//
-//                        while(var8.hasNext()) {
-//                            String authority = (String)var8.next();
-//                            authorities.add(new SimpleGrantedAuthority("SCOPE_" + authority));
-//                        }
 
                         return new DefaultOAuth2User(authorities, attributes, "name");
                     }

@@ -16,14 +16,27 @@ public class SongIndexDecorator extends SongStorageDecorator {
     @Override
     public Song upload(Resource resource) throws Exception {
         Song entity = super.upload(resource);
-        indexClient.create(entity);
-        return entity;
+
+        try {
+            indexClient.create(entity);
+            return entity;
+        }
+        catch (Exception e){
+            super.delete(entity);
+            throw new Exception("Error when save song to es");
+        }
     }
 
     @Override
-    public void delete(Song entity) {
+    public void delete(Song entity) throws Exception {
+        try {
+            indexClient.delete(entity.getId());
+        }
+        catch (Exception e){
+            throw new Exception("Error when delete song from db");
+        }
+
         super.delete(entity);
-        indexClient.delete(entity.getId());
     }
 
     @Override

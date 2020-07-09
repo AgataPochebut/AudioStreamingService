@@ -80,7 +80,7 @@ public class SongServiceApplication extends SpringBootServletInitializer {
                             && bean.getClass().getAnnotation(Decorate.class).value() == ResourceStorageDecorator.class) {
                         newbean = new ResourceIORetryDecorator(newbean);
                         newbean = new ResourceDBDecorator(newbean, resourceRepositoryService);
-                        newbean = new ResourceCacheDecorator(newbean, cacheManager);
+//                        newbean = new ResourceCacheDecorator(newbean, cacheManager);
                     }
                     if (bean.getClass().isAnnotationPresent(StorageType.class)) {
                         resourceStorageFactory.registerService(bean.getClass().getAnnotation(StorageType.class).value(), newbean);
