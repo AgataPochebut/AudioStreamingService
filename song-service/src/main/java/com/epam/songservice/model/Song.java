@@ -27,18 +27,15 @@ public class Song extends BaseEntity {
     private Date year;
 
     @NotNull
-    @NotEmpty
     @OneToOne
     @JoinColumn(name = "resource_id")
     private Resource resource;
-
-    @ElementCollection
-    @CollectionTable(name = "notes", joinColumns = @JoinColumn(name = "source_id"))
-    private Set<String> notes;
 
     @ManyToOne
     @JoinColumn(name = "album_id")
     private Album album;
 
-
+    @ElementCollection
+    @CollectionTable(name = "notes", joinColumns = @JoinColumn(name = "source_id"))
+    private Set<String> notes;
 }

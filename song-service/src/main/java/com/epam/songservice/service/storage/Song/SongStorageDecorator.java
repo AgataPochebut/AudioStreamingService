@@ -22,7 +22,7 @@ public abstract class SongStorageDecorator implements SongStorageService {
     }
 
     @Override
-    public void delete(Song entity) {
+    public void delete(Song entity) throws Exception {
         storageService.delete(entity);
     }
 

@@ -9,7 +9,7 @@ public interface SongStorageService {
 
     Resource download(Song entity) throws Exception;
 
-    void delete(Song entity);
+    void delete(Song entity) throws Exception;
 
     boolean exist(Song entity);
 

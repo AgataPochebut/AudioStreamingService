@@ -11,24 +11,32 @@ public class ResourceIORetryDecorator extends ResourceStorageDecorator {
     @Override
     public Resource upload(org.springframework.core.io.Resource source, String name) throws Exception {
         Resource resource = null;
-        while (resource==null || !super.exist(resource))
+        int count = 0;
+        while (resource==null)
         {
-            resource = super.upload(source, name);
+            if(count>=3) throw new Exception("Can't upload file");
+
+            try {
+                resource = super.upload(source, name);
+            }
+            catch (Exception e) {}
+            count++;
         }
         return resource;
     }
 
     @Override
-    public org.springframework.core.io.Resource download(Resource resource) throws Exception {
-        if (!super.exist(resource)) throw new Exception("Not exist");
-        return super.download(resource);
-    }
-
-    @Override
-    public void delete(Resource resource) {
+    public void delete(Resource resource) throws Exception {
+        int count = 0;
         while (super.exist(resource))
         {
-            super.delete(resource);
+            if(count>=3) throw new Exception("Can't delete file");
+
+            try {
+                super.delete(resource);
+            }
+            catch (Exception e) {}
+            count++;
         }
     }
 

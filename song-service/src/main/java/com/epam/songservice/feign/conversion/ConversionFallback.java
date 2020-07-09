@@ -14,7 +14,7 @@ public class ConversionFallback implements ConversionClient {
     private Throwable throwable;
 
     @Override
-    public ResponseEntity<Resource> convert(MultipartFile multipartFile, String format) throws Exception {
+    public ResponseEntity<Resource> convert(MultipartFile multipartFile, String format) {
         String errorMessage = throwable.getMessage();
         log.error(errorMessage, throwable);
         return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);

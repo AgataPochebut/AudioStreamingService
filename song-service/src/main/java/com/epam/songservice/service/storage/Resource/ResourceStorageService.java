@@ -8,7 +8,7 @@ public interface ResourceStorageService {
 
     org.springframework.core.io.Resource download(Resource resource) throws Exception;
 
-    void delete(Resource resource);
+    void delete(Resource resource) throws Exception;
 
     boolean exist(Resource resource);
 

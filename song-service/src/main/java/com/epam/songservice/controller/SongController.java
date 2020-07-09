@@ -122,7 +122,7 @@ public class SongController {
 
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable Long id) throws Exception {
         Song entity = songRepositoryService.findById(id);
 
         songStorageService.delete(entity);

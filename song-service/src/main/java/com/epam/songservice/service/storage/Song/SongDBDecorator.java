@@ -16,14 +16,27 @@ public class SongDBDecorator extends SongStorageDecorator {
     @Override
     public Song upload(Resource resource) throws Exception {
         Song entity = super.upload(resource);
-        entity = repositoryService.save(entity);
-        return entity;
+
+        try {
+            entity = repositoryService.save(entity);
+            return entity;
+        }
+        catch (Exception e){
+            super.delete(entity);
+            throw new Exception("Error when save song to db");
+        }
     }
 
     @Override
-    public void delete(Song entity) {
+    public void delete(Song entity) throws Exception {
+        try {
+            repositoryService.deleteById(entity.getId());
+        }
+        catch (Exception e){
+            throw new Exception("Error when delete song from db");
+        }
+
         super.delete(entity);
-        repositoryService.delete(entity);
     }
 
     @Override

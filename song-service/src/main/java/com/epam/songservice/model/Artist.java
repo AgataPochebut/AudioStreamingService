@@ -23,14 +23,13 @@ public class Artist extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String name;
 
-    @ElementCollection
-    @CollectionTable(name = "notes", joinColumns = @JoinColumn(name = "source_id"))
-    private Set<String> notes;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "Artist_Genre",
             joinColumns = {@JoinColumn(name = "artist_id")},
             inverseJoinColumns = {@JoinColumn(name = "genre_id")})
     private Set<Genre> genres;
 
+    @ElementCollection
+    @CollectionTable(name = "notes", joinColumns = @JoinColumn(name = "source_id"))
+    private Set<String> notes;
 }

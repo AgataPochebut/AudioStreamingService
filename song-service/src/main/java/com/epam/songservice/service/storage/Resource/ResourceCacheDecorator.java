@@ -36,7 +36,7 @@ public class ResourceCacheDecorator extends ResourceStorageDecorator {
 
     @Override
 //    @CacheEvict(cacheNames = "cachetest")
-    public void delete(Resource resource) {
+    public void delete(Resource resource) throws Exception {
         cacheManager.getCache("resources").evictIfPresent(resource);
         super.delete(resource);
     }

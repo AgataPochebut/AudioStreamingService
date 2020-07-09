@@ -40,13 +40,12 @@ public class ResourceStorageServiceS3 implements ResourceStorageService {
         resource.setSize(meta.getContentLength());
         resource.setChecksum(meta.getContentMD5());
         resource.setBucketName(defaultBucketName);
-        resource.setKeyName(name);
         return resource;
     }
 
     public org.springframework.core.io.Resource download(Resource resource) {
         S3Resource currentResource = (S3Resource)resource;
-        S3Object s3object = amazonS3Client.getObject(currentResource.getBucketName(), currentResource.getKeyName());
+        S3Object s3object = amazonS3Client.getObject(currentResource.getBucketName(), currentResource.getName());
         S3ObjectInputStream inputStream = s3object.getObjectContent();
         return new InputStreamResource(inputStream);
     }
@@ -54,7 +53,7 @@ public class ResourceStorageServiceS3 implements ResourceStorageService {
     @Override
     public void delete(Resource resource) {
         S3Resource currentResource = (S3Resource)resource;
-        amazonS3Client.deleteObject(currentResource.getBucketName(), currentResource.getKeyName());
+        amazonS3Client.deleteObject(currentResource.getBucketName(), currentResource.getName());
     }
 
     @Override
