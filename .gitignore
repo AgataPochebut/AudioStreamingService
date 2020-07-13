@@ -1,6 +1,5 @@
 /.idea/
 /ui/
 /common-service/
-keys.txt
 var.env
 errors.txt

@@ -1,7 +1,6 @@
 package com.epam.songservice.jms;
 
 import com.epam.songservice.model.Resource;
-import com.epam.songservice.model.Song;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
-import java.util.List;
 
 @Component
 @Slf4j
@@ -22,9 +20,9 @@ public class Producer {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    public List<Song> upload(Resource resource, String queue) throws JMSException {
+    public void upload(Resource resource, String queue) throws JMSException {
 
-        ObjectMessage receiveMessage = (ObjectMessage) jmsTemplate.sendAndReceive(queue, new MessageCreator() {
+        jmsTemplate.send(queue, new MessageCreator() {
             @Override
             public Message createMessage(Session session) throws JMSException {
                 try {
@@ -38,8 +36,6 @@ public class Producer {
                 }
             }
         });
-
-        return (List<Song>)receiveMessage.getObject();
     }
 
     //это можно использовать когда conv-serv читает-пишет в бд - тогла обмениваемся json

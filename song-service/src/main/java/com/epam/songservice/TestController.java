@@ -2,13 +2,12 @@ package com.epam.songservice;
 
 import com.epam.songservice.exception.ConversionException;
 import com.epam.songservice.feign.conversion.ConversionClient;
-import com.epam.songservice.model.Song;
-import com.epam.songservice.service.repository.SongRepositoryService;
 import com.epam.songservice.service.storage.Resource.ResourceStorageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.mock.web.MockMultipartFile;
@@ -16,6 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 @RestController
 @RequestMapping
@@ -57,13 +60,16 @@ public class TestController {
     @Autowired
     RedisCacheManager cacheManager;
 
+    @Autowired
+    RedisTemplate<Object, Object> redisTemplate;
+
     @PostMapping("/test/4")
     public void test4(@RequestParam("data") MultipartFile multipartFile) throws Exception {
         org.springframework.core.io.Resource source = multipartFile.getResource();
         String name = multipartFile.getOriginalFilename();
 
         com.epam.songservice.model.Resource resource = resourceStorageFactory.getService().upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
-        cacheManager.getCache("resources1").put(resource, source);
+        cacheManager.getCache("resources1").put(resource.getId(), source);
 
         org.springframework.core.io.Resource source1 = (Resource) cacheManager.getCache("resources1").get(resource);
     }
@@ -78,18 +84,32 @@ public class TestController {
         org.springframework.core.io.Resource source1 = (Resource) cacheManager.getCache("resources2").get(name);
     }
 
-    @Autowired
-    private SongRepositoryService songRepositoryService;
-
     @PostMapping("/test/6")
     public void test6(@RequestParam("data") MultipartFile multipartFile) throws Exception {
-        com.epam.songservice.model.Resource resource = resourceStorageFactory.getService().upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
+        org.springframework.core.io.Resource source = multipartFile.getResource();
+        String name = multipartFile.getOriginalFilename();
 
-        Song entity = Song.builder()
-                .title("ggg")
-                .resource(resource)
-                .build();
+        cacheManager.getCache("resources2").put(name, source.getInputStream());
 
-        entity = songRepositoryService.save(entity);
+        org.springframework.core.io.Resource source1 = (Resource) cacheManager.getCache("resources2").get(name);
+    }
+
+    @PostMapping("/test/7")
+    public void test7(@RequestParam("data") MultipartFile multipartFile) throws Exception {
+        org.springframework.core.io.Resource source = multipartFile.getResource();
+
+        ZipInputStream zin;
+        ZipEntry entry;
+        String name;
+
+        zin = new ZipInputStream(source.getInputStream(), Charset.forName("windows-1251"));
+        while ((entry = zin.getNextEntry()) != null) {
+            if (!entry.isDirectory()) {
+                name = entry.getName(); // получим название файла
+                name = java.net.URLEncoder.encode(entry.getName(), StandardCharsets.UTF_8);
+            }
+            zin.closeEntry();
+        }
+        zin.close();
     }
 }

@@ -15,10 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ForkJoinPool;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -46,14 +44,7 @@ public class SongController {
     public ResponseEntity<SongResponseDto> upload(@RequestParam("data") MultipartFile multipartFile) throws Exception {
 
         Resource resource = resourceStorageFactory.getService().upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
-
-        Song entity = null;
-        try {
-            entity = songStorageService.upload(resource);
-        } catch (Exception e) {
-            resourceStorageFactory.getService().delete(resource);
-            throw new Exception("Upload exc");
-        }
+        Song entity = songStorageService.upload(resource);
 
         final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -61,16 +52,10 @@ public class SongController {
 
     // Content type 'multipart/form-data;boundary
     @PostMapping(value = "/upload/async", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<List<SongResponseDto>> uploadAsync(@RequestParam("data") MultipartFile multipartFile) throws Exception {
+    public void uploadAsync(@RequestParam("data") MultipartFile multipartFile) throws Exception {
 
         Resource resource = resourceStorageFactory.getService().upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
-
-        List<Song> entity = producer.upload(resource, "zip");
-
-        final List<SongResponseDto> responseDto = entity.stream()
-                .map((i) -> mapper.map(i, SongResponseDto.class))
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        producer.upload(resource, "upl");
     }
 
     // Content type 'multipart/form-data;boundary

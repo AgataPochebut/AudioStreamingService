@@ -40,6 +40,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableFeignClients
 @EnableHystrix
 @EnableHystrixDashboard
+//кодировка zip
+//mapping
 public class SongServiceApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
@@ -94,7 +96,7 @@ public class SongServiceApplication extends SpringBootServletInitializer {
                             && bean.getClass().getAnnotation(Decorate.class).value() == SongStorageDecorator.class) {
                         newbean = new SongConversionDecorator(newbean, conversionClient, resourceStorageFactory);
                         newbean = new SongDBDecorator(newbean, songRepositoryService);
-                        newbean = new SongIndexDecorator(newbean, songIndexClient);
+//                        newbean = new SongIndexDecorator(newbean, songIndexClient);
                     }
                     return newbean;
                 }
