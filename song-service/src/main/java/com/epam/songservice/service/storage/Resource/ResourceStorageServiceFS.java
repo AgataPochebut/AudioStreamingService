@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 
 @Decorate(ResourceStorageDecorator.class)
@@ -37,12 +34,16 @@ public class ResourceStorageServiceFS implements ResourceStorageService {
         }
         file.getParentFile().mkdirs();
 
-        IOUtils.copy(source.getInputStream(), new FileOutputStream(file));
+        OutputStream output = new FileOutputStream(file);
+        IOUtils.copy(source.getInputStream(), output);
+        output.close();
 
         FSResource resource = new FSResource();
         resource.setName(file.getName());
         resource.setSize(file.length());
-        resource.setChecksum(DigestUtils.md5Hex(new FileInputStream(file)));
+        InputStream input = new FileInputStream(file);
+        resource.setChecksum(DigestUtils.md5Hex(input));
+        input.close();
         resource.setPath(file.getAbsolutePath());
         return resource;
     }

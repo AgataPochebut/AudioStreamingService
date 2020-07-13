@@ -2,6 +2,7 @@ package com.epam.songservice.service.storage.Resource;
 
 import com.epam.songservice.model.Resource;
 import com.epam.songservice.service.repository.ResourceRepositoryService;
+import org.apache.commons.codec.digest.DigestUtils;
 
 public class ResourceDBDecorator extends ResourceStorageDecorator {
 
@@ -14,12 +15,11 @@ public class ResourceDBDecorator extends ResourceStorageDecorator {
 
     @Override
     public Resource upload(org.springframework.core.io.Resource source, String name) throws Exception {
-        Resource entity = super.upload(source, name);
-
-        if(repositoryService.findByChecksum(entity.getChecksum())!=null) {
-            super.delete(entity);
+        if(repositoryService.findByChecksum(DigestUtils.md5Hex(source.getInputStream()))!=null) {
             throw new Exception("Already exist file in db");
         }
+
+        Resource entity = super.upload(source, name);
 
         try {
            entity = repositoryService.save(entity);
