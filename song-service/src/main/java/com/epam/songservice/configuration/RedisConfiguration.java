@@ -13,9 +13,10 @@ public class RedisConfiguration {
     JedisConnectionFactory jedisConnectionFactory() {
         return new JedisConnectionFactory();
     }
+
     @Bean
-    public RedisTemplate<String, Object> redisTemplate() {
-        final RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
+    public RedisTemplate<Object, Object> redisTemplate() {
+        final RedisTemplate<Object, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(jedisConnectionFactory());
         template.setValueSerializer(new GenericToStringSerializer<Object>(Object.class));
         return template;

@@ -15,19 +15,19 @@
     </p>
 </div>
 
-<form method="POST" enctype="multipart/form-data" id="fileUploadForm">
-    <!--    <input type="text" name="extraField"/><br/><br/>-->
-    <!--    <input type="file" name="files"/><br/><br/>-->
-    <!--    <input type="file" name="files"/><br/><br/>-->
-    <input type="file" name="data"/><br/><br/>
-    <input type="submit" value="Upload" id="btnUpload"/>
-    <input type="submit" value="Upload zip" id="btnUploadZip"/>
-</form>
+<!--<form method="POST" enctype="multipart/form-data" id="fileUploadForm">-->
+<!--    &lt;!&ndash;    <input type="text" name="extraField"/><br/><br/>&ndash;&gt;-->
+<!--    &lt;!&ndash;    <input type="file" name="files"/><br/><br/>&ndash;&gt;-->
+<!--    &lt;!&ndash;    <input type="file" name="files"/><br/><br/>&ndash;&gt;-->
+<!--    <input type="file" name="data"/><br/><br/>-->
+<!--    <input type="submit" value="Upload" id="btnUpload"/>-->
+<!--    <input type="submit" value="Upload zip" id="btnUploadZip"/>-->
+<!--</form>-->
 
-<h2>Ajax Post Result</h2>
-<pre>
-    <span id="result"></span>
-</pre>
+<!--<h2>Ajax Post Result</h2>-->
+<!--<pre>-->
+<!--    <span id="result"></span>-->
+<!--</pre>-->
 
 <div th:switch="${songs}" class="container my-5">
     <div class="row">
@@ -37,17 +37,17 @@
                     <thead>
                     <tr>
                         <th>Title</th>
-                        <th>Play</th>
-                        <th>Download</th>
-                        <th>Delete</th>
+<!--                        <th>Play</th>-->
+<!--                        <th>Download</th>-->
+<!--                        <th>Delete</th>-->
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="song : ${songs}">
                         <td th:text="${song.title}"></td>
-                        <td><a th:href="@{/song-service/songs/download/{id}(id=${song.id})}" class="btn btn-primary" id="btnPlay"><i class="fas fa-user-edit ml-2"></i>Play</a></td>
-                        <td><a th:href="@{/song-service/songs/download/{id}(id=${song.id})}" class="btn btn-primary" id="btnDownload"><i class="fas fa-user-edit ml-2"></i>Download</a></td>
-                        <td><a th:href="@{/song-service/songs/delete/{id}(id=${song.id})}" class="btn btn-primary" id="btnDelete"><i class="fas fa-user-times ml-2"></i>Delete</a></td>
+<!--                        <td><a th:href="@{/song-service/songs/download/{id}(id=${song.id})}" class="btn btn-primary" id="btnPlay"><i class="fas fa-user-edit ml-2"></i>Play</a></td>-->
+<!--                        <td><a th:href="@{/song-service/songs/download/{id}(id=${song.id})}" class="btn btn-primary" id="btnDownload"><i class="fas fa-user-edit ml-2"></i>Download</a></td>-->
+<!--                        <td><a th:href="@{/song-service/songs/delete/{id}(id=${song.id})}" class="btn btn-primary" id="btnDelete"><i class="fas fa-user-times ml-2"></i>Delete</a></td>-->
                     </tr>
                     </tbody>
                 </table>
@@ -56,20 +56,19 @@
     </div>
 </div>
 
-<h2>Ajax Stream Result</h2>
-<pre>
-    <span id="stream_result"></span>
-</pre>
+<!--<h2>Ajax Stream Result</h2>-->
+<!--<pre>-->
+<!--    <span id="stream_result"></span>-->
+<!--</pre>-->
 
-<h2>Ajax Download Result</h2>
-<pre>
-    <span id="download_result"></span>
-</pre>
+<!--<h2>Ajax Download Result</h2>-->
+<!--<pre>-->
+<!--    <span id="download_result"></span>-->
+<!--</pre>-->
 
 <script type="text/javascript"
         src="webjars/jquery/2.2.4/jquery.min.js"></script>
 
 <script type="text/javascript" src="js/main.js"></script>
-<!--<a th:href="@{/song-service/upload}">Upload</a>-->
 </body>
 </html>

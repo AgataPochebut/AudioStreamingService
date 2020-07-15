@@ -30,11 +30,6 @@ public class SongConversionDecorator extends SongStorageDecorator {
         this.resourceStorageFactory = resourceStorageFactory;
     }
 
-    public SongConversionDecorator(SongStorageService storageService, Producer producer) {
-        super(storageService);
-        this.producer = producer;
-    }
-
     @Override
     public Song upload(Resource resource) throws Exception {
         if (!FilenameUtils.getExtension(resource.getName()).equals("mp3")) {

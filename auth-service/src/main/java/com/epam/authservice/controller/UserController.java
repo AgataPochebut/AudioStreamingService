@@ -43,8 +43,8 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserResponseDto> create(@RequestBody UserRequestDto requestDto) throws Exception {
-        final User entity = mapper.map(requestDto, User.class);
-        service.save(entity);
+        User entity = mapper.map(requestDto, User.class);
+        entity = service.save(entity);
 
         final UserResponseDto responseDto = mapper.map(entity, UserResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -52,9 +52,9 @@ public class UserController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<UserResponseDto> update(@PathVariable Long id, @RequestBody UserRequestDto requestDto) throws Exception {
-        final User entity = mapper.map(requestDto, User.class);
+        User entity = mapper.map(requestDto, User.class);
         entity.setId(id);
-        service.update(entity);
+        entity = service.update(entity);
 
         final UserResponseDto responseDto = mapper.map(entity, UserResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -76,20 +76,4 @@ public class UserController {
         final UserResponseDto responseDto = mapper.map(entity, UserResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
-
-    @GetMapping(value = "/test")
-    public String test() {
-        return "test";
-    }
-
-    @PostMapping(value = "/test1")
-    public String test1(@RequestBody Object test) {
-        return "test";
-    }
-
-    @PostMapping(value = "/test2")
-    public String test2(@RequestBody String test) {
-        return test;
-    }
-
 }

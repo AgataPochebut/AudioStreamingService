@@ -1,4 +1,4 @@
-package com.epam.songservice;
+package com.epam.songservice.controller;
 
 import com.epam.songservice.exception.ConversionException;
 import com.epam.songservice.feign.conversion.ConversionClient;

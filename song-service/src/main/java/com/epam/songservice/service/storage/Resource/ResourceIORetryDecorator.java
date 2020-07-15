@@ -19,7 +19,9 @@ public class ResourceIORetryDecorator extends ResourceStorageDecorator {
             try {
                 resource = super.upload(source, name);
             }
-            catch (Exception e) {}
+            catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
             count++;
         }
         return resource;
@@ -35,7 +37,9 @@ public class ResourceIORetryDecorator extends ResourceStorageDecorator {
             try {
                 super.delete(resource);
             }
-            catch (Exception e) {}
+            catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
             count++;
         }
     }

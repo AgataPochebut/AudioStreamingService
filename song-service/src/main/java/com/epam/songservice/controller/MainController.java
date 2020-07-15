@@ -1,11 +1,12 @@
-package com.epam.songservice;
+package com.epam.songservice.controller;
 
-import com.epam.songservice.model.Song;
 import com.epam.songservice.dto.response.SongResponseDto;
+import com.epam.songservice.model.Song;
 import com.epam.songservice.service.repository.SongRepositoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +28,7 @@ public class MainController {
     @RequestMapping(value = { "/", "/index" }, method = RequestMethod.GET)
     public String index(Model model) {
 
-        model.addAttribute("username", "user");
+        model.addAttribute("username", SecurityContextHolder.getContext().getAuthentication().getName());
 
         final List<Song> entity = repositoryService.findAll();
 

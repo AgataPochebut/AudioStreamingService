@@ -37,25 +37,4 @@ public class Producer {
             }
         });
     }
-
-    //это можно использовать когда conv-serv читает-пишет в бд - тогла обмениваемся json
-//    public Resource convert(Resource resource, String queue) throws JMSException {
-//
-//        ObjectMessage receiveMessage = (ObjectMessage) jmsTemplate.sendAndReceive(queue, new MessageCreator() {
-//            @Override
-//            public Message createMessage(Session session) throws JMSException {
-//                try {
-//                    ObjectMessage sendMessage = session.createObjectMessage();
-//                    sendMessage.setObject(resource);
-//
-//                    sendMessage.setJMSCorrelationID(RandomStringUtils.randomAscii(24));
-//                    return sendMessage;
-//                } catch (Exception e) {
-//                    return null;
-//                }
-//            }
-//        });
-//
-//        return (Resource)receiveMessage.getObject();
-//    }
 }

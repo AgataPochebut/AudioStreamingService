@@ -20,8 +20,12 @@ spring:
 #          client-secret: cYunCGV91wrv7KI2M3a31LxS
 #          introspection-uri: https://oauth2.googleapis.com/tokeninfo #post request with map & value token - don't work
 
+  elasticsearch:
+    rest:
+      uris: ${ELASTICSEARCH:http://localhost:9200}
+
   activemq:
-    broker-url: tcp://localhost:61616
+    broker-url: ${ACTIVEMQ:tcp://localhost:61616}
     user: admin
     password: admin
     packages:
@@ -99,5 +103,5 @@ fs:
 
 cloud:
   aws:
-    accessKey: ${AWS_ACCESS_KEY}
-    secretKey:  ${AWS_SECRET_KEY}
+    accessKey: 12345
+    secretKey:  34567

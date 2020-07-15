@@ -41,9 +41,7 @@ public class ResourceStorageServiceFS implements ResourceStorageService {
         FSResource resource = new FSResource();
         resource.setName(file.getName());
         resource.setSize(file.length());
-        InputStream input = new FileInputStream(file);
-        resource.setChecksum(DigestUtils.md5Hex(input));
-        input.close();
+        resource.setChecksum(DigestUtils.md5Hex(source.getInputStream()));
         resource.setPath(file.getAbsolutePath());
         return resource;
     }
