@@ -30,14 +30,12 @@ public class MappingConfiguration {
             protected void configure() {
 
                 mapping(Map.class, Song.class,
-//                        TypeMappingOptions.wildcard(false),
                         TypeMappingOptions.dateFormat("yyyy"))
                         .fields("Album", "Album", FieldsMappingOptions.customConverter(AlbumConverter.class))
                         .fields("Year", "Year")
                         .fields("Title", "Title");
 
                 mapping(Map.class, Album.class,
-//                        TypeMappingOptions.wildcard(false),
                         TypeMappingOptions.dateFormat("yyyy"))
                         .fields("Artists", "Artists", FieldsMappingOptions.customConverter(ArtistConverter.class))
                         .fields("Year", "Year")
@@ -55,4 +53,6 @@ public class MappingConfiguration {
         return mapper;
     }
 }
+
+
 

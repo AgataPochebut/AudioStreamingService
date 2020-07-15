@@ -9,6 +9,6 @@ public class SearchResponseDto {
 
     private String index;
 
-    private String type;
+//    private String type;
 
 }

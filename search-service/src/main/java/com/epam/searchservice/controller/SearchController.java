@@ -36,13 +36,13 @@ public class SearchController {
     @Autowired
     private Mapper mapper;
 
-    @GetMapping("/{index}")
+    @GetMapping("/")
     public ResponseEntity<List<SearchResponseDto>> searchAll(@PathVariable String index) throws IOException {
 
         QueryBuilder queryBuilder = QueryBuilders.matchAllQuery();
 
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
-                .withIndices(index)
+//                .withIndices(index)
                 .withQuery(queryBuilder)
                 .build();
 
@@ -58,13 +58,13 @@ public class SearchController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @GetMapping("/{index}/{keyword}")
+    @GetMapping("/{keyword}")
     public ResponseEntity<List<SearchResponseDto>> search(@PathVariable String index, @PathVariable String keyword) throws IOException {
 
         QueryBuilder queryBuilder = QueryBuilders.queryStringQuery(keyword);
 
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
-                .withIndices(index)
+//                .withIndices(index)
                 .withQuery(queryBuilder)
                 .build();
 

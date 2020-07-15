@@ -50,9 +50,6 @@ class GenreConverter implements CustomConverter {
             Genre entity = repositoryService.findByName((String)metadataMap.get("Name"));
 
             if(entity == null) {
-//                entity = Genre.builder()
-//                    .name((String) metadataMap.get("Name"))
-//                    .build();
                 entity = mapper.map(metadataMap, Genre.class);
                 repositoryService.save(entity);
             }

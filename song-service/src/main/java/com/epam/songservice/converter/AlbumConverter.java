@@ -43,13 +43,6 @@ public class AlbumConverter implements CustomConverter {
             Album entity = repositoryService.findByTitle((String) metadataMap.get("Title"));
 
             if (entity == null) {
-//                entity = Album.builder()
-//                        .title((String) metadataMap.get("Title"))
-//                        .artists(((Set<?>) metadataMap.get("Artists"))
-//                                    .stream()
-//                                    .map(a -> mapper.map((Map<String, Object>)a, Artist.class))
-//                                    .collect(Collectors.toSet()))
-//                    .build();
                 entity = mapper.map(metadataMap, Album.class);
                 repositoryService.save(entity);
             }

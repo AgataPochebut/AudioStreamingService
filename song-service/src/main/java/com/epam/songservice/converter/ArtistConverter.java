@@ -52,13 +52,6 @@ class ArtistConverter implements CustomConverter {
             Artist entity = repositoryService.findByName((String)metadataMap.get("Name"));
 
             if(entity == null) {
-//                entity = Artist.builder()
-//                    .name((String) metadataMap.get("Name"))
-//                    .genres(((Set<?>)metadataMap.get("Genres"))
-//                                    .stream()
-//                                    .map(g -> mapper.map((Map<String, Object>)g, Genre.class))
-//                                    .collect(Collectors.toSet()))
-//                    .build();
                 entity = mapper.map(metadataMap, Artist.class);
                 repositoryService.save(entity);
             } else {

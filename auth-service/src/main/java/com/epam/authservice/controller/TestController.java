@@ -1,4 +1,4 @@
-package com.epam.authservice;
+package com.epam.authservice.controller;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.web.bind.annotation.GetMapping;

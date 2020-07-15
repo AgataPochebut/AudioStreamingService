@@ -6,8 +6,9 @@ import com.epam.songservice.service.storage.Resource.ResourceStorageFactory;
 import com.epam.songservice.service.storage.Song.SongStorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
@@ -51,7 +52,10 @@ public class Consumer {
                 if (!entry.isDirectory()) {
                     //чтобы загрузились остальные песни
                     try {
-                        Resource resource1 = resourceStorageFactory.getService().upload(new InputStreamResource(zin), entry.getName());
+                        byte[] content = IOUtils.toByteArray(zin);
+                        org.springframework.core.io.Resource source1 = new ByteArrayResource(content);
+                        String name1 = entry.getName();
+                        Resource resource1 = resourceStorageFactory.getService().upload(source1, name1);
                         List<Song> entity1 = uploadRecursively(resource1);
                         entity.addAll(entity1);
                     } catch (Exception e) {
@@ -71,6 +75,4 @@ public class Consumer {
 
         return entity;
     }
-
-
 }

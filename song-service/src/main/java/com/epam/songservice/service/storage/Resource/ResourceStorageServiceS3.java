@@ -3,7 +3,6 @@ package com.epam.songservice.service.storage.Resource;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.epam.songservice.annotation.Decorate;
 import com.epam.songservice.annotation.StorageType;
 import com.epam.songservice.model.Resource;
@@ -13,7 +12,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -43,11 +42,12 @@ public class ResourceStorageServiceS3 implements ResourceStorageService {
         return resource;
     }
 
-    public org.springframework.core.io.Resource download(Resource resource) {
+    public org.springframework.core.io.Resource download(Resource resource) throws IOException {
         S3Resource currentResource = (S3Resource)resource;
         S3Object s3object = amazonS3Client.getObject(currentResource.getBucketName(), currentResource.getName());
-        S3ObjectInputStream inputStream = s3object.getObjectContent();
-        return new InputStreamResource(inputStream);
+        byte[] content = IOUtils.toByteArray(s3object.getObjectContent());
+        return new ByteArrayResource(content);
+//        return new InputStreamResource(inputStream);//нельзя перечитывать
     }
 
     @Override

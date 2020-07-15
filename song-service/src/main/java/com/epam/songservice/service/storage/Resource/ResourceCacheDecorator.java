@@ -15,29 +15,31 @@ public class ResourceCacheDecorator extends ResourceStorageDecorator {
     @Override
 //    @CachePut(cacheNames = "cachetest")
     public Resource upload(org.springframework.core.io.Resource source, String name) throws Exception {
-//        return super.upload(source);
         Resource resource = super.upload(source, name);
-        cacheManager.getCache("resources").put(resource, source);
+
+        cacheManager.getCache("resources").put(resource.getId(), source);
         return resource;
+//        return super.upload(source);
     }
 
     @Override
 //    @Cacheable(cacheNames = "cachetest")
     public org.springframework.core.io.Resource download(Resource resource) throws Exception {
-//        return super.download(resource);
         org.springframework.core.io.Resource source = null;
-        source = cacheManager.getCache("resources").get(resource, org.springframework.core.io.Resource.class);
+        source = cacheManager.getCache("resources").get(resource.getId(), org.springframework.core.io.Resource.class);
         if (source==null){
             source = super.download(resource);
-            cacheManager.getCache("resources").put(resource, source);
+            cacheManager.getCache("resources").put(resource.getId(), source);
         }
         return source;
+//        return super.download(resource);
     }
 
     @Override
 //    @CacheEvict(cacheNames = "cachetest")
     public void delete(Resource resource) throws Exception {
-        cacheManager.getCache("resources").evictIfPresent(resource);
+        cacheManager.getCache("resources").evictIfPresent(resource.getId());
+
         super.delete(resource);
     }
 

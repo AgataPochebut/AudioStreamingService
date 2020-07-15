@@ -1,6 +1,6 @@
-package com.epam.gateway;
+package com.epam.gateway.controller;
 
-import com.epam.gateway.feign.AuthServiceClient;
+import com.epam.gateway.feign.auth.AuthServiceClient;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -61,15 +61,4 @@ public class TestController {
 
         return null;
     }
-
-    @GetMapping("/testAuth")
-    public void testAuth() throws IOException {
-        String test = authServiceClient.testUser();
-        System.out.println(test);
-
-        String test2 = authServiceClient.testUser2("vdsd");
-        System.out.println(test2);
-
-    }
-
 }

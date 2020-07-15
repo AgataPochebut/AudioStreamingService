@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -19,8 +18,8 @@ public class UserRequestDto {
     @NotEmpty
     private String name;
 
-    @NotNull
-    @NotEmpty
-    private Set<Long> roles;
+//    @NotNull
+//    @NotEmpty
+//    private Set<Long> roles;
 
 }

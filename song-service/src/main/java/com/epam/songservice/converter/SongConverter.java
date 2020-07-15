@@ -44,10 +44,6 @@ class SongConverter implements CustomConverter {
             Song entity = repositoryService.findByTitle((String) metadataMap.get("Title"));
 
             if (entity == null) {
-//                entity = Song.builder()
-//                        .title((String) metadataMap.get("Title"))
-//                        .album(mapper.map((Map<String, Object>) metadataMap.get("Album"), Album.class))
-//                        .build();
                 entity = mapper.map(metadataMap, Song.class);
                 repositoryService.save(entity);
             } else {

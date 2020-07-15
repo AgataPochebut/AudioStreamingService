@@ -6,12 +6,16 @@
 <!--    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>-->
 </head>
 <body>
-<h1>Welcome</h1>
-<h2 th:utext="${message}">..!..</h2>
+<h1>Hello, [[${username}]]!</h1>
 
-<a th:href="@{/users}">Users</a>
+<div>
+    <p>
+        <a href="/login">login</a>
+        <a href="/logout">logout</a>
+    </p>
+</div>
+
 <a th:href="@{/song-service}">Song service</a>
-<a th:href="@{http://google.com}">Google</a>
 
 </body>
 

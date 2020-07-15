@@ -13,7 +13,6 @@ zuul:
     auth-service:
       path: /auth-service/**
       serviceId: auth-service
-#      url: http://localhost:8081 # Местоположение сервиса может быть указано либо как serviceId, либо как URL
 #      stripPrefix: false # Удалять префикс - нужно сохранять path: /auth-service/ если context-path равен /auth-service
     song-service:
       path: /song-service/**
