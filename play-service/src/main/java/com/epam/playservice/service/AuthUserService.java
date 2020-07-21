@@ -1,6 +1,5 @@
 package com.epam.playservice.service;
 
-import com.epam.playservice.feign.AuthServiceClient;
 import com.epam.playservice.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

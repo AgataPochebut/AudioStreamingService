@@ -9,13 +9,17 @@ volumes:
 services:
 
   mysql:
-    image: mysql:8.0
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+#    image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
     ports:
       - 3306:3306
     volumes:
       - mysql-data:/var/lib/mysql
+#      - ./init.sql:/docker-entrypoint-initdb.d
 
   redis:
     image: redis:3.0
@@ -28,6 +32,7 @@ services:
     image: rmohr/activemq:5.14.5-alpine
     ports:
       - 8161:8161
+      - 61616:61616
     volumes:
       - activemq-data:/var/lib/activemq
     #      - activemq-data:/opt/activemq/conf
@@ -52,7 +57,7 @@ services:
 #      - 5601:5601
 #    depends_on:
 #      - elasticsearch
-
+#
   discovery:
     build: ./discovery
     ports:
@@ -63,66 +68,72 @@ services:
     ports:
       - 8888:8888
 
-  gateway:
-    build: ./gateway
-    environment:
-      CONFIG_SERVER: http://config:8888
-      DISCOVERY_SERVER: http://discovery:8761/eureka
-    restart: on-failure
-    ports:
-      - 8080:8080
-    depends_on:
-      - config
-
   auth-service:
     build: ./auth-service
     environment:
       CONFIG_SERVER: http://config:8888
       DISCOVERY_SERVER: http://discovery:8761/eureka
+      DATASOURCE_URL: jdbc:mysql://mysql:3306/auth_service?useUnicode=true&serverTimezone=UTC
     restart: on-failure
     depends_on:
       - config
       - mysql
 
-  song-service:
-    build: ./song-service
-    environment:
-      CONFIG_SERVER: http://config:8888
-      DISCOVERY_SERVER: http://discovery:8761/eureka
-    restart: on-failure
-    depends_on:
-      - config
-      - conversion-service
-      - search-service
-      - mysql
-      - redis
-      - activemq
+#  song-service:
+#    build: ./song-service
+#    environment:
+#      CONFIG_SERVER: http://config:8888
+#      DISCOVERY_SERVER: http://discovery:8761/eureka
+#      DATASOURCE_URL: jdbc:mysql://mysql:3306/song_service?useUnicode=true&serverTimezone=UTC
+#      ACTIVEMQ: tcp://activemq:61616
+#    restart: on-failure
+#    depends_on:
+#      - config
+#      - conversion-service
+#      - search-service
+#      - mysql
+#      - redis
+#      - activemq
+#
+#  conversion-service:
+#    build: ./conversion-service
+#    environment:
+#      CONFIG_SERVER: http://config:8888
+#      DISCOVERY_SERVER: http://discovery:8761/eureka
+#    restart: on-failure
+#    depends_on:
+#      - config
+#
+#  search-service:
+#    build: ./search-service
+#    environment:
+#      CONFIG_SERVER: http://config:8888
+#      DISCOVERY_SERVER: http://discovery:8761/eureka
+#      ELASTICSEARCH: http://elasticsearch:9200
+#    restart: on-failure
+#    depends_on:
+#      - config
+#      - elasticsearch
+#
+#  play-service:
+#    build: ./play-service
+#    environment:
+#      CONFIG_SERVER: http://config:8888
+#      DISCOVERY_SERVER: http://discovery:8761/eureka
+#      DATASOURCE_URL: jdbc:mysql://mysql:3306/play_service?useUnicode=true&serverTimezone=UTC
+#    restart: on-failure
+#    depends_on:
+#      - config
+#      - mysql
 
-  conversion-service:
-    build: ./conversion-service
-    environment:
-      CONFIG_SERVER: http://config:8888
-      DISCOVERY_SERVER: http://discovery:8761/eureka
-    restart: on-failure
-    depends_on:
-      - config
-
-  search-service:
-    build: ./search-service
-    environment:
-      CONFIG_SERVER: http://config:8888
-      DISCOVERY_SERVER: http://discovery:8761/eureka
-    restart: on-failure
-    depends_on:
-      - config
-      - elasticsearch
-
-  play-service:
-    build: ./play-service
-    environment:
-      CONFIG_SERVER: http://config:8888
-      DISCOVERY_SERVER: http://discovery:8761/eureka
-    restart: on-failure
-    depends_on:
-      - config
-      - mysql
+#  gateway:
+#    build: ./gateway
+#    environment:
+#      CONFIG_SERVER: http://config:8888
+#      DISCOVERY_SERVER: http://discovery:8761/eureka
+#    restart: on-failure
+#    ports:
+#      - 8080:8080
+#    depends_on:
+#      - config
+##      - auth-service

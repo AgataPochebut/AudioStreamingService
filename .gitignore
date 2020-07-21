@@ -1,5 +1,4 @@
 /.idea/
 /ui/
-/common-service/
-var.env
+.env
 errors.txt

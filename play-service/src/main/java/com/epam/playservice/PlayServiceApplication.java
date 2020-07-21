@@ -12,9 +12,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @EnableJpaRepositories(includeFilters = @ComponentScan.Filter(
         type = FilterType.ASSIGNABLE_TYPE, classes = JpaRepository.class))
-//@EnableCaching
-@EnableFeignClients
 @EnableDiscoveryClient
+@EnableFeignClients
 public class PlayServiceApplication {
 
     public static void main(String[] args) {

@@ -103,5 +103,5 @@ fs:
 
 cloud:
   aws:
-    accessKey: 12345
-    secretKey:  34567
+    accessKey: ${AWS_ACCESS_KEY}
+    secretKey:  ${AWS_SECRET_KEY}

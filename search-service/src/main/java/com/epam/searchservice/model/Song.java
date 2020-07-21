@@ -1,5 +1,6 @@
 package com.epam.searchservice.model;
 
+import com.epam.commonservice.model.BaseEntity;
 import lombok.Data;
 import org.springframework.data.elasticsearch.annotations.Document;
 

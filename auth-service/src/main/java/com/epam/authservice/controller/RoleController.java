@@ -3,7 +3,7 @@ package com.epam.authservice.controller;
 import com.epam.authservice.dto.request.RoleRequestDto;
 import com.epam.authservice.dto.response.RoleResponseDto;
 import com.epam.authservice.model.Role;
-import com.epam.authservice.service.RoleService;
+import com.epam.authservice.service.repository.RoleRepositoryService;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 public class RoleController {
 
     @Autowired
-    private RoleService service;
+    private RoleRepositoryService service;
 
     @Autowired
     private Mapper mapper;
@@ -44,8 +45,8 @@ public class RoleController {
 
     @PostMapping
     public ResponseEntity<RoleResponseDto> create(@Valid @RequestBody RoleRequestDto requestDto) throws Exception {
-        final Role entity = mapper.map(requestDto, Role.class);
-        service.save(entity);
+        Role entity = mapper.map(requestDto, Role.class);
+        entity = service.save(entity);
 
         final RoleResponseDto responseDto = mapper.map(entity, RoleResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -53,8 +54,9 @@ public class RoleController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<RoleResponseDto> update(@PathVariable Long id, @Valid @RequestBody RoleRequestDto requestDto) throws Exception {
-        final Role entity = mapper.map(requestDto, Role.class);
-        service.update(entity);
+        Role entity = mapper.map(requestDto, Role.class);
+        entity.setId(id);
+        entity = service.update(entity);
 
         final RoleResponseDto responseDto = mapper.map(entity, RoleResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -64,5 +66,33 @@ public class RoleController {
     @ResponseStatus(value = HttpStatus.OK)
     public void delete(@PathVariable Long id) {
         service.deleteById(id);
+    }
+
+    //////////////////////////////////////
+
+    @GetMapping(value = "/default")
+    public ResponseEntity<List<RoleResponseDto>> getDefaultRoles() throws Exception {
+        Set<Role> entity = Role.defaultRoles;
+
+        final List<RoleResponseDto> responseDto = entity.stream()
+                .map((i) -> mapper.map(i, RoleResponseDto.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/add/{id}")
+    public ResponseEntity<List<RoleResponseDto>> addDefaultRole(@PathVariable Long id) throws Exception {
+        Role entity = service.findById(id);
+        Role.defaultRoles.add(entity);
+
+        return getDefaultRoles();
+    }
+
+    @PutMapping(value = "/delete/{id}")
+    public ResponseEntity<List<RoleResponseDto>> deleteDefaultRole(@PathVariable Long id) throws Exception {
+        Role entity = service.findById(id);
+        Role.defaultRoles.remove(entity);
+
+        return getDefaultRoles();
     }
 }
