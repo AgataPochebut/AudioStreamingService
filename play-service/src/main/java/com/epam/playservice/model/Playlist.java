@@ -1,5 +1,6 @@
 package com.epam.playservice.model;
 
+import com.epam.commonservice.model.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

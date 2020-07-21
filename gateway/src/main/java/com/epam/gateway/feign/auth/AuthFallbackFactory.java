@@ -8,6 +8,6 @@ public class AuthFallbackFactory implements FallbackFactory<AuthServiceClient> {
 
     @Override
     public AuthServiceClient create(Throwable throwable) {
-        return new AuthFallback(throwable);
+        return null;
     }
 }

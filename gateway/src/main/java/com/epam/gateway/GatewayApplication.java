@@ -7,10 +7,8 @@ import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.jms.annotation.EnableJms;
 
 @SpringBootApplication
-@EnableJms
 @EnableDiscoveryClient
 @EnableFeignClients
 @EnableZuulProxy

@@ -1,28 +1,21 @@
 package com.epam.gateway.feign.auth;
 
-import com.epam.gateway.model.User;
+import com.epam.commonservice.model.auth.AuthUser;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(value = "auth-service", fallbackFactory = AuthFallbackFactory.class)
+@FeignClient(value = "auth-service/auth")//, fallbackFactory = AuthFallbackFactory.class)
 public interface AuthServiceClient {
 
-    @GetMapping(value = "users/byAccount")
-//    @GetMapping(value = "users", params = {"byAccount"})
-    public ResponseEntity<User> getUserByAccount(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestParam("account") String account);
+//    @GetMapping(value = "userinfo")
+//    ResponseEntity<Map> getUserInfo(@RequestParam("access_token") String s);
+//
+//    @GetMapping(value = "authorities")
+//    ResponseEntity<Collection> getAuthorities(@RequestParam("access_token") String s);
 
-    @PostMapping("users")
-    public ResponseEntity<User> createUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody User user);
-
-    @PutMapping("users/{id}")
-    public ResponseEntity<User> updateUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable Long id, @RequestBody User user);
-
-//    @GetMapping("roles/{name}")
-//    public ResponseEntity<User> getRole(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestParam("name") String name);
-
-//    @PostMapping("roles")
-//    public ResponseEntity<User> createRole(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody Role role);
+    @GetMapping(value = "user")
+    ResponseEntity<AuthUser> getUser(@RequestParam("access_token") String s);
 
 }

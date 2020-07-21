@@ -1,6 +1,6 @@
 package com.epam.authservice.controller;
 
-import com.epam.authservice.service.UserService;
+import com.epam.authservice.service.repository.UserRepositoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import java.util.Map;
 public class MainController {
 
     @Autowired
-    private UserService repositoryService;
+    private UserRepositoryService repositoryService;
 
     @Autowired
     private Mapper mapper;

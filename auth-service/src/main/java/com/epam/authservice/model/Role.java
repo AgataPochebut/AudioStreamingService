@@ -1,12 +1,14 @@
 package com.epam.authservice.model;
 
+import com.epam.commonservice.model.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.util.Set;
 
 @Builder
 @Data
@@ -14,12 +16,10 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name="ROLES")
-public class Role extends BaseEntity implements GrantedAuthority {
+public class Role extends BaseEntity {
+
+    public static Set<Role> defaultRoles;
 
     private String name;
-
-    @Override
-    public String getAuthority() {
-            return "ROLE_" + name.toUpperCase();
-    }
 }
+
