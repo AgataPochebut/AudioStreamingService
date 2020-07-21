@@ -1,1 +1,0 @@
-too many redirect - запустить auth-service
