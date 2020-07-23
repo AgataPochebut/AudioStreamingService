@@ -25,7 +25,7 @@ public class AlbumController {
     private Mapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<AlbumResponseDto>> read() {
+    public ResponseEntity<List<AlbumResponseDto>> getAll() {
         final List<Album> entity = service.findAll();
 
         final List<AlbumResponseDto> responseDto = entity.stream()
@@ -35,7 +35,7 @@ public class AlbumController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<AlbumResponseDto> read(@PathVariable Long id) {
+    public ResponseEntity<AlbumResponseDto> get(@PathVariable Long id) {
         Album entity = service.findById(id);
 
         final AlbumResponseDto responseDto = mapper.map(entity, AlbumResponseDto.class);

@@ -25,7 +25,7 @@ public class ArtistController {
     private Mapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<ArtistResponseDto>> read() {
+    public ResponseEntity<List<ArtistResponseDto>> getAll() {
         final List<Artist> entity = service.findAll();
 
         final List<ArtistResponseDto> responseDto = entity.stream()
@@ -35,7 +35,7 @@ public class ArtistController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ArtistResponseDto> read(@PathVariable Long id) {
+    public ResponseEntity<ArtistResponseDto> get(@PathVariable Long id) {
         Artist entity = service.findById(id);
 
         final ArtistResponseDto responseDto = mapper.map(entity, ArtistResponseDto.class);

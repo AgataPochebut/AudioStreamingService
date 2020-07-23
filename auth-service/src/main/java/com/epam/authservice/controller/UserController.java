@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 @RequestMapping("/users")
 public class UserController {
 
@@ -25,6 +24,7 @@ public class UserController {
     @Autowired
     private Mapper mapper;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> getAll() {
         final List<User> entity = service.findAll();
@@ -35,8 +35,9 @@ public class UserController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<UserResponseDto> getById(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDto> get(@PathVariable Long id) {
         User entity = service.findById(id);
 
         final UserResponseDto responseDto = mapper.map(entity, UserResponseDto.class);

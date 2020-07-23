@@ -25,7 +25,7 @@ public class GenreController {
     private Mapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<GenreResponseDto>> read() {
+    public ResponseEntity<List<GenreResponseDto>> getAll() {
         final List<Genre> entity = service.findAll();
 
         final List<GenreResponseDto> responseDto = entity.stream()
@@ -35,7 +35,7 @@ public class GenreController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<GenreResponseDto> read(@PathVariable Long id) {
+    public ResponseEntity<GenreResponseDto> get(@PathVariable Long id) {
         Genre entity = service.findById(id);
 
         final GenreResponseDto responseDto = mapper.map(entity, GenreResponseDto.class);
