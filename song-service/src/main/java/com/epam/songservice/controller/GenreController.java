@@ -44,8 +44,8 @@ public class GenreController {
 
     @PostMapping
     public ResponseEntity<GenreResponseDto> create(@Valid @RequestBody GenreRequestDto requestDto) throws Exception {
-        final Genre entity = mapper.map(requestDto, Genre.class);
-        service.save(entity);
+        Genre entity = mapper.map(requestDto, Genre.class);
+        entity = service.save(entity);
 
         final GenreResponseDto responseDto = mapper.map(entity, GenreResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -53,8 +53,9 @@ public class GenreController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<GenreResponseDto> update(@PathVariable Long id, @Valid @RequestBody GenreRequestDto requestDto) throws Exception {
-        final Genre entity = mapper.map(requestDto, Genre.class);
-        service.update(entity);
+        Genre entity = mapper.map(requestDto, Genre.class);
+        entity.setId(id);
+        entity = service.update(entity);
 
         final GenreResponseDto responseDto = mapper.map(entity, GenreResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);

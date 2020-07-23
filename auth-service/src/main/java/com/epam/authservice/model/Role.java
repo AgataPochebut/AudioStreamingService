@@ -1,25 +1,27 @@
 package com.epam.authservice.model;
 
-import com.epam.commonservice.model.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
-@Builder
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-@Table(name="ROLES")
-public class Role extends BaseEntity {
+//@Builder
+//@Data
+//@AllArgsConstructor
+//@NoArgsConstructor
+//@Entity
+//@Table(name="ROLES")
+//public class Role extends BaseEntity {
+//
+//    private String name;
+//
+////    @Enumerated(EnumType.STRING)
+////    @Column(name = "role")
+////    private RoleEnum role;
+//}
 
-    public static Set<Role> defaultRoles;
+public enum Role {
+    USER, ADMIN;
 
-    private String name;
+    public static Set<Role> defaultRoles = new HashSet<>(Arrays.asList(Role.USER));
+
 }
-

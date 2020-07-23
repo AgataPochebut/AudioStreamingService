@@ -44,8 +44,8 @@ public class AlbumController {
 
     @PostMapping
     public ResponseEntity<AlbumResponseDto> create(@Valid @RequestBody AlbumRequestDto requestDto) throws Exception {
-        final Album entity = mapper.map(requestDto, Album.class);
-        service.save(entity);
+        Album entity = mapper.map(requestDto, Album.class);
+        entity = service.save(entity);
 
         final AlbumResponseDto responseDto = mapper.map(entity, AlbumResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -53,8 +53,9 @@ public class AlbumController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<AlbumResponseDto> update(@PathVariable Long id, @Valid @RequestBody AlbumRequestDto requestDto) throws Exception {
-        final Album entity = mapper.map(requestDto, Album.class);
-        service.update(entity);
+        Album entity = mapper.map(requestDto, Album.class);
+        entity.setId(id);
+        entity = service.update(entity);
 
         final AlbumResponseDto responseDto = mapper.map(entity, AlbumResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);

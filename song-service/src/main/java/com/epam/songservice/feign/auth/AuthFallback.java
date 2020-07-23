@@ -12,20 +12,6 @@ public class AuthFallback implements AuthServiceClient {
 
     private Throwable throwable;
 
-//    @Override
-//    public ResponseEntity<Map> getUserInfo(String s) {
-//        String errorMessage = throwable.getMessage();
-//        log.error(errorMessage, throwable);
-//        return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
-//    }
-//
-//    @Override
-//    public ResponseEntity<Collection> getAuthorities(String s) {
-//        String errorMessage = throwable.getMessage();
-//        log.error(errorMessage, throwable);
-//        return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
-//    }
-
     @Override
     public ResponseEntity<AuthUser> getUser(String s) {
         String errorMessage = throwable.getMessage();
