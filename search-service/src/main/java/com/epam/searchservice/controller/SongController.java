@@ -28,10 +28,8 @@ public class SongController {
     @PutMapping(value = "/{id}")
     @ResponseBody
     public Song update(@PathVariable Long id, @RequestBody Song entity) throws Exception {
-        Song entity1 = repositoryService.findById(id);
-        mapper.map(entity, entity1);
-
-        return repositoryService.update(entity1);
+        entity.setId(id);
+        return repositoryService.update(entity);
     }
 
     @DeleteMapping(value = "/{id}")

@@ -1,5 +1,6 @@
 package com.epam.authservice.service.auth;
 
+import com.epam.authservice.model.Role;
 import com.epam.authservice.model.User;
 import com.epam.authservice.service.repository.UserRepositoryService;
 import com.epam.commonservice.model.auth.AuthUser;
@@ -56,12 +57,12 @@ public class AuthServiceImpl implements AuthService {
     private Collection<Authority> getUserAuthorities(String s) throws Exception {
         User entity = userRepositoryService.findByAccount(s);
         if (entity == null) {
-            entity = com.epam.authservice.model.User.builder()
+            entity = User.builder()
                     .account(s)
-                    .roles(com.epam.authservice.model.Role.defaultRoles)
+                    .roles(Role.defaultRoles)
                     .build();
             entity = userRepositoryService.save(entity);
         }
-        return entity.getRoles().stream().map(i->new Authority(i.getName())).collect(Collectors.toSet());
+        return entity.getRoles().stream().map(i->new Authority(i.name())).collect(Collectors.toSet());
     }
 }

@@ -18,9 +18,9 @@
     <properties>
         <java.version>11</java.version>
         <spring-cloud.version>Hoxton.SR4</spring-cloud.version>
+        <lombok>1.18.12</lombok>
         <dozer>5.5.1</dozer>
         <swagger>2.9.2</swagger>
-        <lombok>1.18.12</lombok>
         <hibernate.validator>6.0.16.Final</hibernate.validator>
     </properties>
 
@@ -62,11 +62,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-activemq</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
         </dependency>
@@ -89,15 +84,6 @@
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-cache</artifactId>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-data-redis</artifactId>-->
-<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

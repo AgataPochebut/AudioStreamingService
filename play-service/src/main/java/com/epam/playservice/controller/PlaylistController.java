@@ -45,8 +45,8 @@ public class PlaylistController {
 
     @PostMapping
     public ResponseEntity<PlaylistResponseDto> create(@Valid @RequestBody PlaylistRequestDto requestDto) throws Exception {
-        final Playlist entity = mapper.map(requestDto, Playlist.class);
-        service.save(entity);
+        Playlist entity = mapper.map(requestDto, Playlist.class);
+        entity = service.save(entity);
 
         final PlaylistResponseDto responseDto = mapper.map(entity, PlaylistResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -54,8 +54,9 @@ public class PlaylistController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<PlaylistResponseDto> update(@PathVariable Long id, @Valid @RequestBody PlaylistRequestDto requestDto) throws Exception {
-        final Playlist entity = mapper.map(requestDto, Playlist.class);
-        service.update(entity);
+        Playlist entity = mapper.map(requestDto, Playlist.class);
+        entity.setId(id);
+        entity = service.update(entity);
 
         final PlaylistResponseDto responseDto = mapper.map(entity, PlaylistResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);

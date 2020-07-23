@@ -8,12 +8,14 @@ import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 @RequestMapping("/users")
 public class UserController {
 
@@ -64,16 +66,5 @@ public class UserController {
     @ResponseStatus(value = HttpStatus.OK)
     public void delete(@PathVariable Long id) {
         service.deleteById(id);
-    }
-
-    @GetMapping("/byAccount")
-//    @GetMapping(params = {"byAccount"})
-    public ResponseEntity<UserResponseDto> getByAccount(@RequestParam("account") String account){
-        User entity = service.findByAccount(account);
-
-        if (entity == null) return new ResponseEntity<>(null, HttpStatus.OK);
-
-        final UserResponseDto responseDto = mapper.map(entity, UserResponseDto.class);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 }

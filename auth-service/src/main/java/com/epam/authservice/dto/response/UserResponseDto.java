@@ -1,5 +1,6 @@
 package com.epam.authservice.dto.response;
 
+import com.epam.authservice.model.Role;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,8 +14,6 @@ public class UserResponseDto {
 
     private String account;
 
-    private String name;
-
-    private Set<RoleResponseDto> roles;
+    private Set<Role> roles;
 
 }
