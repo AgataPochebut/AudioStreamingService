@@ -28,7 +28,7 @@ package com.epam.songservice.controller;//package com.epam.controller;
 //    private ResourceStorageFactory storageServiceFactory;
 //
 //    @GetMapping//(produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<List<ResourceResponseDto>> read() {
+//    public ResponseEntity<List<ResourceResponseDto>> getAll() {
 //        final List<Resource> entity = repositoryService.findAll();
 //
 //        final List<ResourceResponseDto> responseDto = entity.stream()
@@ -38,7 +38,7 @@ package com.epam.songservice.controller;//package com.epam.controller;
 //    }
 //
 //    @GetMapping(value = "/{id}")//, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<ResourceResponseDto> read(@PathVariable Long id) throws IOException {
+//    public ResponseEntity<ResourceResponseDto> get(@PathVariable Long id) throws IOException {
 //        Resource entity = repositoryService.findById(id);
 //
 //        final ResourceResponseDto responseDto = mapper.map(entity, ResourceResponseDto.class);

@@ -16,6 +16,6 @@ public class Authority implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
-            return "ROLE_" + name.toUpperCase();
+            return name;
     }
 }
