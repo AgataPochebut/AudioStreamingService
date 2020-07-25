@@ -3,8 +3,9 @@ package com.epam.playservice.controller;
 import com.epam.playservice.dto.request.PlaylistRequestDto;
 import com.epam.playservice.dto.response.PlaylistResponseDto;
 import com.epam.playservice.model.Playlist;
-import com.epam.playservice.service.AuthUserService;
-import com.epam.playservice.service.PlaylistService;
+import com.epam.playservice.model.Song;
+import com.epam.playservice.service.SongService;
+import com.epam.playservice.service.repository.PlaylistRepositoryService;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,14 +21,17 @@ import java.util.stream.Collectors;
 public class PlaylistController {
 
     @Autowired
-    private PlaylistService service;
+    private PlaylistRepositoryService playlistRepositoryService;
+
+    @Autowired
+    private SongService songService;
 
     @Autowired
     private Mapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<PlaylistResponseDto>> getAll() {
-        final List<Playlist> entity = service.findAll();
+    public ResponseEntity<List<PlaylistResponseDto>> getAll() throws Exception {
+        final List<Playlist> entity = playlistRepositoryService.findAll();
 
         final List<PlaylistResponseDto> responseDto = entity.stream()
                 .map((i) -> mapper.map(i, PlaylistResponseDto.class))
@@ -36,17 +40,17 @@ public class PlaylistController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<PlaylistResponseDto> get(@PathVariable Long id) {
-        Playlist entity = service.findById(id);
+    public ResponseEntity<PlaylistResponseDto> get(@PathVariable Long id) throws Exception {
+        final Playlist entity = playlistRepositoryService.findById(id);
 
         final PlaylistResponseDto responseDto = mapper.map(entity, PlaylistResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<PlaylistResponseDto> create(@Valid @RequestBody PlaylistRequestDto requestDto) throws Exception {
+    public ResponseEntity<PlaylistResponseDto> create(@RequestBody PlaylistRequestDto requestDto) throws Exception {
         Playlist entity = mapper.map(requestDto, Playlist.class);
-        entity = service.save(entity);
+        entity = playlistRepositoryService.save(entity);
 
         final PlaylistResponseDto responseDto = mapper.map(entity, PlaylistResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -56,7 +60,7 @@ public class PlaylistController {
     public ResponseEntity<PlaylistResponseDto> update(@PathVariable Long id, @Valid @RequestBody PlaylistRequestDto requestDto) throws Exception {
         Playlist entity = mapper.map(requestDto, Playlist.class);
         entity.setId(id);
-        entity = service.update(entity);
+        entity = playlistRepositoryService.update(entity);
 
         final PlaylistResponseDto responseDto = mapper.map(entity, PlaylistResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -64,17 +68,40 @@ public class PlaylistController {
 
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    public void delete(@PathVariable Long id) {
-        service.deleteById(id);
+    public void delete(@PathVariable Long id) throws Exception {
+        playlistRepositoryService.deleteById(id);
     }
 
-    @Autowired
-    private AuthUserService authUserService;
+    @PutMapping(value = "/{id}/add/{song_id}")
+    public ResponseEntity<PlaylistResponseDto> add(@PathVariable Long id, @PathVariable Long song_id) throws Exception {
+        Song song = songService.get(song_id);
 
-//        OAuth2AuthenticationProcessingFilter
-//        OAuth2AuthenticationManager
-//        UserInfoTokenServices
-//        UsernamePasswordAuthenticationToken
-//        OAuth2Authentication
+        Playlist entity = playlistRepositoryService.findById(id);
+        entity.getSongs().add(song);
+        entity = playlistRepositoryService.update(entity);
 
+        final PlaylistResponseDto responseDto = mapper.map(entity, PlaylistResponseDto.class);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/{id}/del/{song_id}")
+    public ResponseEntity<PlaylistResponseDto> del(@PathVariable Long id, @PathVariable Long song_id) throws Exception {
+        Song song = songService.get(song_id);
+
+        Playlist entity = playlistRepositoryService.findById(id);
+        entity.getSongs().remove(song);
+        entity = playlistRepositoryService.update(entity);
+
+//        if (song.getPlaylists().isEmpty()) songService.delete(song);
+
+        final PlaylistResponseDto responseDto = mapper.map(entity, PlaylistResponseDto.class);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/song/{song_id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void del1(@PathVariable Long song_id) throws Exception {
+        Song song = songService.get(song_id);
+        songService.delete(song);
+    }
 }

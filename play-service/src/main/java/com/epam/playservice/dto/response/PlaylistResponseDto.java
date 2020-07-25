@@ -13,8 +13,8 @@ public class PlaylistResponseDto {
 
     private String title;
 
-    private Set<Long> songs;
+    private Set<SongResponseDto> songs;
 
-    private Long user;
+    private UserResponseDto user;
 
 }

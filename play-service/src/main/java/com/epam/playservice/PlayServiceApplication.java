@@ -12,12 +12,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @EnableJpaRepositories(includeFilters = @ComponentScan.Filter(
         type = FilterType.ASSIGNABLE_TYPE, classes = JpaRepository.class))
-@EnableDiscoveryClient
 @EnableFeignClients
-public class PlayServiceApplication {
+@EnableDiscoveryClient
+public class PlayServiceApplication {//extends SpringBootServletInitializer
 
     public static void main(String[] args) {
         SpringApplication.run(PlayServiceApplication.class, args);
     }
-
 }
