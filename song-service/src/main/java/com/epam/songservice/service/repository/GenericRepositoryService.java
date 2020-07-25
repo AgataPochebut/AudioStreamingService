@@ -2,7 +2,7 @@ package com.epam.songservice.service.repository;
 
 import java.util.List;
 
-public interface GenericService<T,U> {
+public interface GenericRepositoryService<T,U> {
 
     List<T> findAll();
 

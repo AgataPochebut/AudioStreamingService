@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class AlbumServiceImpl extends GenericServiceImpl<Album, Long> implements AlbumService {
+public class AlbumRepositoryServiceImpl extends GenericRepositoryServiceImpl<Album, Long> implements AlbumRepositoryService {
 
     @Autowired
     private AlbumRepository repository;

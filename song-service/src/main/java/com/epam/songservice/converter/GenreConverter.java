@@ -1,7 +1,7 @@
 package com.epam.songservice.converter;
 
 import com.epam.songservice.model.Genre;
-import com.epam.songservice.service.repository.GenreService;
+import com.epam.songservice.service.repository.GenreRepositoryService;
 import lombok.SneakyThrows;
 import org.dozer.CustomConverter;
 import org.dozer.Mapper;
@@ -18,11 +18,11 @@ import java.util.stream.Collectors;
 public
 class GenreConverter implements CustomConverter {
 
-    private static GenreService repositoryService;
+    private static GenreRepositoryService repositoryService;
     private static Mapper mapper;
 
     @Autowired
-    public GenreConverter(GenreService repositoryService, Mapper mapper) {
+    public GenreConverter(GenreRepositoryService repositoryService, Mapper mapper) {
         GenreConverter.repositoryService = repositoryService;
         GenreConverter.mapper = mapper;
     }

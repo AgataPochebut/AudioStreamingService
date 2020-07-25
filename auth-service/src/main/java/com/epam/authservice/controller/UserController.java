@@ -68,4 +68,13 @@ public class UserController {
     public void delete(@PathVariable Long id) {
         service.deleteById(id);
     }
+
+
+    @GetMapping(value = "/byAccount")
+    public ResponseEntity<UserResponseDto> getByAccount(@RequestParam(value = "account") String s) {
+        User entity = service.findByAccount(s);
+
+        final UserResponseDto responseDto = mapper.map(entity, UserResponseDto.class);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
 }

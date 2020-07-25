@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class SongRepositoryServiceImpl extends GenericServiceImpl<Song, Long> implements SongRepositoryService {
+public class SongRepositoryServiceImpl extends GenericRepositoryServiceImpl<Song, Long> implements SongRepositoryService {
 
     @Autowired
     private SongRepository repository;

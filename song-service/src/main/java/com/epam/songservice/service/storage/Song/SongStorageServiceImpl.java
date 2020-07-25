@@ -3,7 +3,7 @@ package com.epam.songservice.service.storage.Song;
 import com.epam.songservice.annotation.Decorate;
 import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
-import com.epam.songservice.service.repository.AlbumService;
+import com.epam.songservice.service.repository.AlbumRepositoryService;
 import com.epam.songservice.service.storage.Resource.ResourceStorageFactory;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
@@ -32,7 +32,7 @@ public class SongStorageServiceImpl implements SongStorageService {
     @Autowired
     private Mapper mapper;
 
-    private static AlbumService repositoryService;
+    private static AlbumRepositoryService repositoryService;
 
     @Override
     public Song upload(Resource resource) throws Exception {

@@ -3,7 +3,7 @@ package com.epam.songservice.controller;
 import com.epam.songservice.dto.request.ArtistRequestDto;
 import com.epam.songservice.dto.response.ArtistResponseDto;
 import com.epam.songservice.model.Artist;
-import com.epam.songservice.service.repository.ArtistService;
+import com.epam.songservice.service.repository.ArtistRepositoryService;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class ArtistController {
 
     @Autowired
-    private ArtistService service;
+    private ArtistRepositoryService service;
 
     @Autowired
     private Mapper mapper;

@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class ResourceRepositoryServiceImpl extends GenericServiceImpl<Resource, Long> implements ResourceRepositoryService {
+public class ResourceRepositoryServiceImpl extends GenericRepositoryServiceImpl<Resource, Long> implements ResourceRepositoryService {
 
     @Autowired
     private ResourceRepository repository;
