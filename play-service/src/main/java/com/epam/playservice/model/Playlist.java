@@ -23,14 +23,15 @@ public class Playlist extends BaseEntity {
     @NotEmpty
     private String title;
 
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @ManyToMany
     @JoinTable(name = "Playlist_Song",
             joinColumns = {@JoinColumn(name = "playlist_id")},
             inverseJoinColumns = {@JoinColumn(name = "song_id")})
-    private Set<Long> songs;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private Set<Song> songs;
 
 }

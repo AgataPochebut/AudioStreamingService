@@ -1,25 +1,23 @@
-package com.epam.playservice.service;
+package com.epam.playservice.service.repository;
 
 import com.epam.playservice.repository.GenericRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-public class GenericServiceImpl<T,U> implements GenericService<T, U> {
+public class GenericRepositoryServiceImpl<T,U> implements GenericRepositoryService<T, U> {
 
     @Autowired
     private GenericRepository<T,U> repository;
 
-//    @Cacheable(cacheNames = "cachetest")
     @Override
-    public List<T> findAll() {
+    public List<T> findAll() throws Exception {
         return repository.findAll();
     }
 
-//    @Cacheable(cacheNames = "cachetest")
     @Override
-    public T findById(U id) {
-        return repository.findById(id).orElseThrow(() -> new RuntimeException());
+    public T findById(U id) throws Exception {
+        return repository.findById(id).orElse(null);
     }
 
     @Override
@@ -32,15 +30,13 @@ public class GenericServiceImpl<T,U> implements GenericService<T, U> {
         return repository.save(entity);
     }
 
-//    @CacheEvict(cacheNames = "cachetest")
     @Override
-    public void delete(T entity) {
+    public void delete(T entity) throws Exception {
         repository.delete(entity);
     }
 
-//    @CacheEvict(cacheNames = "cachetest")
     @Override
-    public void deleteById(U id) {
+    public void deleteById(U id) throws Exception {
         if (repository.existsById(id)) {
             repository.deleteById(id);}
     }
