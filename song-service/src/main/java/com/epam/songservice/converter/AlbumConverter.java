@@ -1,7 +1,7 @@
 package com.epam.songservice.converter;
 
 import com.epam.songservice.model.Album;
-import com.epam.songservice.service.repository.AlbumService;
+import com.epam.songservice.service.repository.AlbumRepositoryService;
 import lombok.SneakyThrows;
 import org.dozer.CustomConverter;
 import org.dozer.Mapper;
@@ -15,11 +15,11 @@ import java.util.Map;
 @Transactional
 public class AlbumConverter implements CustomConverter {
 
-    private static AlbumService repositoryService;
+    private static AlbumRepositoryService repositoryService;
     private static Mapper mapper;
 
     @Autowired
-    public AlbumConverter(AlbumService repositoryService, Mapper mapper) {
+    public AlbumConverter(AlbumRepositoryService repositoryService, Mapper mapper) {
         AlbumConverter.repositoryService = repositoryService;
         AlbumConverter.mapper = mapper;
     }

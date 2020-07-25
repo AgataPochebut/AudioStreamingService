@@ -27,10 +27,10 @@ import java.util.stream.Collectors;
 public class SongController {
 
     @Autowired
-    private SongStorageService songStorageService;
+    private SongRepositoryService service;
 
     @Autowired
-    private SongRepositoryService songRepositoryService;
+    private SongStorageService songStorageService;
 
     @Autowired
     private ResourceStorageFactory resourceStorageFactory;
@@ -43,7 +43,7 @@ public class SongController {
 
     @GetMapping
     public ResponseEntity<List<SongResponseDto>> getAll() {
-        final List<Song> entity = songRepositoryService.findAll();
+        final List<Song> entity = service.findAll();
 
         final List<SongResponseDto> responseDto = entity.stream()
                 .map((i) -> mapper.map(i, SongResponseDto.class))
@@ -53,7 +53,7 @@ public class SongController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<SongResponseDto> get(@PathVariable Long id) {
-        Song entity = songRepositoryService.findById(id);
+        Song entity = service.findById(id);
 
         final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -62,7 +62,7 @@ public class SongController {
     // Accept 'application/octet-stream'
     @GetMapping(value = "/download/{id}", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public ResponseEntity<org.springframework.core.io.Resource> download(@PathVariable Long id) throws Exception {
-        Song entity = songRepositoryService.findById(id);
+        Song entity = service.findById(id);
 
         Resource resource = songStorageService.download(entity);
         org.springframework.core.io.Resource source = resourceStorageFactory.getService().download(resource);
@@ -127,7 +127,7 @@ public class SongController {
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public void delete(@PathVariable Long id) throws Exception {
-        Song entity = songRepositoryService.findById(id);
+        Song entity = service.findById(id);
 
         songStorageService.delete(entity);
     }

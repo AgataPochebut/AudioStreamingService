@@ -3,7 +3,7 @@ package com.epam.songservice.controller;
 import com.epam.songservice.dto.request.GenreRequestDto;
 import com.epam.songservice.dto.response.GenreResponseDto;
 import com.epam.songservice.model.Genre;
-import com.epam.songservice.service.repository.GenreService;
+import com.epam.songservice.service.repository.GenreRepositoryService;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class GenreController {
 
     @Autowired
-    private GenreService service;
+    private GenreRepositoryService service;
 
     @Autowired
     private Mapper mapper;

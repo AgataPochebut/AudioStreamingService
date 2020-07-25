@@ -1,6 +1,6 @@
 package com.epam.playservice.service;
 
-import com.epam.playservice.feign.SongServiceClient;
+import com.epam.playservice.feign.song.SongServiceClient;
 import com.epam.playservice.model.Song;
 import com.epam.playservice.service.repository.SongRepositoryService;
 import org.springframework.beans.factory.annotation.Autowired;
