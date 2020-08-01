@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,7 @@ public class UserController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserResponseDto> get(@PathVariable Long id) {
         User entity = service.findById(id);
@@ -44,8 +45,16 @@ public class UserController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/byAccount")
+    public ResponseEntity<UserResponseDto> getByAccount(@RequestParam(value = "account") String s) {
+        User entity = service.findByAccount(s);
+
+        final UserResponseDto responseDto = mapper.map(entity, UserResponseDto.class);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
     @PostMapping
-    public ResponseEntity<UserResponseDto> create(@RequestBody UserRequestDto requestDto) throws Exception {
+    public ResponseEntity<UserResponseDto> create(@Valid @RequestBody UserRequestDto requestDto) throws Exception {
         User entity = mapper.map(requestDto, User.class);
         entity = service.save(entity);
 
@@ -69,12 +78,4 @@ public class UserController {
         service.deleteById(id);
     }
 
-
-    @GetMapping(value = "/byAccount")
-    public ResponseEntity<UserResponseDto> getByAccount(@RequestParam(value = "account") String s) {
-        User entity = service.findByAccount(s);
-
-        final UserResponseDto responseDto = mapper.map(entity, UserResponseDto.class);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
 }

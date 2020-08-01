@@ -19,15 +19,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     private static final String SEMICOLON = ";";
     private static final String EMPTY = "";
 
-//    @ExceptionHandler(value = {MethodArgumentNotValidException.class})
-//    protected ResponseEntity<Object> handle(MethodArgumentNotValidException exception) {
-//        String errorMessage = exception.getBindingResult().getAllErrors().stream()
-//                .map(objectError -> objectError.getDefaultMessage().concat(SEMICOLON))
-//                .reduce(EMPTY, String::concat);
-//        log.error(errorMessage, exception);
-//        return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
-//    }
-
     @ExceptionHandler(value = {ConstraintViolationException.class})
     protected ResponseEntity<Object> handle(ConstraintViolationException exception) {
         String errorMessage = exception.getConstraintViolations().stream()

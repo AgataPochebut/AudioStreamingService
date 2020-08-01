@@ -22,6 +22,7 @@
         <dozer>5.5.1</dozer>
         <swagger>2.9.2</swagger>
         <hibernate.validator>6.0.16.Final</hibernate.validator>
+        <com.h2.driver>1.4.197</com.h2.driver>
     </properties>
 
     <dependencyManagement>
@@ -83,6 +84,12 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${com.h2.driver}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>

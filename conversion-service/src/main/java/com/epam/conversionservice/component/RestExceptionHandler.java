@@ -18,16 +18,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     private static final String SEMICOLON = ";";
     private static final String EMPTY = "";
 
-//    @ExceptionHandler(value = {MethodArgumentNotValidException.class})
-//    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception,
-//                                                                  HttpHeaders headers, HttpStatus status, WebRequest request) {
-//        String errorMessage = exception.getBindingResult().getAllErrors().stream()
-//                .map(objectError -> objectError.getDefaultMessage().concat(SEMICOLON))
-//                .reduce(EMPTY, String::concat);
-//        log.error(errorMessage, exception);
-//        return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
-//    }
-
     @ExceptionHandler(value = {IncorrectFormatException.class})
     protected ResponseEntity<Object> handle(IncorrectFormatException exception, WebRequest request) {
         String errorMessage = exception.getMessage();
