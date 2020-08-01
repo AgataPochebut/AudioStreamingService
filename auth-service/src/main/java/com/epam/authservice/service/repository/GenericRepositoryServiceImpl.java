@@ -1,22 +1,24 @@
 package com.epam.authservice.service.repository;
 
 import com.epam.authservice.repository.GenericRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional
 public class GenericRepositoryServiceImpl<T,U> implements GenericRepositoryService<T, U> {
 
-    @Autowired
-    private GenericRepository<T,U> repository;
+    private final GenericRepository<T,U> repository;
 
-//    @Cacheable(cacheNames = "auth-service-cache")
+    public GenericRepositoryServiceImpl(GenericRepository<T,U> repository) {
+        this.repository = repository;
+    }
+
     @Override
     public List<T> findAll() {
         return repository.findAll();
     }
 
-//    @Cacheable(cacheNames = "auth-service-cache")
     @Override
     public T findById(U id) {
         return repository.findById(id).orElseThrow(() -> new RuntimeException());
@@ -32,13 +34,11 @@ public class GenericRepositoryServiceImpl<T,U> implements GenericRepositoryServi
         return repository.save(entity);
     }
 
-//    @CacheEvict(cacheNames = "auth-service-cache")
     @Override
     public void delete(T entity) {
         repository.delete(entity);
     }
 
-//    @CacheEvict(cacheNames = "auth-service-cache")
     @Override
     public void deleteById(U id) {
         if (repository.existsById(id)) {
