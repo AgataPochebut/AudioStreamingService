@@ -33,7 +33,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handle(AccessDeniedException exception, WebRequest request) {
         String errorMessage = exception.getMessage();
         log.error(errorMessage, exception);
-        return handleExceptionInternal(exception, exception.getMessage(), new HttpHeaders(), HttpStatus.FORBIDDEN, request);
+        return new ResponseEntity(errorMessage, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(value = {Exception.class})

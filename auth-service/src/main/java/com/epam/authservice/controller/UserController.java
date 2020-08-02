@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<UserResponseDto> update(@PathVariable Long id, @RequestBody UserRequestDto requestDto) throws Exception {
+    public ResponseEntity<UserResponseDto> update(@PathVariable Long id, @Valid @RequestBody UserRequestDto requestDto) throws Exception {
         User entity = mapper.map(requestDto, User.class);
         entity.setId(id);
         entity = service.update(entity);
