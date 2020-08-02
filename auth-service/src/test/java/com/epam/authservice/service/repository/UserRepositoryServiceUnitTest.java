@@ -46,8 +46,7 @@ class UserRepositoryServiceUnitTest {
         user.setAccount("test");
         user.setRoles(Set.of(Role.USER));
         when(userRepository.save(any(User.class))).then(returnsFirstArg());
-        assertThat(userRepositoryService.save(user)).isNotNull();
-//        assertThat(userRepositoryService.save(user)).isNotNull();
+        assertThat(userRepositoryService.save(user)).isEqualTo(user);
     }
 
     @Test
