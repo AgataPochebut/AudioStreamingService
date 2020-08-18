@@ -21,7 +21,7 @@ public class SongController {
 
     @PostMapping
     @ResponseBody
-    public Song create(@RequestBody Song entity) throws Exception {
+    public Song save(@RequestBody Song entity) throws Exception {
         return repositoryService.save(entity);
     }
 

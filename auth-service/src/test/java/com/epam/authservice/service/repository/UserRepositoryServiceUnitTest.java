@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,11 +17,9 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-//@ExtendWith(SpringExtension.class)
-//@SpringBootTest
 class UserRepositoryServiceUnitTest {
 
     @Mock
@@ -30,6 +29,7 @@ class UserRepositoryServiceUnitTest {
     private UserRepositoryServiceImpl userRepositoryService;
 
     @Test
+    @WithMockUser(username = "user", password = "test", authorities = "ADMIN")
     void findAll() {
         List<User> list = Arrays.asList();
         when(userRepository.findAll()).thenReturn(list);
@@ -38,6 +38,16 @@ class UserRepositoryServiceUnitTest {
 
     @Test
     void findById() {
+        User user = new User();
+        when(userRepository.findById(any())).thenReturn(java.util.Optional.of(user));
+        assertThat(userRepositoryService.findById(1L)).isEqualTo(user);
+    }
+
+    @Test
+    void findByAccount() {
+        User user = new User();
+        when(userRepository.findByAccount(any())).thenReturn(java.util.Optional.of(user));
+        assertThat(userRepositoryService.findByAccount("test")).isEqualTo(user);
     }
 
     @Test
@@ -50,18 +60,20 @@ class UserRepositoryServiceUnitTest {
     }
 
     @Test
-    void update() {
-    }
-
-    @Test
-    void delete() {
+    void update() throws Exception {
+        User user = new User();
+        user.setAccount("test");
+        user.setRoles(Set.of(Role.USER));
+        user.setId(1L);
+        when(userRepository.save(any(User.class))).then(returnsFirstArg());
+        assertThat(userRepositoryService.save(user)).isEqualTo(user);
     }
 
     @Test
     void deleteById() {
+        when(userRepository.existsById(any())).thenReturn(true);
+        doNothing().when(userRepository).deleteById(any());
+        userRepositoryService.deleteById(1L);
     }
 
-    @Test
-    void findByAccount() {
-    }
 }

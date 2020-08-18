@@ -43,7 +43,7 @@ public class AlbumController {
     }
 
     @PostMapping
-    public ResponseEntity<AlbumResponseDto> create(@Valid @RequestBody AlbumRequestDto requestDto) throws Exception {
+    public ResponseEntity<AlbumResponseDto> save(@Valid @RequestBody AlbumRequestDto requestDto) throws Exception {
         Album entity = mapper.map(requestDto, Album.class);
         entity = service.save(entity);
 

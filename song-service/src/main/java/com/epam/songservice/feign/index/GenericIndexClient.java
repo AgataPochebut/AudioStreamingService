@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 public interface GenericIndexClient<T,U> {
 
     @PostMapping
-    public T create(@RequestBody T entity);
+    public T save(@RequestBody T entity);
 
     @PutMapping(value = "/{id}")
     public T update(@PathVariable U id, @RequestBody T entity);
