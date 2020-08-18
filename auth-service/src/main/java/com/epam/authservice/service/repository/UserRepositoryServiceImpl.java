@@ -18,6 +18,6 @@ public class UserRepositoryServiceImpl extends GenericRepositoryServiceImpl<User
 
 
     @Override
-    public User findByAccount(String email) { return repository.findByAccount(email); }
+    public User findByAccount(String email) { return repository.findByAccount(email).orElse(null); }
 
 }

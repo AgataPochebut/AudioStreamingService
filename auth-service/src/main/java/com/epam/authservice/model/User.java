@@ -21,6 +21,7 @@ public class User extends BaseEntity {
 
     @NotNull
     @NotEmpty
+    @Column(nullable = false, unique = true)
     private String account;
 
     @NotNull
@@ -29,6 +30,6 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @JoinTable(name = "User_Role",
             joinColumns = {@JoinColumn(name = "user_id")})
-    @Column(name = "role", nullable = false, unique = true)
+    @Column(name = "role", nullable = false)
     private Set<Role> roles;
 }

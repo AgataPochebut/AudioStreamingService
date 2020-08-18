@@ -22,7 +22,7 @@
         <dozer>5.5.1</dozer>
         <swagger>2.9.2</swagger>
         <hibernate.validator>6.0.16.Final</hibernate.validator>
-        <com.h2.driver>1.4.197</com.h2.driver>
+        <h2>1.4.197</h2>
     </properties>
 
     <dependencyManagement>
@@ -88,7 +88,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>${com.h2.driver}</version>
+            <version>${h2}</version>
             <scope>test</scope>
         </dependency>
 
@@ -148,15 +148,23 @@
             <groupId>com.epam</groupId>
             <artifactId>common-service</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
-        
+
     </dependencies>
 
     <build>
         <finalName>auth-service</finalName>
 
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

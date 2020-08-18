@@ -43,7 +43,7 @@ public class ArtistController {
     }
 
     @PostMapping
-    public ResponseEntity<ArtistResponseDto> create(@Valid @RequestBody ArtistRequestDto requestDto) throws Exception {
+    public ResponseEntity<ArtistResponseDto> save(@Valid @RequestBody ArtistRequestDto requestDto) throws Exception {
         Artist entity = mapper.map(requestDto, Artist.class);
         entity = service.save(entity);
 

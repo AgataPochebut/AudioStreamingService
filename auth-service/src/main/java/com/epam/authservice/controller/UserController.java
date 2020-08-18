@@ -54,7 +54,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponseDto> create(@Valid @RequestBody UserRequestDto requestDto) throws Exception {
+    public ResponseEntity<UserResponseDto> save(@Valid @RequestBody UserRequestDto requestDto) throws Exception {
         User entity = mapper.map(requestDto, User.class);
         entity = service.save(entity);
 

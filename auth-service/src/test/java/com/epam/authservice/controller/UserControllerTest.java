@@ -16,6 +16,7 @@ import org.springframework.security.test.context.support.WithSecurityContextTest
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
 import java.util.Set;
 
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
@@ -25,7 +26,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-//@ExtendWith(SpringExtension.class)
 //@WebMvcTest(UserController.class)
 @SpringBootTest//(properties = {"security.basic.enabled=false"})
 @AutoConfigureMockMvc(addFilters = false)
@@ -38,14 +38,15 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private ObjectMapper mapper;
+    private ObjectMapper objectMapper;
 
     @MockBean
     private UserRepositoryService userRepositoryService;
 
     @Test
     @WithMockUser(username = "user", password = "test", authorities = "USER")
-    public void getAllShouldReturn403() throws Exception {
+    public void getAllShouldReturnAuthError403() throws Exception {
+        when(userRepositoryService.findAll()).thenReturn(Arrays.asList());
         this.mockMvc.perform(get("/users"))
                 .andExpect(status().isForbidden());
     }
@@ -53,7 +54,16 @@ class UserControllerTest {
     @Test
     @WithMockUser(username = "user", password = "test", authorities = "ADMIN")
     public void getAllShouldReturnOK() throws Exception {
-        this.mockMvc.perform(get("/users"))
+        when(userRepositoryService.findAll()).thenReturn(Arrays.asList());
+        mockMvc.perform(get("/users"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "user", password = "test", authorities = "ADMIN")
+    void getByIdShouldReturnOK() throws Exception {
+        when(userRepositoryService.findById(any())).thenReturn(new User());
+        this.mockMvc.perform(get("/users/{id}", 1L))
                 .andExpect(status().isOk());
     }
 
@@ -66,27 +76,63 @@ class UserControllerTest {
     }
 
     @Test
-    void createShouldReturnOK() throws Exception {
+    void saveShouldReturnErrorAccountNotNull() throws Exception {
         final UserRequestDto user = new UserRequestDto();
-        user.setAccount("test");
+        user.setAccount(null);
         user.setRoles(Set.of(Role.USER));
         when(userRepositoryService.save(any(User.class))).then(returnsFirstArg());
         this.mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(user)))
-                .andExpect(status().isOk());
+                .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    void createShouldReturn400() throws Exception {
+    void saveShouldReturnErrorAccountNotEmpty() throws Exception {
+        final UserRequestDto user = new UserRequestDto();
+        user.setAccount("");
+        user.setRoles(Set.of(Role.USER));
+        when(userRepositoryService.save(any(User.class))).then(returnsFirstArg());
+        this.mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void saveShouldReturnErrorRolesNotNull() throws Exception {
         final UserRequestDto user = new UserRequestDto();
         user.setAccount("test");
         user.setRoles(null);
         when(userRepositoryService.save(any(User.class))).then(returnsFirstArg());
         this.mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(user)))
+                .content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void saveShouldReturnErrorRolesNotEmpty() throws Exception {
+        final UserRequestDto user = new UserRequestDto();
+        user.setAccount("test");
+        user.setRoles(Set.of());
+        when(userRepositoryService.save(any(User.class))).then(returnsFirstArg());
+        this.mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void saveShouldReturnOK() throws Exception {
+        final UserRequestDto user = new UserRequestDto();
+        user.setAccount("test");
+        user.setRoles(Set.of(Role.USER));
+        when(userRepositoryService.save(any(User.class))).then(returnsFirstArg());
+        this.mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -97,20 +143,8 @@ class UserControllerTest {
         when(userRepositoryService.update(any(User.class))).then(returnsFirstArg());
         this.mockMvc.perform(put("/users/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(user)))
+                .content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isOk());
-    }
-
-    @Test
-    void updateShouldReturn400() throws Exception {
-        final UserRequestDto user = new UserRequestDto();
-        user.setAccount(null);
-        user.setRoles(Set.of(Role.USER));
-        when(userRepositoryService.update(any(User.class))).then(returnsFirstArg());
-        this.mockMvc.perform(put("/users/{id}", 1L)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(user)))
-                .andExpect(status().isBadRequest());
     }
 
     @Test

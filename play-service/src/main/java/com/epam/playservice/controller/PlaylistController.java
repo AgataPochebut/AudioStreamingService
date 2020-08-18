@@ -48,7 +48,7 @@ public class PlaylistController {
     }
 
     @PostMapping
-    public ResponseEntity<PlaylistResponseDto> create(@RequestBody PlaylistRequestDto requestDto) throws Exception {
+    public ResponseEntity<PlaylistResponseDto> save(@RequestBody PlaylistRequestDto requestDto) throws Exception {
         Playlist entity = mapper.map(requestDto, Playlist.class);
         entity = playlistRepositoryService.save(entity);
 

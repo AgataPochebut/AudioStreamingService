@@ -46,7 +46,7 @@ package com.epam.songservice.controller;//package com.epam.controller;
 //    }
 //
 ////    @PostMapping//(consumes = {MediaType.APPLICATION_JSON_VALUE})
-////    public ResponseEntity<ResourceResponseDto> create(@RequestBody ResourceRequestDto requestDto) throws Exception {
+////    public ResponseEntity<ResourceResponseDto> save(@RequestBody ResourceRequestDto requestDto) throws Exception {
 ////        final Resource entity = mapper.map(requestDto, Resource.class);
 ////        repositoryService.save(entity);
 ////

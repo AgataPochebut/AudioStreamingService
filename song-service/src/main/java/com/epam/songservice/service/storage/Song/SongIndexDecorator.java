@@ -18,7 +18,7 @@ public class SongIndexDecorator extends SongStorageDecorator {
         Song entity = super.upload(resource);
 
         try {
-            indexClient.create(entity);
+            indexClient.save(entity);
             return entity;
         }
         catch (Exception e){

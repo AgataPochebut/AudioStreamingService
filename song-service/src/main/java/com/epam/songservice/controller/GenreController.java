@@ -43,7 +43,7 @@ public class GenreController {
     }
 
     @PostMapping
-    public ResponseEntity<GenreResponseDto> create(@Valid @RequestBody GenreRequestDto requestDto) throws Exception {
+    public ResponseEntity<GenreResponseDto> save(@Valid @RequestBody GenreRequestDto requestDto) throws Exception {
         Genre entity = mapper.map(requestDto, Genre.class);
         entity = service.save(entity);
 
