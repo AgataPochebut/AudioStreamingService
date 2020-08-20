@@ -1,7 +1,8 @@
-package com.epam.authservice.service.repository;
+package com.epam.authservice;
 
 import com.epam.authservice.model.Role;
 import com.epam.authservice.model.User;
+import com.epam.authservice.service.repository.UserRepositoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
-import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -25,13 +24,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
-@TestExecutionListeners(mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS, listeners = {
-        WithSecurityContextTestExecutionListener.class
-})
 @Transactional
 @Sql(scripts = "/insert_users.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "/clear_users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-class UserRepositoryServiceIntegrationTest {
+class UserIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -43,7 +39,7 @@ class UserRepositoryServiceIntegrationTest {
     private UserRepositoryService userRepositoryService;
 
     @Test
-    @WithMockUser(username = "user", password = "test", authorities = "ADMIN")
+    @WithMockUser(authorities = "ADMIN")
     void findAll() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
@@ -55,7 +51,7 @@ class UserRepositoryServiceIntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "user", password = "test", authorities = "ADMIN")
+    @WithMockUser(authorities = "ADMIN")
     void findById() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(get("/users/{id}", 1L))
                 .andExpect(status().isOk())

@@ -2,3 +2,4 @@
 /ui/
 .env
 errors.txt
+logs.txt
