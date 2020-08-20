@@ -1,4 +1,4 @@
-package com.epam.songservice.service.storage.Resource;
+package com.epam.songservice.service.storage.resource;
 
 import com.epam.songservice.model.StorageTypes;
 import org.springframework.stereotype.Component;

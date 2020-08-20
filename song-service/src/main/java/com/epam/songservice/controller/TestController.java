@@ -2,7 +2,7 @@ package com.epam.songservice.controller;
 
 import com.epam.songservice.exception.ConversionException;
 import com.epam.songservice.feign.conversion.ConversionClient;
-import com.epam.songservice.service.storage.Resource.ResourceStorageFactory;
+import com.epam.songservice.service.storage.resource.ResourceStorageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;

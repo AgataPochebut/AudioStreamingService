@@ -1,0 +1,20 @@
+server:
+  port: 0
+  servlet:
+    context-path: /
+
+eureka:
+  client:
+    enabled: false
+
+s3:
+  defaultBucket: files
+  tempBucket: temp
+
+fs:
+  defaultFolder: /Java/files
+  tempFolder: /Java/temp
+
+#aws:
+#  accessKey: ${AWS_ACCESS_KEY:111}
+#  secretKey: ${AWS_SECRET_KEY:111}

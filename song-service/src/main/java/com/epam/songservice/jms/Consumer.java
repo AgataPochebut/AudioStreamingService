@@ -2,8 +2,8 @@ package com.epam.songservice.jms;
 
 import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
-import com.epam.songservice.service.storage.Resource.ResourceStorageFactory;
-import com.epam.songservice.service.storage.Song.SongStorageService;
+import com.epam.songservice.service.storage.resource.ResourceStorageFactory;
+import com.epam.songservice.service.storage.song.SongStorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -28,7 +28,6 @@ public class Consumer {
 
     @Autowired
     private SongStorageService songStorageService;
-
 
     @Autowired
     private ResourceStorageFactory resourceStorageFactory;
