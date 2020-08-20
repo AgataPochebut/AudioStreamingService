@@ -8,7 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,10 +16,11 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class UserRepositoryServiceUnitTest {
+class UserRepositoryServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
@@ -29,7 +29,6 @@ class UserRepositoryServiceUnitTest {
     private UserRepositoryServiceImpl userRepositoryService;
 
     @Test
-    @WithMockUser(username = "user", password = "test", authorities = "ADMIN")
     void findAll() {
         List<User> list = Arrays.asList();
         when(userRepository.findAll()).thenReturn(list);

@@ -12,8 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
-import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -26,12 +24,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-//@WebMvcTest(UserController.class)
-@SpringBootTest//(properties = {"security.basic.enabled=false"})
+@SpringBootTest(classes = UserController.class)
 @AutoConfigureMockMvc(addFilters = false)
-@TestExecutionListeners(mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS, listeners = {
-        WithSecurityContextTestExecutionListener.class
-})
 class UserControllerTest {
 
     @Autowired
@@ -44,7 +38,7 @@ class UserControllerTest {
     private UserRepositoryService userRepositoryService;
 
     @Test
-    @WithMockUser(username = "user", password = "test", authorities = "USER")
+    @WithMockUser(authorities = "USER")
     public void getAllShouldReturnAuthError403() throws Exception {
         when(userRepositoryService.findAll()).thenReturn(Arrays.asList());
         this.mockMvc.perform(get("/users"))
@@ -52,7 +46,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user", password = "test", authorities = "ADMIN")
+    @WithMockUser(authorities = "ADMIN")
     public void getAllShouldReturnOK() throws Exception {
         when(userRepositoryService.findAll()).thenReturn(Arrays.asList());
         mockMvc.perform(get("/users"))
@@ -60,7 +54,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user", password = "test", authorities = "ADMIN")
+    @WithMockUser(authorities = "ADMIN")
     void getByIdShouldReturnOK() throws Exception {
         when(userRepositoryService.findById(any())).thenReturn(new User());
         this.mockMvc.perform(get("/users/{id}", 1L))
