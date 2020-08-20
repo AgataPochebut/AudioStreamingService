@@ -1,10 +1,10 @@
-package com.epam.songservice.service.storage.Song;
+package com.epam.songservice.service.storage.song;
 
 import com.epam.songservice.annotation.Decorate;
 import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
 import com.epam.songservice.service.repository.AlbumRepositoryService;
-import com.epam.songservice.service.storage.Resource.ResourceStorageFactory;
+import com.epam.songservice.service.storage.resource.ResourceStorageFactory;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;

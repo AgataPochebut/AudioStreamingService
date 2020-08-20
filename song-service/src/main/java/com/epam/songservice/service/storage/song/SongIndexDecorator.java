@@ -1,16 +1,16 @@
-package com.epam.songservice.service.storage.Song;
+package com.epam.songservice.service.storage.song;
 
+import com.epam.songservice.feign.index.SongIndexClient;
 import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
-import com.epam.songservice.service.repository.SongRepositoryService;
 
-public class SongDBDecorator extends SongStorageDecorator {
+public class SongIndexDecorator extends SongStorageDecorator {
 
-    private SongRepositoryService repositoryService;
+    private SongIndexClient indexClient;
 
-    public SongDBDecorator(SongStorageService storageService, SongRepositoryService repositoryService) {
+    public SongIndexDecorator(SongStorageService storageService, SongIndexClient indexService) {
         super(storageService);
-        this.repositoryService = repositoryService;
+        this.indexClient = indexService;
     }
 
     @Override
@@ -18,19 +18,19 @@ public class SongDBDecorator extends SongStorageDecorator {
         Song entity = super.upload(resource);
 
         try {
-            entity = repositoryService.save(entity);
+            indexClient.save(entity);
             return entity;
         }
         catch (Exception e){
             super.delete(entity);
-            throw new Exception("Error when save song to db");
+            throw new Exception("Error when save song to es");
         }
     }
 
     @Override
     public void delete(Song entity) throws Exception {
         try {
-            repositoryService.deleteById(entity.getId());
+            indexClient.delete(entity.getId());
         }
         catch (Exception e){
             throw new Exception("Error when delete song from db");
@@ -41,7 +41,7 @@ public class SongDBDecorator extends SongStorageDecorator {
 
     @Override
     public String test() {
-        return super.test() + " DB";
+        return super.test() + " Index";
     }
 
 }

@@ -77,7 +77,6 @@ fs:
   defaultFolder: /Java/files
   tempFolder: /Java/temp
 
-cloud:
-  aws:
-    accessKey: ${AWS_ACCESS_KEY}
-    secretKey:  ${AWS_SECRET_KEY}
+aws:
+  accessKey: ${AWS_ACCESS_KEY}
+  secretKey: ${AWS_SECRET_KEY}

@@ -1,11 +1,11 @@
-package com.epam.songservice.service.storage.Song;
+package com.epam.songservice.service.storage.song;
 
 import com.epam.songservice.exception.ConversionException;
 import com.epam.songservice.feign.conversion.ConversionClient;
 import com.epam.songservice.jms.Producer;
 import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
-import com.epam.songservice.service.storage.Resource.ResourceStorageFactory;
+import com.epam.songservice.service.storage.resource.ResourceStorageFactory;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;

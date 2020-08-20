@@ -80,6 +80,11 @@
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -90,14 +95,10 @@
             <artifactId>jedis</artifactId>
         </dependency>
 
-        <!--    <dependency>-->
-        <!--      <groupId>org.springframework.cloud</groupId>-->
-        <!--      <artifactId>spring-cloud-starter-aws</artifactId>-->
-        <!--    </dependency>-->
         <dependency>
             <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk</artifactId>
-            <version>1.11.762</version>
+            <artifactId>aws-java-sdk-s3</artifactId>
+            <version>1.11.845</version>
         </dependency>
 
         <dependency>
@@ -188,6 +189,13 @@
             <artifactId>common-service</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.findify</groupId>
+            <artifactId>s3mock_2.12</artifactId>
+            <version>0.2.4</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

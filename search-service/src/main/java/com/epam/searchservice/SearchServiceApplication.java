@@ -8,13 +8,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
-import org.springframework.jms.annotation.EnableJms;
 
 @SpringBootApplication
 @EnableElasticsearchRepositories
 		(includeFilters = @ComponentScan.Filter(
 		type = FilterType.ASSIGNABLE_TYPE, classes = ElasticsearchRepository.class))
-@EnableJms
 @EnableFeignClients
 @EnableDiscoveryClient
 public class SearchServiceApplication {
