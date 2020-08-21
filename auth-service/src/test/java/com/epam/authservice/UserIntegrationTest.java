@@ -36,7 +36,7 @@ class UserIntegrationTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private UserRepositoryService userRepositoryService;
+    private UserRepositoryService repositoryService;
 
     @Test
     @WithMockUser(authorities = "ADMIN")
@@ -46,7 +46,7 @@ class UserIntegrationTest {
                 .andReturn();
 
         int count1 = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), List.class).size();
-        int count2 = userRepositoryService.findAll().size();
+        int count2 = repositoryService.findAll().size();
         assertThat(count1).isEqualTo(count2);
     }
 
@@ -58,7 +58,7 @@ class UserIntegrationTest {
                 .andReturn();
 
         User user1 = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), User.class);
-        User user2 = userRepositoryService.findById(1L);
+        User user2 = repositoryService.findById(1L);
         assertThat(user1).isEqualTo(user2);
     }
 
@@ -70,7 +70,7 @@ class UserIntegrationTest {
                 .andReturn();
 
         User user1 = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), User.class);
-        User user2 = userRepositoryService.findByAccount("test");
+        User user2 = repositoryService.findByAccount("test");
         assertThat(user1).isEqualTo(user2);
     }
 
@@ -90,7 +90,7 @@ class UserIntegrationTest {
         assertThat(user1.getAccount()).isEqualTo(user.getAccount());
         assertThat(user1.getRoles()).isEqualTo(user.getRoles());
 
-        User user2 = userRepositoryService.findByAccount("test_new");
+        User user2 = repositoryService.findByAccount("test_new");
         assertThat(user2.getAccount()).isEqualTo(user.getAccount());
         assertThat(user2.getRoles()).isEqualTo(user.getRoles());
     }
@@ -111,7 +111,7 @@ class UserIntegrationTest {
         assertThat(user1.getAccount()).isEqualTo(user.getAccount());
         assertThat(user1.getRoles()).isEqualTo(user.getRoles());
 
-        User user2 = userRepositoryService.findById(1L);
+        User user2 = repositoryService.findById(1L);
         assertThat(user2.getAccount()).isEqualTo(user.getAccount());
         assertThat(user2.getRoles()).isEqualTo(user.getRoles());
     }
@@ -121,7 +121,7 @@ class UserIntegrationTest {
         this.mockMvc.perform(delete("/users/{id}", 1L))
                 .andExpect(status().isOk());
 
-        User user1 = userRepositoryService.findById(1L);
+        User user1 = repositoryService.findById(1L);
         assertThat(user1).isNull();
     }
 

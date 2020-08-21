@@ -19,14 +19,14 @@ import java.util.stream.Collectors;
 public class GenreController {
 
     @Autowired
-    private GenreRepositoryService service;
+    private GenreRepositoryService repositoryService;
 
     @Autowired
     private Mapper mapper;
 
     @GetMapping
     public ResponseEntity<List<GenreResponseDto>> getAll() {
-        final List<Genre> entity = service.findAll();
+        final List<Genre> entity = repositoryService.findAll();
 
         final List<GenreResponseDto> responseDto = entity.stream()
                 .map((i) -> mapper.map(i, GenreResponseDto.class))
@@ -36,7 +36,7 @@ public class GenreController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<GenreResponseDto> get(@PathVariable Long id) {
-        Genre entity = service.findById(id);
+        Genre entity = repositoryService.findById(id);
 
         final GenreResponseDto responseDto = mapper.map(entity, GenreResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -45,7 +45,7 @@ public class GenreController {
     @PostMapping
     public ResponseEntity<GenreResponseDto> save(@Valid @RequestBody GenreRequestDto requestDto) throws Exception {
         Genre entity = mapper.map(requestDto, Genre.class);
-        entity = service.save(entity);
+        entity = repositoryService.save(entity);
 
         final GenreResponseDto responseDto = mapper.map(entity, GenreResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -55,7 +55,7 @@ public class GenreController {
     public ResponseEntity<GenreResponseDto> update(@PathVariable Long id, @Valid @RequestBody GenreRequestDto requestDto) throws Exception {
         Genre entity = mapper.map(requestDto, Genre.class);
         entity.setId(id);
-        entity = service.update(entity);
+        entity = repositoryService.update(entity);
 
         final GenreResponseDto responseDto = mapper.map(entity, GenreResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -64,7 +64,7 @@ public class GenreController {
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public void delete(@PathVariable Long id) {
-        service.deleteById(id);
+        repositoryService.deleteById(id);
     }
 
 }

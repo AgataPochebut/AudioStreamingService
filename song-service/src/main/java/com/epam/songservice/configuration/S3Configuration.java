@@ -27,7 +27,7 @@ public class S3Configuration {
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(Regions.DEFAULT_REGION)
                 .build();
-        s3client.createBucket(defaultBucketName);
+//        s3client.createBucket(defaultBucketName);
         return s3client;
     }
 
