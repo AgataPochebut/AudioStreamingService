@@ -6,6 +6,7 @@ import com.epam.songservice.service.repository.SongRepositoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,10 +21,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //@SpringBootTest
 //@ContextConfiguration(classes = {S3TestConfiguration.class})
 @WebMvcTest(controllers = SongController.class)
-//@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc(addFilters = false)
 @Transactional
 @Sql(scripts = "/insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(scripts = "/clear.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(scripts = "/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class SongIntegrationTest {
 
     @Autowired

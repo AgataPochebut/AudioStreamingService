@@ -25,8 +25,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 @Transactional
-@Sql(scripts = "/insert_users.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(scripts = "/clear_users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(scripts = "/insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class UserIntegrationTest {
 
     @Autowired
@@ -57,9 +57,9 @@ class UserIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        User user1 = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), User.class);
-        User user2 = repositoryService.findById(1L);
-        assertThat(user1).isEqualTo(user2);
+        User obj1 = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), User.class);
+        User obj2 = repositoryService.findById(1L);
+        assertThat(obj1).isEqualTo(obj2);
     }
 
     @Test
@@ -69,51 +69,49 @@ class UserIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        User user1 = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), User.class);
-        User user2 = repositoryService.findByAccount("test");
-        assertThat(user1).isEqualTo(user2);
+        User obj1 = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), User.class);
+        User obj2 = repositoryService.findByAccount("test");
+        assertThat(obj1).isEqualTo(obj2);
     }
 
     @Test
     void save() throws Exception {
-        User user = new User();
-        user.setAccount("test_new");
-        user.setRoles(Set.of(Role.USER));
+        User obj = new User();
+        obj.setAccount("test_new");
+        obj.setRoles(Set.of(Role.USER));
 
         MvcResult mvcResult = this.mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(user)))
+                .content(objectMapper.writeValueAsString(obj)))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        User user1 = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), User.class);
-        assertThat(user1.getAccount()).isEqualTo(user.getAccount());
-        assertThat(user1.getRoles()).isEqualTo(user.getRoles());
+        User obj1 = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), User.class);
+        assertThat(obj1.getAccount()).isEqualTo(obj.getAccount());
+        assertThat(obj1.getRoles()).isEqualTo(obj.getRoles());
 
-        User user2 = repositoryService.findByAccount("test_new");
-        assertThat(user2.getAccount()).isEqualTo(user.getAccount());
-        assertThat(user2.getRoles()).isEqualTo(user.getRoles());
+        User obj2 = repositoryService.findByAccount("test_new");
+        assertThat(obj2).isEqualTo(obj1);
     }
 
     @Test
     void update() throws Exception {
-        User user = new User();
-        user.setAccount("test_new");
-        user.setRoles(Set.of(Role.USER, Role.ADMIN));
+        User obj = new User();
+        obj.setAccount("test_new");
+        obj.setRoles(Set.of(Role.USER, Role.ADMIN));
 
         MvcResult mvcResult = this.mockMvc.perform(put("/users/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(user)))
+                .content(objectMapper.writeValueAsString(obj)))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        User user1 = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), User.class);
-        assertThat(user1.getAccount()).isEqualTo(user.getAccount());
-        assertThat(user1.getRoles()).isEqualTo(user.getRoles());
+        User obj1 = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), User.class);
+        assertThat(obj1.getAccount()).isEqualTo(obj.getAccount());
+        assertThat(obj1.getRoles()).isEqualTo(obj.getRoles());
 
-        User user2 = repositoryService.findById(1L);
-        assertThat(user2.getAccount()).isEqualTo(user.getAccount());
-        assertThat(user2.getRoles()).isEqualTo(user.getRoles());
+        User obj2 = repositoryService.findById(1L);
+        assertThat(obj2).isEqualTo(obj1);
     }
 
     @Test
@@ -121,8 +119,8 @@ class UserIntegrationTest {
         this.mockMvc.perform(delete("/users/{id}", 1L))
                 .andExpect(status().isOk());
 
-        User user1 = repositoryService.findById(1L);
-        assertThat(user1).isNull();
+        User obj = repositoryService.findById(1L);
+        assertThat(obj).isNull();
     }
 
 }

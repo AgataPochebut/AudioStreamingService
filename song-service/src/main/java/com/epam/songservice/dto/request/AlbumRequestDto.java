@@ -16,16 +16,10 @@ public class AlbumRequestDto {
     @NotEmpty
     private String title;
 
-    @NotNull
-    @NotEmpty
     private Date year;
 
-    @NotNull
-    @NotEmpty
-    private  Set<String> notes;
-
-    @NotNull
-    @NotEmpty
     private Set<Long> artists;
+
+    private  Set<String> notes;
 
 }

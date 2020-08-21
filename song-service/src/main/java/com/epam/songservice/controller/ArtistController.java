@@ -19,14 +19,14 @@ import java.util.stream.Collectors;
 public class ArtistController {
 
     @Autowired
-    private ArtistRepositoryService service;
+    private ArtistRepositoryService repositoryService;
 
     @Autowired
     private Mapper mapper;
 
     @GetMapping
     public ResponseEntity<List<ArtistResponseDto>> getAll() {
-        final List<Artist> entity = service.findAll();
+        final List<Artist> entity = repositoryService.findAll();
 
         final List<ArtistResponseDto> responseDto = entity.stream()
                 .map((i) -> mapper.map(i, ArtistResponseDto.class))
@@ -36,7 +36,7 @@ public class ArtistController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<ArtistResponseDto> get(@PathVariable Long id) {
-        Artist entity = service.findById(id);
+        Artist entity = repositoryService.findById(id);
 
         final ArtistResponseDto responseDto = mapper.map(entity, ArtistResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -45,7 +45,7 @@ public class ArtistController {
     @PostMapping
     public ResponseEntity<ArtistResponseDto> save(@Valid @RequestBody ArtistRequestDto requestDto) throws Exception {
         Artist entity = mapper.map(requestDto, Artist.class);
-        entity = service.save(entity);
+        entity = repositoryService.save(entity);
 
         final ArtistResponseDto responseDto = mapper.map(entity, ArtistResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -55,7 +55,7 @@ public class ArtistController {
     public ResponseEntity<ArtistResponseDto> update(@PathVariable Long id, @Valid @RequestBody ArtistRequestDto requestDto) throws Exception {
         Artist entity = mapper.map(requestDto, Artist.class);
         entity.setId(id);
-        entity = service.update(entity);
+        entity = repositoryService.update(entity);
 
         final ArtistResponseDto responseDto = mapper.map(entity, ArtistResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -64,7 +64,7 @@ public class ArtistController {
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public void delete(@PathVariable Long id) {
-        service.deleteById(id);
+        repositoryService.deleteById(id);
     }
 
 }

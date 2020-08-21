@@ -29,7 +29,7 @@ public class S3TestConfiguration {
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("http://localhost:" + port, Regions.DEFAULT_REGION.getName()))
                 .withCredentials(new AWSStaticCredentialsProvider(new AnonymousAWSCredentials())) //use anonymous credentials.
                 .build();
-        amazonS3.createBucket(defaultBucketName);
+//        amazonS3.createBucket(defaultBucketName);
         return amazonS3;
     }
 
