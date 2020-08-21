@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.util.SocketUtils;
 
 @TestConfiguration
-public class S3Configuration {
+public class S3TestConfiguration {
 
     @Value("${s3.defaultBucket}")
     private String defaultBucketName;

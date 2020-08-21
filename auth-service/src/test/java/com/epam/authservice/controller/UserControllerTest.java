@@ -1,5 +1,6 @@
 package com.epam.authservice.controller;
 
+import com.epam.authservice.configuration.MappingConfiguration;
 import com.epam.authservice.dto.request.UserRequestDto;
 import com.epam.authservice.model.Role;
 import com.epam.authservice.model.User;
@@ -7,9 +8,14 @@ import com.epam.authservice.service.repository.UserRepositoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cloud.netflix.ribbon.RibbonAutoConfiguration;
+import org.springframework.cloud.openfeign.FeignAutoConfiguration;
+import org.springframework.cloud.openfeign.ribbon.FeignRibbonClientAutoConfiguration;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,8 +30,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@SpringBootTest
-@AutoConfigureMockMvc(addFilters = false)
+@WebMvcTest(controllers = UserController.class)
+//        useDefaultFilters = false) // this disables loading up the WebSecurityConfig.java file, otherwise it fails on start up
+@AutoConfigureMockMvc(addFilters = false) //disable standart spring recurity filters (token)
+@Import({MappingConfiguration.class})
+@ImportAutoConfiguration({RibbonAutoConfiguration.class, FeignRibbonClientAutoConfiguration.class, FeignAutoConfiguration.class})
 class UserControllerTest {
 
     @Autowired
