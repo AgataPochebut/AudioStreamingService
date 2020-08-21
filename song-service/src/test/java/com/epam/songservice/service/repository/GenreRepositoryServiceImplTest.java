@@ -1,8 +1,7 @@
-package com.epam.authservice.service.repository;
+package com.epam.songservice.service.repository;
 
-import com.epam.authservice.model.Role;
-import com.epam.authservice.model.User;
-import com.epam.authservice.repository.UserRepository;
+import com.epam.songservice.model.Genre;
+import com.epam.songservice.repository.GenreRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,7 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
@@ -20,51 +18,49 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class UserRepositoryServiceImplTest {
+class GenreRepositoryServiceImplTest {
 
     @Mock
-    private UserRepository repository;
+    private GenreRepository repository;
 
     @InjectMocks
-    private UserRepositoryServiceImpl repositoryService;
+    private GenreRepositoryServiceImpl repositoryService;
 
     @Test
     void findAll() {
-        List<User> list = Arrays.asList();
+        List<Genre> list = Arrays.asList();
         when(repository.findAll()).thenReturn(list);
         assertThat(repositoryService.findAll()).isEqualTo(list);
     }
 
     @Test
     void findById() {
-        User obj = new User();
+        Genre obj = new Genre();
         when(repository.findById(any())).thenReturn(java.util.Optional.of(obj));
         assertThat(repositoryService.findById(1L)).isEqualTo(obj);
     }
 
     @Test
-    void findByAccount() {
-        User obj = new User();
-        when(repository.findByAccount(any())).thenReturn(java.util.Optional.of(obj));
-        assertThat(repositoryService.findByAccount("test")).isEqualTo(obj);
+    void findByName() {
+        Genre obj = new Genre();
+        when(repository.findByName(any())).thenReturn(java.util.Optional.of(obj));
+        assertThat(repositoryService.findByName("test")).isEqualTo(obj);
     }
 
     @Test
     void save() throws Exception {
-        User obj = new User();
-        obj.setAccount("test");
-        obj.setRoles(Set.of(Role.USER));
-        when(repository.save(any(User.class))).then(returnsFirstArg());
+        Genre obj = new Genre();
+        obj.setName("test");
+        when(repository.save(any(Genre.class))).then(returnsFirstArg());
         assertThat(repositoryService.save(obj)).isEqualTo(obj);
     }
 
     @Test
     void update() throws Exception {
-        User obj = new User();
-        obj.setAccount("test");
-        obj.setRoles(Set.of(Role.USER));
+        Genre obj = new Genre();
+        obj.setName("test");
         obj.setId(1L);
-        when(repository.save(any(User.class))).then(returnsFirstArg());
+        when(repository.save(any(Genre.class))).then(returnsFirstArg());
         assertThat(repositoryService.save(obj)).isEqualTo(obj);
     }
 

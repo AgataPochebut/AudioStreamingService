@@ -16,8 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @DataJpaTest
-@Sql(scripts = "/insert_users.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(scripts = "/clear_users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(scripts = "/insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class UserRepositoryTest {
 
     @Autowired
@@ -32,8 +32,8 @@ class UserRepositoryTest {
 
     @Test
     void findById() {
-        User user = repository.findById(1L).orElse(null);
-        assertThat(user).isNotNull();
+        User obj = repository.findById(1L).orElse(null);
+        assertThat(obj).isNotNull();
     }
 
     @Test
@@ -44,80 +44,80 @@ class UserRepositoryTest {
 
     @Test
     void saveShouldReturnErrorAccountNotUnique() throws Exception {
-        User user = new User();
-        user.setAccount("test");
-        user.setRoles(Set.of(Role.USER));
+        User obj = new User();
+        obj.setAccount("test");
+        obj.setRoles(Set.of(Role.USER));
         assertThatExceptionOfType(DataIntegrityViolationException.class)
-                .isThrownBy(() -> repository.save(user));
+                .isThrownBy(() -> repository.save(obj));
     }
 
     @Test
     void saveShouldReturnErrorAccountNotNull() throws Exception {
-        User user = new User();
-        user.setAccount(null);
-        user.setRoles(Set.of(Role.USER));
+        User obj = new User();
+        obj.setAccount(null);
+        obj.setRoles(Set.of(Role.USER));
         assertThatExceptionOfType(ConstraintViolationException.class)
-                .isThrownBy(() -> repository.save(user));
+                .isThrownBy(() -> repository.save(obj));
     }
 
     @Test
     void saveShouldReturnErrorAccountNotEmpty() throws Exception {
-        User user = new User();
-        user.setAccount("");
-        user.setRoles(Set.of(Role.USER));
+        User obj = new User();
+        obj.setAccount("");
+        obj.setRoles(Set.of(Role.USER));
         assertThatExceptionOfType(ConstraintViolationException.class)
-                .isThrownBy(() -> repository.save(user));
+                .isThrownBy(() -> repository.save(obj));
     }
 
     @Test
     void saveShouldReturnErrorRolesNotNull() throws Exception {
-        User user = new User();
-        user.setAccount("test_new");
-        user.setRoles(null);
+        User obj = new User();
+        obj.setAccount("test_new");
+        obj.setRoles(null);
         assertThatExceptionOfType(ConstraintViolationException.class)
-                .isThrownBy(() -> repository.save(user));
+                .isThrownBy(() -> repository.save(obj));
     }
 
     @Test
     void saveShouldReturnErrorRolesNotEmpty() throws Exception {
-        User user = new User();
-        user.setAccount("test_new");
-        user.setRoles(Set.of());
+        User obj = new User();
+        obj.setAccount("test_new");
+        obj.setRoles(Set.of());
         assertThatExceptionOfType(ConstraintViolationException.class)
-                .isThrownBy(() -> repository.save(user));
+                .isThrownBy(() -> repository.save(obj));
     }
 
     @Test
     void save() throws Exception {
-        User user = new User();
-        user.setAccount("test_new");
-        user.setRoles(Set.of(Role.USER));
-        repository.save(user);
+        User obj = new User();
+        obj.setAccount("test_new");
+        obj.setRoles(Set.of(Role.USER));
+        repository.save(obj);
 
-        User user1 = repository.findByAccount("test_new").orElse(null);
-        assertThat(user1).isNotNull();
-        assertThat(user1.getAccount()).isEqualTo(user.getAccount());
-        assertThat(user1.getRoles()).isEqualTo(user.getRoles());
+        User obj1 = repository.findByAccount("test_new").orElse(null);
+        assertThat(obj1).isNotNull();
+        assertThat(obj1.getAccount()).isEqualTo(obj.getAccount());
+        assertThat(obj1.getRoles()).isEqualTo(obj.getRoles());
     }
 
     @Test
     void update() throws Exception {
-        User user = new User();
-        user.setAccount("test_new");
-        user.setRoles(Set.of(Role.USER, Role.ADMIN));
-        user.setId(1L);
-        repository.save(user);
+        User obj = new User();
+        obj.setAccount("test_new");
+        obj.setRoles(Set.of(Role.USER, Role.ADMIN));
+        obj.setId(1L);
+        repository.save(obj);
 
-        User user1 = repository.findById(1L).orElse(null);
-        assertThat(user1).isNotNull();
-        assertThat(user1).isEqualTo(user);
+        User obj1 = repository.findById(1L).orElse(null);
+        assertThat(obj1).isNotNull();
+        assertThat(obj1).isEqualTo(obj);
     }
 
     @Test
     void deleteById() {
         repository.deleteById(1L);
 
-        User user1 = repository.findById(1L).orElse(null);
-        assertThat(user1).isNull();
+        User obj = repository.findById(1L).orElse(null);
+        assertThat(obj).isNull();
     }
 }

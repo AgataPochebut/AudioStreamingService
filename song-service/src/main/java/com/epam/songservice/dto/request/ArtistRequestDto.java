@@ -15,12 +15,8 @@ public class ArtistRequestDto {
     @NotEmpty
     private String name;
 
-    @NotNull
-    @NotEmpty
-    private Set<String> notes;
-
-    @NotNull
-    @NotEmpty
     private Set<Long> genres;
+
+    private Set<String> notes;
 
 }

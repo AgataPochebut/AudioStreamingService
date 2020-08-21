@@ -16,20 +16,14 @@ public class SongRequestDto {
     @NotEmpty
     private String title;
 
-    @NotNull
-    @NotEmpty
     private Date year;
 
     @NotNull
     @NotEmpty
-    private Set<String> notes;
+    private Long resource;
 
-    @NotNull
-    @NotEmpty
     private Long album;
 
-    @NotNull
-    @NotEmpty
-    private Long storage;
+    private Set<String> notes;
 
 }
