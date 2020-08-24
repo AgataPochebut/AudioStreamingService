@@ -43,8 +43,8 @@ public class ResourceStorageServiceS3 implements ResourceStorageService {
     }
 
     public org.springframework.core.io.Resource download(Resource resource) throws IOException {
-        S3Resource currentResource = (S3Resource)resource;
-        S3Object s3object = amazonS3Client.getObject(currentResource.getBucketName(), currentResource.getName());
+        S3Resource resource1 = (S3Resource)resource;
+        S3Object s3object = amazonS3Client.getObject(resource1.getBucketName(), resource1.getName());
         byte[] content = IOUtils.toByteArray(s3object.getObjectContent());
         return new ByteArrayResource(content);
 //        return new InputStreamResource(inputStream);//нельзя перечитывать
@@ -52,13 +52,14 @@ public class ResourceStorageServiceS3 implements ResourceStorageService {
 
     @Override
     public void delete(Resource resource) {
-        S3Resource currentResource = (S3Resource)resource;
-        amazonS3Client.deleteObject(currentResource.getBucketName(), currentResource.getName());
+        S3Resource resource1 = (S3Resource)resource;
+        amazonS3Client.deleteObject(resource1.getBucketName(), resource1.getName());
     }
 
     @Override
     public boolean exist(Resource resource) {
-        return false;
+        S3Resource resource1 = (S3Resource)resource;
+        return amazonS3Client.doesObjectExist(resource1.getBucketName(), resource1.getName());
     }
 
     @Override

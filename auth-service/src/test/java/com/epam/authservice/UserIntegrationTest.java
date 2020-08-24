@@ -1,9 +1,12 @@
 package com.epam.authservice;
 
+import com.epam.authservice.dto.request.UserRequestDto;
+import com.epam.authservice.dto.response.UserResponseDto;
 import com.epam.authservice.model.Role;
 import com.epam.authservice.model.User;
 import com.epam.authservice.service.repository.UserRepositoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.dozer.Mapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -37,6 +40,9 @@ class UserIntegrationTest {
 
     @Autowired
     private UserRepositoryService repositoryService;
+
+    @Autowired
+    private Mapper mapper;
 
     @Test
     @WithMockUser(authorities = "ADMIN")
@@ -76,7 +82,7 @@ class UserIntegrationTest {
 
     @Test
     void save() throws Exception {
-        User obj = new User();
+        UserRequestDto obj = new UserRequestDto();
         obj.setAccount("test_new");
         obj.setRoles(Set.of(Role.USER));
 
@@ -86,7 +92,7 @@ class UserIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        User obj1 = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), User.class);
+        User obj1 = mapper.map(objectMapper.readValue(mvcResult.getResponse().getContentAsString(), UserResponseDto.class), User.class);
         assertThat(obj1.getAccount()).isEqualTo(obj.getAccount());
         assertThat(obj1.getRoles()).isEqualTo(obj.getRoles());
 
@@ -96,7 +102,7 @@ class UserIntegrationTest {
 
     @Test
     void update() throws Exception {
-        User obj = new User();
+        UserRequestDto obj = new UserRequestDto();
         obj.setAccount("test_new");
         obj.setRoles(Set.of(Role.USER, Role.ADMIN));
 
@@ -106,7 +112,7 @@ class UserIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        User obj1 = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), User.class);
+        User obj1 = mapper.map(objectMapper.readValue(mvcResult.getResponse().getContentAsString(), UserResponseDto.class), User.class);
         assertThat(obj1.getAccount()).isEqualTo(obj.getAccount());
         assertThat(obj1.getRoles()).isEqualTo(obj.getRoles());
 

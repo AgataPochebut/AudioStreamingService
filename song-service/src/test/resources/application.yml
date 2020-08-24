@@ -15,6 +15,6 @@ fs:
   defaultFolder: /Java/files
   tempFolder: /Java/temp
 
-#aws:
-#  accessKey: ${AWS_ACCESS_KEY:111}
-#  secretKey: ${AWS_SECRET_KEY:111}
+spring:
+  profiles:
+    active: test

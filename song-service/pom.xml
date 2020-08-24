@@ -104,7 +104,7 @@
             <groupId>io.findify</groupId>
             <artifactId>s3mock_2.12</artifactId>
             <version>0.2.4</version>
-            <scope>test</scope>
+<!--            <scope>test</scope>-->
         </dependency>
 
         <dependency>

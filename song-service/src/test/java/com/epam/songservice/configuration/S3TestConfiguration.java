@@ -8,11 +8,13 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import io.findify.s3mock.S3Mock;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.util.SocketUtils;
 
-@TestConfiguration
+@Configuration
+@Profile("test")
 public class S3TestConfiguration {
 
     @Value("${s3.defaultBucket}")
@@ -29,7 +31,7 @@ public class S3TestConfiguration {
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("http://localhost:" + port, Regions.DEFAULT_REGION.getName()))
                 .withCredentials(new AWSStaticCredentialsProvider(new AnonymousAWSCredentials())) //use anonymous credentials.
                 .build();
-//        amazonS3.createBucket(defaultBucketName);
+        amazonS3.createBucket(defaultBucketName);
         return amazonS3;
     }
 

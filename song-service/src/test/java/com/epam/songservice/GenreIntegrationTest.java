@@ -1,6 +1,6 @@
 package com.epam.songservice;
 
-import com.epam.songservice.configuration.MappingConfiguration;
+import com.epam.songservice.dto.request.GenreRequestDto;
 import com.epam.songservice.dto.response.GenreResponseDto;
 import com.epam.songservice.model.Genre;
 import com.epam.songservice.service.repository.GenreRepositoryService;
@@ -11,25 +11,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@ContextConfiguration(classes = {MappingConfiguration.class})
 @AutoConfigureMockMvc(addFilters = false)
 @Transactional
-@Sql(scripts = "/insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(scripts = "/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(scripts = "/insert_genres.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "/clean_genres.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class GenreIntegrationTest {
 
     @Autowired
@@ -50,12 +47,9 @@ class GenreIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<Genre> list1 = (List<Genre>) objectMapper.readValue(mvcResult.getResponse().getContentAsString(), List.class)
-                .stream()
-                .map(i->mapper.map(i, Genre.class))
-                .collect(Collectors.toList());
-        List<Genre> list2 = repositoryService.findAll();
-        assertThat(list1).isEqualTo(list2);
+        int count1 = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), List.class).size();
+        int count2 = repositoryService.findAll().size();
+        assertThat(count1).isEqualTo(count2);
     }
 
     @Test
@@ -71,10 +65,10 @@ class GenreIntegrationTest {
 
     @Test
     void save() throws Exception {
-        Genre dto = new Genre();
+        GenreRequestDto dto = new GenreRequestDto();
         dto.setName("test_new");
 
-        MvcResult mvcResult = this.mockMvc.perform(post("/users")
+        MvcResult mvcResult = this.mockMvc.perform(post("/genres")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
@@ -88,16 +82,16 @@ class GenreIntegrationTest {
 
     @Test
     void update() throws Exception {
-        Genre dto = new Genre();
+        GenreRequestDto dto = new GenreRequestDto();
         dto.setName("test_new");
 
-        MvcResult mvcResult = this.mockMvc.perform(put("/users/{id}", 1L)
+        MvcResult mvcResult = this.mockMvc.perform(put("/genres/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Genre obj1 = mapper.map(mvcResult.getResponse().getContentAsString(), Genre.class);
+        Genre obj1 = mapper.map(objectMapper.readValue(mvcResult.getResponse().getContentAsString(), GenreResponseDto.class), Genre.class);
         assertThat(obj1.getName()).isEqualTo(dto.getName());
         Genre obj2 = repositoryService.findById(1L);
         assertThat(obj2).isEqualTo(obj1);
@@ -105,7 +99,7 @@ class GenreIntegrationTest {
 
     @Test
     void deleteById() throws Exception {
-        this.mockMvc.perform(delete("/users/{id}", 1L))
+        this.mockMvc.perform(delete("/genres/{id}", 1L))
                 .andExpect(status().isOk());
 
         Genre obj = repositoryService.findById(1L);
