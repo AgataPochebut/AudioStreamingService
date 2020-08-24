@@ -17,6 +17,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
+//todo
+//не понимаю смысла  теста, что вообще проверяется?
 @ExtendWith(MockitoExtension.class)
 class GenreRepositoryServiceImplTest {
 

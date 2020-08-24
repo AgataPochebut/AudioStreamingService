@@ -17,7 +17,7 @@ public class GenericRepositoryServiceImpl<T,U> implements GenericRepositoryServi
 
     @Override
     public T findById(U id) {
-        return repository.findById(id).orElseThrow(() -> new RuntimeException());
+        return repository.findById(id).orElse(null);
     }
 
     @Override

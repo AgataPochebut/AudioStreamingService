@@ -24,7 +24,6 @@ public class MappingConfiguration {
     public Mapper mapper() {
 
         DozerBeanMapper mapper = new DozerBeanMapper();
-//        mapper.setMappingFiles(Arrays.asList("dozer-config.xml"));
         mapper.addMapping(new BeanMappingBuilder() {
             @Override
             protected void configure() {
