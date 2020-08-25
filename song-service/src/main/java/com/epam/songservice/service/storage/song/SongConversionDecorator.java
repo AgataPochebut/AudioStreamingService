@@ -1,5 +1,6 @@
 package com.epam.songservice.service.storage.song;
 
+import com.epam.songservice.annotation.StorageType;
 import com.epam.songservice.exception.ConversionException;
 import com.epam.songservice.feign.conversion.ConversionClient;
 import com.epam.songservice.jms.Producer;
@@ -36,7 +37,7 @@ public class SongConversionDecorator extends SongStorageDecorator {
             Resource resource1 = null;
 
             try {
-                org.springframework.core.io.Resource source = resourceStorageFactory.getService().download(resource);
+                org.springframework.core.io.Resource source = resourceStorageFactory.getService(resource.getClass().getAnnotation(StorageType.class).value()).download(resource);
                 String name = resource.getName();
 
                 //convert
@@ -50,9 +51,9 @@ public class SongConversionDecorator extends SongStorageDecorator {
                 //save new
                 resource1 = resourceStorageFactory.getService().upload(source1, name1);
                 //rm old
-                resourceStorageFactory.getService().delete(resource);
+                resourceStorageFactory.getService(resource.getClass().getAnnotation(StorageType.class).value()).delete(resource);
             } catch (Exception e) {
-                resourceStorageFactory.getService().delete(resource);
+                resourceStorageFactory.getService(resource.getClass().getAnnotation(StorageType.class).value()).delete(resource);
                 throw new Exception("Conv exc");
             }
 

@@ -3,6 +3,10 @@ server:
   servlet:
     context-path: /
 
+spring:
+  profiles:
+    active: test
+
 eureka:
   client:
     enabled: false
@@ -15,6 +19,5 @@ fs:
   defaultFolder: /Java/files
   tempFolder: /Java/temp
 
-spring:
-  profiles:
-    active: test
+storage:
+  type: FS

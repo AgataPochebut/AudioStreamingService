@@ -1,5 +1,6 @@
 package com.epam.songservice.controller;
 
+import com.epam.songservice.annotation.StorageType;
 import com.epam.songservice.dto.response.SongResponseDto;
 import com.epam.songservice.jms.Producer;
 import com.epam.songservice.model.Resource;
@@ -60,12 +61,12 @@ public class SongController {
     }
 
     // Accept 'application/octet-stream'
-    @GetMapping(value = "/download/{id}", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public ResponseEntity<org.springframework.core.io.Resource> download(@PathVariable Long id) throws Exception {
         Song entity = songRepositoryService.findById(id);
 
         Resource resource = songStorageService.download(entity);
-        org.springframework.core.io.Resource source = resourceStorageFactory.getService().download(resource);
+        org.springframework.core.io.Resource source = resourceStorageFactory.getService(resource.getClass().getAnnotation(StorageType.class).value()).download(resource);
 
         HttpHeaders headers = new HttpHeaders();
         ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
@@ -77,9 +78,8 @@ public class SongController {
     }
 
     // Content type 'multipart/form-data;boundary
-    @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<SongResponseDto> upload(@RequestParam("data") MultipartFile multipartFile) throws Exception {
-
         Resource resource = resourceStorageFactory.getService().upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
         Song entity = songStorageService.upload(resource);
 
@@ -88,15 +88,14 @@ public class SongController {
     }
 
     // Content type 'multipart/form-data;boundary
-    @PostMapping(value = "/upload/async", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/async", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public void uploadAsync(@RequestParam("data") MultipartFile multipartFile) throws Exception {
-
         Resource resource = resourceStorageFactory.getService().upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
         producer.upload(resource, "upl");
     }
 
     // Content type 'multipart/form-data;boundary
-    @PostMapping(value = "/upload/future", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/future", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public CompletableFuture<ResponseEntity<SongResponseDto>> uploadFuture(@RequestParam("data") MultipartFile multipartFile) throws Exception {
         return CompletableFuture.supplyAsync(() -> {
             try {
@@ -109,7 +108,7 @@ public class SongController {
     }
 
     // Content type 'multipart/form-data;boundary
-    @PostMapping(value = "/upload/deferred", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/deferred", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public DeferredResult<ResponseEntity<SongResponseDto>> uploadDeferred(@RequestParam("data") MultipartFile multipartFile) throws Exception {
         final DeferredResult<ResponseEntity<SongResponseDto>> result = new DeferredResult<>(null, null);
 

@@ -1,6 +1,7 @@
 package com.epam.songservice.service.storage.song;
 
 import com.epam.songservice.annotation.Decorate;
+import com.epam.songservice.annotation.StorageType;
 import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
 import com.epam.songservice.service.repository.AlbumRepositoryService;
@@ -37,7 +38,7 @@ public class SongStorageServiceImpl implements SongStorageService {
     @Override
     public Song upload(Resource resource) throws Exception {
         try {
-            org.springframework.core.io.Resource source = resourceStorageFactory.getService().download(resource);
+            org.springframework.core.io.Resource source = resourceStorageFactory.getService(resource.getClass().getAnnotation(StorageType.class).value()).download(resource);
 
             InputStream input = source.getInputStream();
             ContentHandler handler = new DefaultHandler();
@@ -88,7 +89,7 @@ public class SongStorageServiceImpl implements SongStorageService {
 
             return entity;
         } catch (Exception e) {
-            resourceStorageFactory.getService().delete(resource);
+            resourceStorageFactory.getService(resource.getClass().getAnnotation(StorageType.class).value()).delete(resource);
             throw new Exception("Upload exc");
         }
     }
@@ -101,13 +102,13 @@ public class SongStorageServiceImpl implements SongStorageService {
     @Override
     public void delete(Song entity) throws Exception {
         Resource resource = entity.getResource();
-        resourceStorageFactory.getService().delete(resource);
+        resourceStorageFactory.getService(resource.getClass().getAnnotation(StorageType.class).value()).delete(resource);
     }
 
     @Override
     public boolean exist(Song entity) {
         Resource resource = entity.getResource();
-        return resourceStorageFactory.getService().exist(resource);
+        return resourceStorageFactory.getService(resource.getClass().getAnnotation(StorageType.class).value()).exist(resource);
     }
 
     @Override
