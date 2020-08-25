@@ -1,5 +1,6 @@
 package com.epam.songservice.model;
 
+import com.epam.songservice.annotation.StorageType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +18,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @DiscriminatorValue("FS")
 //@Table(name="FSResource")
+@StorageType(StorageTypes.FS)
 public class FSResource extends Resource {
 
     @NotNull

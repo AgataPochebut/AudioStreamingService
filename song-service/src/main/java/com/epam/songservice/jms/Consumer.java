@@ -1,5 +1,6 @@
 package com.epam.songservice.jms;
 
+import com.epam.songservice.annotation.StorageType;
 import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
 import com.epam.songservice.service.storage.resource.ResourceStorageFactory;
@@ -43,7 +44,7 @@ public class Consumer {
         final List<Song> entity = new ArrayList<>();
 
         if (FilenameUtils.getExtension(resource.getName()).equals("zip")) {
-            org.springframework.core.io.Resource source = resourceStorageFactory.getService().download(resource);
+            org.springframework.core.io.Resource source = resourceStorageFactory.getService(resource.getClass().getAnnotation(StorageType.class).value()).download(resource);
 
             ZipInputStream zin = new ZipInputStream(source.getInputStream());
             ZipEntry entry;
@@ -66,7 +67,7 @@ public class Consumer {
             }
             zin.close();
 
-            resourceStorageFactory.getService().delete(resource);
+            resourceStorageFactory.getService(resource.getClass().getAnnotation(StorageType.class).value()).delete(resource);
         } else {
             Song entity1 = songStorageService.upload(resource);
             entity.add(entity1);

@@ -2,6 +2,7 @@ package com.epam.songservice.controller;
 
 import com.epam.songservice.configuration.MappingConfiguration;
 import com.epam.songservice.jms.Producer;
+import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
 import com.epam.songservice.service.repository.SongRepositoryService;
 import com.epam.songservice.service.storage.resource.ResourceStorageFactory;
@@ -17,6 +18,9 @@ import org.springframework.cloud.netflix.ribbon.RibbonAutoConfiguration;
 import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.cloud.openfeign.ribbon.FeignRibbonClientAutoConfiguration;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.util.InMemoryResource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -24,12 +28,11 @@ import java.util.Arrays;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = SongController.class)
-@AutoConfigureMockMvc(addFilters = false) //disable standart spring recurity filters (token)
+@AutoConfigureMockMvc(addFilters = false)
 @ImportAutoConfiguration({RibbonAutoConfiguration.class, FeignRibbonClientAutoConfiguration.class, FeignAutoConfiguration.class})
 @Import({MappingConfiguration.class})
 class SongControllerTest {
@@ -60,9 +63,30 @@ class SongControllerTest {
     }
 
     @Test
-    void getById() throws Exception {
+    void getByIdShouldReturnOK() throws Exception {
         when(repositoryService.findById(any())).thenReturn(new Song());
         this.mockMvc.perform(get("/songs/{id}", 1L))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void download() throws Exception {
+        when(repositoryService.findById(any())).thenReturn(new Song());
+        when(storageService.download(any())).thenReturn(new Resource());
+        when(resourceStorageFactory.getService().download(any())).thenReturn(new InMemoryResource("test"));
+        this.mockMvc.perform(get("/songs/{id}", 1L)
+                .accept(MediaType.APPLICATION_OCTET_STREAM_VALUE))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void upload() throws Exception {
+        when(resourceStorageFactory.getService().upload(any(), any())).thenReturn(new Resource());
+        when(storageService.upload(any())).thenReturn(new Song());
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("data", "test", "multipart/form-data", new InMemoryResource("test").getInputStream());
+        this.mockMvc.perform(multipart("/songs")
+                .file(mockMultipartFile)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE))
                 .andExpect(status().isOk());
     }
 
