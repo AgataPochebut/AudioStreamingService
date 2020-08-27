@@ -1,13 +1,13 @@
 package com.epam.songservice;
 
 import com.epam.songservice.dto.response.SongResponseDto;
+import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
 import com.epam.songservice.service.repository.SongRepositoryService;
 import com.epam.songservice.service.storage.resource.ResourceStorageFactory;
 import com.epam.songservice.service.storage.song.SongStorageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.dozer.Mapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +15,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,8 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest("storage.type=S3")
 @AutoConfigureMockMvc(addFilters = false)
 @Transactional
-@Sql(scripts = "/insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(scripts = "/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class SongIntegrationTest {
 
     @Autowired
@@ -83,13 +79,13 @@ public class SongIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Resource source = new ByteArrayResource(mvcResult.getResponse().getContentAsByteArray());
+        org.springframework.core.io.Resource source = new ByteArrayResource(mvcResult.getResponse().getContentAsByteArray());
         assertThat(source).isNotNull();
     }
 
     @Test
     void upload() throws Exception {
-        Resource source = new FileSystemResource("src/test/resources/50_Cent_GUnit_Ismell.mp3");
+        org.springframework.core.io.Resource source = new FileSystemResource("src/test/resources/50_Cent_GUnit_Ismell.mp3");
         MockMultipartFile mockMultipartFile = new MockMultipartFile("data", source.getFilename(), "multipart/form-data", source.getInputStream());
         MvcResult mvcResult = this.mockMvc.perform(multipart("/songs")
                 .file(mockMultipartFile)
@@ -98,10 +94,10 @@ public class SongIntegrationTest {
                 .andReturn();
 
         Song song = mapper.map(objectMapper.readValue(mvcResult.getResponse().getContentAsString(), SongResponseDto.class), Song.class);
-        assertThat(song.getResource().getName()).isEqualTo(source.getFilename());
-        assertThat(song.getResource().getFormat()).isEqualTo(FilenameUtils.getExtension(source.getFilename()));
-        assertThat(song.getResource().getSize()).isEqualTo(source.contentLength());
-        assertThat(song.getResource().getChecksum()).isEqualTo(DigestUtils.md5Hex(source.getInputStream()));
+        Resource resource = song.getResource();
+        assertThat(resource.getName()).isEqualTo(source.getFilename());
+        assertThat(resource.getSize()).isEqualTo(source.contentLength());
+        assertThat(resource.getChecksum()).isEqualTo(DigestUtils.md5Hex(source.getInputStream()));
     }
 
     @Test

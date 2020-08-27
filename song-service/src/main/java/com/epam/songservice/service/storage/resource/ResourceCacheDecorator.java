@@ -2,6 +2,7 @@ package com.epam.songservice.service.storage.resource;
 
 import com.epam.songservice.model.Resource;
 import org.springframework.cache.CacheManager;
+import org.springframework.core.io.ByteArrayResource;
 
 public class ResourceCacheDecorator extends ResourceStorageDecorator {
 
@@ -13,33 +14,20 @@ public class ResourceCacheDecorator extends ResourceStorageDecorator {
     }
 
     @Override
-//    @CachePut(cacheNames = "cachetest")
-    public Resource upload(org.springframework.core.io.Resource source, String name) throws Exception {
-        Resource resource = super.upload(source, name);
-
-        cacheManager.getCache("resources").put(resource.getId(), source);
-        return resource;
-//        return super.upload(source);
-    }
-
-    @Override
-//    @Cacheable(cacheNames = "cachetest")
     public org.springframework.core.io.Resource download(Resource resource) throws Exception {
         org.springframework.core.io.Resource source = null;
-        source = cacheManager.getCache("resources").get(resource.getId(), org.springframework.core.io.Resource.class);
-        if (source==null){
+        byte[] cachedSource = cacheManager.getCache("resources").get(resource.getId(), byte[].class);
+        if (cachedSource == null){
             source = super.download(resource);
             cacheManager.getCache("resources").put(resource.getId(), source);
         }
+        else source = new ByteArrayResource(cachedSource);
         return source;
-//        return super.download(resource);
     }
 
     @Override
-//    @CacheEvict(cacheNames = "cachetest")
     public void delete(Resource resource) throws Exception {
         cacheManager.getCache("resources").evictIfPresent(resource.getId());
-
         super.delete(resource);
     }
 

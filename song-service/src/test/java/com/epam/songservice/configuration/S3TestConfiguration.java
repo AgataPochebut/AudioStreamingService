@@ -13,6 +13,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.util.SocketUtils;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 @Configuration
 @Profile("test")
 public class S3TestConfiguration {
@@ -20,12 +23,27 @@ public class S3TestConfiguration {
     @Value("${s3.defaultBucket}")
     private String defaultBucketName;
 
+    private int port;
+    private S3Mock api;
+
+    public S3TestConfiguration()
+    {
+        port = SocketUtils.findAvailableTcpPort();
+        api = new S3Mock.Builder().withPort(port).withInMemoryBackend().build();
+    }
+
+    @PostConstruct
+    public void postConstruct() {
+        api.start();
+    }
+
+    @PreDestroy
+    public void preDestroy() {
+        api.stop();
+    }
+
     @Bean
     public AmazonS3 amazonS3Client() {
-        int port = SocketUtils.findAvailableTcpPort();
-        S3Mock api = new S3Mock.Builder().withPort(port).withInMemoryBackend().build();
-        api.start(); // Start the Mock S3 server locally on available port
-
         AmazonS3 amazonS3 = AmazonS3ClientBuilder.standard()
                 .withPathStyleAccessEnabled(true)
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("http://localhost:" + port, Regions.DEFAULT_REGION.getName()))

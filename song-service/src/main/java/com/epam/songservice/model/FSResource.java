@@ -17,12 +17,11 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Entity
 @DiscriminatorValue("FS")
-//@Table(name="FSResource")
 @StorageType(StorageTypes.FS)
 public class FSResource extends Resource {
 
     @NotNull
     @NotEmpty
-    private String path;
+    private String folderName;
 
 }

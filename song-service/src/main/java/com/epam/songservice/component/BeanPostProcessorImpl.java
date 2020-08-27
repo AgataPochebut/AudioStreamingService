@@ -12,7 +12,9 @@ import com.epam.songservice.service.storage.song.*;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.cache.CacheManager;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -34,7 +36,13 @@ public class BeanPostProcessorImpl implements BeanPostProcessor {
     private Producer producer;
 
     @Autowired
-    private CacheManager cacheManager;
+    private RedisConnectionFactory connectionFactory;
+
+    @Autowired
+    private RedisTemplate<Object, Object> template;
+
+    @Autowired
+    private RedisCacheManager cacheManager;
 
     @Autowired
     private SongRepositoryService songRepositoryService;
