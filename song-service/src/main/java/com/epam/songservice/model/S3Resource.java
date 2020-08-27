@@ -17,7 +17,6 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Entity
 @DiscriminatorValue("S3")
-//@Table(name="S3Resource")
 @StorageType(StorageTypes.S3)
 public class S3Resource extends Resource {
 

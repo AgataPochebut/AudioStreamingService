@@ -24,8 +24,6 @@ public class Resource extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    private String format;
-
     private Long size;
 
     private String checksum;

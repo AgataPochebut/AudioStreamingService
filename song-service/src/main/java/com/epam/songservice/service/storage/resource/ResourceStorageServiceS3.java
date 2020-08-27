@@ -9,6 +9,7 @@ import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.S3Resource;
 import com.epam.songservice.model.StorageTypes;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,13 +30,20 @@ public class ResourceStorageServiceS3 implements ResourceStorageService {
     private String defaultBucketName;
 
     public Resource upload(org.springframework.core.io.Resource source, String name) throws IOException {
+        int count = 0;
+        String key = name;
+        while (amazonS3Client.doesObjectExist(defaultBucketName, key)){
+            count++;
+            key = FilenameUtils.removeExtension(name) + " ("+ count + ")" + "." + FilenameUtils.getExtension(name);
+        }
+
         ObjectMetadata meta = new ObjectMetadata();
-        meta.setContentLength(IOUtils.toByteArray(source.getInputStream()).length);
+        meta.setContentLength(source.contentLength());
         meta.setContentMD5(DigestUtils.md5Hex(source.getInputStream()));
-        amazonS3Client.putObject(defaultBucketName, name, source.getInputStream(), meta);
+        amazonS3Client.putObject(defaultBucketName, key, source.getInputStream(), meta);
 
         S3Resource resource = new S3Resource();
-        resource.setName(name);
+        resource.setName(key);
         resource.setSize(meta.getContentLength());
         resource.setChecksum(meta.getContentMD5());
         resource.setBucketName(defaultBucketName);
@@ -47,7 +55,6 @@ public class ResourceStorageServiceS3 implements ResourceStorageService {
         S3Object s3object = amazonS3Client.getObject(resource1.getBucketName(), resource1.getName());
         byte[] content = IOUtils.toByteArray(s3object.getObjectContent());
         return new ByteArrayResource(content);
-//        return new InputStreamResource(inputStream);//нельзя перечитывать
     }
 
     @Override
