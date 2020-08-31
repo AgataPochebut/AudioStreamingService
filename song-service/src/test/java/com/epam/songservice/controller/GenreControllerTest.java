@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = GenreController.class)
-@AutoConfigureMockMvc(addFilters = false) //disable standart spring recurity filters (token)
+@AutoConfigureMockMvc(addFilters = false)
 @ImportAutoConfiguration({RibbonAutoConfiguration.class, FeignRibbonClientAutoConfiguration.class, FeignAutoConfiguration.class})
 @Import({MappingConfiguration.class})
 class GenreControllerTest {

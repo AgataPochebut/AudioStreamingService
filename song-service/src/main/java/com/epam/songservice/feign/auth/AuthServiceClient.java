@@ -11,4 +11,5 @@ public interface AuthServiceClient {
 
     @GetMapping(value = "user")
     ResponseEntity<AuthUser> getUser(@RequestParam("access_token") String s);
+
 }

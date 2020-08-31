@@ -11,6 +11,10 @@ eureka:
   client:
     enabled: false
 
+feign:
+  hystrix:
+    enabled: true
+
 s3:
   defaultBucket: filestest
   tempBucket: temp

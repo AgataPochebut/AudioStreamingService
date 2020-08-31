@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
             throw new Exception("Can not get email for token");
         }
 
-        Collection<Authority> roles = getUserAuthorities((String) attributes.get("email"));
+        Set<Authority> roles = getUserAuthorities((String) attributes.get("email"));
 
         return AuthUser.builder()
                 .authorities(roles)
@@ -54,7 +54,7 @@ public class AuthServiceImpl implements AuthService {
         return attributes;
     }
 
-    private Collection<Authority> getUserAuthorities(String s) throws Exception {
+    private Set<Authority> getUserAuthorities(String s) throws Exception {
         User entity = userRepositoryService.findByAccount(s);
         if (entity == null) {
             entity = User.builder()

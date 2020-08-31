@@ -2,11 +2,13 @@ package com.epam.songservice.feign.auth;
 
 import com.epam.commonservice.model.auth.AuthUser;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @Slf4j
+@NoArgsConstructor
 @AllArgsConstructor
 public class AuthFallback implements AuthServiceClient {
 

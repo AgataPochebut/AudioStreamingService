@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 @Builder
 @Data
@@ -16,7 +17,7 @@ import java.util.Map;
 @NoArgsConstructor
 public class AuthUser implements OAuth2User {
 
-    private Collection<Authority> authorities;
+    private Set<Authority> authorities;
     private Map<String, Object> attributes;
     private String nameAttributeKey;
 

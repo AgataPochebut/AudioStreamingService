@@ -1,5 +1,5 @@
 server:
-  port: 0 # We can let Spring Boot choose a random port for us because later we are accessing this service with its name.
+  port: 0
   servlet:
     context-path: /
 
