@@ -30,7 +30,7 @@ class ResourceStorageServiceS3Test {
 
     @Test
     void testAll() throws IOException {
-        String name = "test";
+        String name = "test.txt";
         org.springframework.core.io.Resource source = new ByteArrayResource("test_data".getBytes());
 
         Resource resource = storageService.upload(source, name);

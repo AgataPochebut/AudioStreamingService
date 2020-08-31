@@ -49,8 +49,8 @@ feign:
       default:
         connectTimeout: 160000000
         readTimeout: 160000000
-  hystrix:
-    enabled: true
+#  hystrix:
+#    enabled: true
 
 hystrix:
   shareSecurityContext: true
