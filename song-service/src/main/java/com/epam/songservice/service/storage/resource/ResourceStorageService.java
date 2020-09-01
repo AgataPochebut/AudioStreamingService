@@ -12,5 +12,5 @@ public interface ResourceStorageService {
 
     boolean exist(Resource resource);
 
-    String test();
+    boolean supports(Class<?> resource);
 }

@@ -43,10 +43,4 @@ public class ResourceIORetryDecorator extends ResourceStorageDecorator {
             count++;
         }
     }
-
-    @Override
-    public String test() {
-        return super.test() + "IORetry";
-    }
-
 }

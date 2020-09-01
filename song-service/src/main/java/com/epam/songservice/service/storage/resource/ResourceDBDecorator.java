@@ -42,10 +42,4 @@ public class ResourceDBDecorator extends ResourceStorageDecorator {
 
         super.delete(entity);
     }
-
-    @Override
-    public String test() {
-        return super.test() + " DBInsert";
-    }
-
 }

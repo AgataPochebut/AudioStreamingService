@@ -7,6 +7,10 @@ spring:
   profiles:
     active: test
 
+  activemq:
+    packages:
+      trust-all: true
+
 eureka:
   client:
     enabled: false

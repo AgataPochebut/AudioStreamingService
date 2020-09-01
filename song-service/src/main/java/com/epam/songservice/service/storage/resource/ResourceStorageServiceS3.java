@@ -70,7 +70,7 @@ public class ResourceStorageServiceS3 implements ResourceStorageService {
     }
 
     @Override
-    public String test() {
-        return "S3";
+    public boolean supports(Class<?> resource) {
+        return S3Resource.class.isAssignableFrom(resource);
     }
 }
