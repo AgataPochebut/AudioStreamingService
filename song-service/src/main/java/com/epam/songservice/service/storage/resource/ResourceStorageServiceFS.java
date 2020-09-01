@@ -69,8 +69,7 @@ public class ResourceStorageServiceFS implements ResourceStorageService {
     }
 
     @Override
-    public String test() {
-        return "FS";
+    public boolean supports(Class<?> resource) {
+        return FSResource.class.isAssignableFrom(resource);
     }
-
 }

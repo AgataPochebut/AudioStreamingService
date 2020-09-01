@@ -38,10 +38,4 @@ public class SongIndexDecorator extends SongStorageDecorator {
 
         super.delete(entity);
     }
-
-    @Override
-    public String test() {
-        return super.test() + " Index";
-    }
-
 }

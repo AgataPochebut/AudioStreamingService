@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 public class BeanPostProcessorImpl implements BeanPostProcessor {
 
     @Autowired
-    private ResourceStorageFactory resourceStorageFactory;
+    private ResourceStorageServiceManager resourceStorageServiceManager;
 
     @Autowired
     private ResourceRepositoryService resourceRepositoryService;
@@ -59,7 +59,7 @@ public class BeanPostProcessorImpl implements BeanPostProcessor {
 //                        newbean = new ResourceCacheDecorator(newbean, cacheManager);
             }
             if (bean.getClass().isAnnotationPresent(StorageType.class)) {
-                resourceStorageFactory.registerService(bean.getClass().getAnnotation(StorageType.class).value(), newbean);
+                resourceStorageServiceManager.registerService(bean.getClass().getAnnotation(StorageType.class).value(), newbean);
             }
             return newbean;
         }
@@ -68,7 +68,7 @@ public class BeanPostProcessorImpl implements BeanPostProcessor {
             SongStorageService newbean = (SongStorageService) bean;
             if (bean.getClass().isAnnotationPresent(Decorate.class)
                     && bean.getClass().getAnnotation(Decorate.class).value() == SongStorageDecorator.class) {
-                newbean = new SongConversionDecorator(newbean, conversionClient, resourceStorageFactory);
+                newbean = new SongConversionDecorator(newbean, conversionClient, resourceStorageServiceManager);
                 newbean = new SongDBDecorator(newbean, songRepositoryService);
                 newbean = new SongIndexDecorator(newbean, songIndexClient);
             }

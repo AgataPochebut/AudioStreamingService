@@ -1,11 +1,10 @@
 package com.epam.songservice.service.storage.song;
 
 import com.epam.songservice.annotation.Decorate;
-import com.epam.songservice.annotation.StorageType;
+import com.epam.songservice.jms.Producer;
 import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
-import com.epam.songservice.service.repository.AlbumRepositoryService;
-import com.epam.songservice.service.storage.resource.ResourceStorageFactory;
+import com.epam.songservice.service.storage.resource.ResourceStorageServiceManager;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
@@ -19,6 +18,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -28,17 +28,18 @@ import java.util.stream.Collectors;
 public class SongStorageServiceImpl implements SongStorageService {
 
     @Autowired
-    private ResourceStorageFactory resourceStorageFactory;
+    private ResourceStorageServiceManager resourceStorageServiceManager;
 
     @Autowired
     private Mapper mapper;
 
-    private static AlbumRepositoryService repositoryService;
+    @Autowired
+    private Producer producer;
 
     @Override
     public Song upload(Resource resource) throws Exception {
         try {
-            org.springframework.core.io.Resource source = resourceStorageFactory.getService(resource.getClass().getAnnotation(StorageType.class).value()).download(resource);
+            org.springframework.core.io.Resource source = resourceStorageServiceManager.download(resource);
 
             InputStream input = source.getInputStream();
             ContentHandler handler = new DefaultHandler();
@@ -86,10 +87,9 @@ public class SongStorageServiceImpl implements SongStorageService {
 
             Song entity = mapper.map(metadataMap, Song.class);
             entity.setResource(resource);
-
             return entity;
         } catch (Exception e) {
-            resourceStorageFactory.getService(resource.getClass().getAnnotation(StorageType.class).value()).delete(resource);
+            resourceStorageServiceManager.delete(resource);
             throw new Exception("Upload exc");
         }
     }
@@ -102,18 +102,33 @@ public class SongStorageServiceImpl implements SongStorageService {
     @Override
     public void delete(Song entity) throws Exception {
         Resource resource = entity.getResource();
-        resourceStorageFactory.getService(resource.getClass().getAnnotation(StorageType.class).value()).delete(resource);
+        resourceStorageServiceManager.delete(resource);
     }
 
     @Override
     public boolean exist(Song entity) {
         Resource resource = entity.getResource();
-        return resourceStorageFactory.getService(resource.getClass().getAnnotation(StorageType.class).value()).exist(resource);
+        return resourceStorageServiceManager.exist(resource);
     }
 
     @Override
-    public String test() {
-        return "Song";
+    public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
+        Resource resource = resourceStorageServiceManager.upload(source, name);
+        Song entity = new Song();
+        entity.setResource(resource);
+        return entity;
+    }
+
+    @Override
+    public List<Song> uploadZip(org.springframework.core.io.Resource source, String name) throws Exception {
+        Resource resource = resourceStorageServiceManager.upload(source, name);
+        return producer.upload(resource);
+    }
+
+    @Override
+    public org.springframework.core.io.Resource download1(Song entity) throws Exception {
+        Resource resource = entity.getResource();
+        return resourceStorageServiceManager.download(resource);
     }
 
 }

@@ -31,8 +31,7 @@ public abstract class ResourceStorageDecorator implements ResourceStorageService
     }
 
     @Override
-    public String test() {
-        return storageService.test();
+    public boolean supports(Class<?> resource) {
+        return storageService.supports(resource);
     }
-
 }

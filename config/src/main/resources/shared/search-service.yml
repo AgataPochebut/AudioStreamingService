@@ -1,5 +1,9 @@
 server:
-#  port: 8085
   port: 0
   servlet:
     context-path: /
+
+spring:
+  elasticsearch:
+    rest:
+      uris: ${ELASTICSEARCH:http://localhost:9200}

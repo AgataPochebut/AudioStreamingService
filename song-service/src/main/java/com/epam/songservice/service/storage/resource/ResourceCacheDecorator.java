@@ -30,10 +30,4 @@ public class ResourceCacheDecorator extends ResourceStorageDecorator {
         cacheManager.getCache("resources").evictIfPresent(resource.getId());
         super.delete(resource);
     }
-
-    @Override
-    public String test() {
-        return super.test() + " Cache";
-    }
-
 }
