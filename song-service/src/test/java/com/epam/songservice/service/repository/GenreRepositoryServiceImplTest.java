@@ -18,7 +18,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 //todo
-//не понимаю смысла  теста, что вообще проверяется?
+//не понимаю смысла  теста, что вообще проверяется? наверное внутренность методов до вызова репозитория
 @ExtendWith(MockitoExtension.class)
 class GenreRepositoryServiceImplTest {
 

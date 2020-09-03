@@ -38,8 +38,54 @@ public class SongStorageServiceImpl implements SongStorageService {
 
     @Override
     public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
+        InputStream input = source.getInputStream();
+        ContentHandler handler = new DefaultHandler();
+        Metadata metadata = new Metadata();
+        Parser parser = new Mp3Parser();
+        ParseContext parseCtx = new ParseContext();
+        parser.parse(input, handler, metadata, parseCtx);
+
+        Map<String, Object> metadataMap = new HashMap<>();
+        if (metadata.get("title") != null && !metadata.get("title").isEmpty()) {
+            metadataMap.put("Title", metadata.get("title"));
+        } else {
+            metadataMap.put("Title", "Без названия");
+        }
+        metadataMap.put("Year", metadata.get("xmpDM:releaseDate"));
+
+        if (metadata.get("xmpDM:album") != null && !metadata.get("xmpDM:album").isEmpty()) {
+            Map<String, Object> albumMap = new HashMap<>();
+            albumMap.put("Title", metadata.get("xmpDM:album"));
+            albumMap.put("Year", metadata.get("xmpDM:releaseDate"));
+
+            if (metadata.get("xmpDM:artist") != null && !metadata.get("xmpDM:artist").isEmpty()) {
+                albumMap.put("Artists", Arrays.stream(metadata.get("xmpDM:artist").split(", "))
+                        .map(a -> {
+                            Map<String, Object> artistMap = new HashMap<>();
+                            artistMap.put("Name", a);
+
+                            if (metadata.get("xmpDM:genre") != null && !metadata.get("xmpDM:genre").isEmpty()) {
+                                artistMap.put("Genres", Arrays.stream(metadata.get("xmpDM:genre").split(", "))
+                                        .map(g -> {
+                                            Map<String, Object> genreMap = new HashMap<>();
+                                            genreMap.put("Name", g);
+                                            return genreMap;
+                                        })
+                                        .collect(Collectors.toSet()));
+                            }
+
+                            return artistMap;
+                        })
+                        .collect(Collectors.toSet()));
+            }
+
+            metadataMap.put("Album", albumMap);
+        }
+
+        Song entity = mapper.map(metadataMap, Song.class);
         Resource resource = resourceStorageServiceManager.upload(source, name);
-        return upload(resource);
+        entity.setResource(resource);
+        return entity;
     }
 
     @Override
@@ -48,63 +94,6 @@ public class SongStorageServiceImpl implements SongStorageService {
         List<Song> list = producer.upload(resource);
         resourceStorageServiceManager.delete(resource);
         return list;
-    }
-
-    public Song upload(Resource resource) throws Exception {
-        try {
-            org.springframework.core.io.Resource source = resourceStorageServiceManager.download(resource);
-
-            InputStream input = source.getInputStream();
-            ContentHandler handler = new DefaultHandler();
-            Metadata metadata = new Metadata();
-            Parser parser = new Mp3Parser();
-            ParseContext parseCtx = new ParseContext();
-            parser.parse(input, handler, metadata, parseCtx);
-
-            Map<String, Object> metadataMap = new HashMap<>();
-            if (metadata.get("title") != null && !metadata.get("title").isEmpty()) {
-                metadataMap.put("Title", metadata.get("title"));
-            } else {
-                metadataMap.put("Title", "Без названия");
-            }
-            metadataMap.put("Year", metadata.get("xmpDM:releaseDate"));
-
-            if (metadata.get("xmpDM:album") != null && !metadata.get("xmpDM:album").isEmpty()) {
-                Map<String, Object> albumMap = new HashMap<>();
-                albumMap.put("Title", metadata.get("xmpDM:album"));
-                albumMap.put("Year", metadata.get("xmpDM:releaseDate"));
-
-                if (metadata.get("xmpDM:artist") != null && !metadata.get("xmpDM:artist").isEmpty()) {
-                    albumMap.put("Artists", Arrays.stream(metadata.get("xmpDM:artist").split(", "))
-                            .map(a -> {
-                                Map<String, Object> artistMap = new HashMap<>();
-                                artistMap.put("Name", a);
-
-                                if (metadata.get("xmpDM:genre") != null && !metadata.get("xmpDM:genre").isEmpty()) {
-                                    artistMap.put("Genres", Arrays.stream(metadata.get("xmpDM:genre").split(", "))
-                                            .map(g -> {
-                                                Map<String, Object> genreMap = new HashMap<>();
-                                                genreMap.put("Name", g);
-                                                return genreMap;
-                                            })
-                                            .collect(Collectors.toSet()));
-                                }
-
-                                return artistMap;
-                            })
-                            .collect(Collectors.toSet()));
-                }
-
-                metadataMap.put("Album", albumMap);
-            }
-
-            Song entity = mapper.map(metadataMap, Song.class);
-            entity.setResource(resource);
-            return entity;
-        } catch (Exception e) {
-            resourceStorageServiceManager.delete(resource);
-            throw new Exception("Upload exc");
-        }
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ class AuthServiceClientTest {
         stubFor(get(urlPathMatching(("/auth/user")))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.OK.value())
-                        .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                         .withBody(objectMapper.writeValueAsString(user))));
         ResponseEntity<AuthUser> responseEntity = client.getUser("token");
         assertThat(responseEntity).isNotNull();
