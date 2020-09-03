@@ -1,0 +1,55 @@
+uploadZip 1 wait 2
+prod 2 wait 3
+cons 3
+file1-uploadZip 3 wait 4
+prod 4 wait 3
+cons 3
+file2-uploadZip 3 wait 5
+prod  5 wait 3
+cons 3
+
+3 wait4
+4 wait3
+--------------------
+uploadZip 1 
+prod 1 wait 3
+cons 3 run4 run5 
+
+file1-uploadZip 4
+prod 4 wait 3
+cons 3
+file2-uploadZip 5
+prod 5 wait 3
+cons 3
+
+3 wait4 wait5
+4 wait3
+5 wait3
+---------------
+??????
+uploadZip 1
+prod 1 wait 13
+cons 3->13
+file1-uploadZip 13
+prod 13 wait 14
+cons 3->14
+upload 14 return to cons14 to prod 13 to uploadZip13 to cons13 ???? ?????????
+file2-uploadZip 13
+prod 13 wait 15
+cons 3->15
+upload 15 return to cons15 to prod 13 to uploadZip13 to cons13 ???? ?????????
+cons 13 return to prod1 to uploadZip1
+
+??????
+uploadZip 1
+prod 1 wait 13
+cons 3->13
+file1-uploadZip 23
+prod 23 wait 14
+cons 3->14
+upload 14 return to cons14 to prod 23 to uploadZip23 to cons13 complfut
+file2-uploadZip 33
+prod 33 wait 15
+cons 3->15
+upload 15 return to cons15 to prod 33 to uploadZip33 to cons13 complfut
+complfut.get

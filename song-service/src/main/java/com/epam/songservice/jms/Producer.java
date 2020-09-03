@@ -23,7 +23,6 @@ public class Producer {
     private JmsTemplate jmsTemplate;
 
     public List<Song> upload(Resource resource) throws JMSException {
-//        ObjectMessage receiveMessage = (ObjectMessage) jmsTemplate.sendAndReceive
         ObjectMessage receiveMessage = (ObjectMessage) jmsTemplate.sendAndReceive("upl", new MessageCreator() {
             @Override
             public Message createMessage(Session session) throws JMSException {
@@ -37,7 +36,7 @@ public class Producer {
                 }
             }
         });
-        return (List<Song>)receiveMessage.getObject();
-//        return null;
+        List<Song> result = (List<Song>)receiveMessage.getObject();
+        return result;
     }
 }

@@ -1,7 +1,6 @@
 package com.epam.songservice.service.storage.song;
 
 import com.epam.songservice.feign.index.SongIndexClient;
-import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
 
 public class SongIndexDecorator extends SongStorageDecorator {
@@ -14,8 +13,8 @@ public class SongIndexDecorator extends SongStorageDecorator {
     }
 
     @Override
-    public Song upload(Resource resource) throws Exception {
-        Song entity = super.upload(resource);
+    public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
+        Song entity = super.upload(source, name);
 
         try {
             indexClient.save(entity);

@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
+//make non interf methods with resource
 @Decorate(SongStorageDecorator.class)
 @Service
 public class SongStorageServiceImpl implements SongStorageService {
@@ -37,6 +37,19 @@ public class SongStorageServiceImpl implements SongStorageService {
     private Producer producer;
 
     @Override
+    public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
+        Resource resource = resourceStorageServiceManager.upload(source, name);
+        return upload(resource);
+    }
+
+    @Override
+    public List<Song> uploadZip(org.springframework.core.io.Resource source, String name) throws Exception {
+        Resource resource = resourceStorageServiceManager.upload(source, name);
+        List<Song> list = producer.upload(resource);
+        resourceStorageServiceManager.delete(resource);
+        return list;
+    }
+
     public Song upload(Resource resource) throws Exception {
         try {
             org.springframework.core.io.Resource source = resourceStorageServiceManager.download(resource);
@@ -95,8 +108,9 @@ public class SongStorageServiceImpl implements SongStorageService {
     }
 
     @Override
-    public Resource download(Song entity) throws Exception {
-        return entity.getResource();
+    public org.springframework.core.io.Resource download(Song entity) throws Exception {
+        Resource resource = entity.getResource();
+        return resourceStorageServiceManager.download(resource);
     }
 
     @Override
@@ -109,26 +123,6 @@ public class SongStorageServiceImpl implements SongStorageService {
     public boolean exist(Song entity) {
         Resource resource = entity.getResource();
         return resourceStorageServiceManager.exist(resource);
-    }
-
-    @Override
-    public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
-        Resource resource = resourceStorageServiceManager.upload(source, name);
-        Song entity = new Song();
-        entity.setResource(resource);
-        return entity;
-    }
-
-    @Override
-    public List<Song> uploadZip(org.springframework.core.io.Resource source, String name) throws Exception {
-        Resource resource = resourceStorageServiceManager.upload(source, name);
-        return producer.upload(resource);
-    }
-
-    @Override
-    public org.springframework.core.io.Resource download1(Song entity) throws Exception {
-        Resource resource = entity.getResource();
-        return resourceStorageServiceManager.download(resource);
     }
 
 }

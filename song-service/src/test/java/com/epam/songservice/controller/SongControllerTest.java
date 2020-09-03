@@ -2,7 +2,6 @@ package com.epam.songservice.controller;
 
 import com.epam.songservice.configuration.MappingConfiguration;
 import com.epam.songservice.jms.Producer;
-import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
 import com.epam.songservice.service.repository.SongRepositoryService;
 import com.epam.songservice.service.storage.resource.ResourceStorageServiceManager;
@@ -72,8 +71,7 @@ class SongControllerTest {
     @Test
     void download() throws Exception {
         when(repositoryService.findById(any())).thenReturn(new Song());
-        when(storageService.download(any())).thenReturn(new Resource());
-        when(resourceStorageServiceManager.download(any())).thenReturn(new InMemoryResource("test"));
+        when(storageService.download(any())).thenReturn(new InMemoryResource("test"));
         this.mockMvc.perform(get("/songs/{id}", 1L)
                 .accept(MediaType.APPLICATION_OCTET_STREAM_VALUE))
                 .andExpect(status().isOk());
@@ -81,8 +79,7 @@ class SongControllerTest {
 
     @Test
     void upload() throws Exception {
-        when(resourceStorageServiceManager.upload(any(), any())).thenReturn(new Resource());
-        when(storageService.upload(any())).thenReturn(new Song());
+        when(storageService.upload(any(), any())).thenReturn(new Song());
         MockMultipartFile mockMultipartFile = new MockMultipartFile("data", "test", "multipart/form-data", new InMemoryResource("test").getInputStream());
         this.mockMvc.perform(multipart("/songs")
                 .file(mockMultipartFile)
