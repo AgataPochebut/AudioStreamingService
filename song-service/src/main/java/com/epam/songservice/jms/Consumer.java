@@ -12,6 +12,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.jms.JMSException;
@@ -32,15 +33,16 @@ public class Consumer {
     private JmsTemplate jmsTemplate;
 
     @Autowired
-    private SongStorageService songStorageService;
-
-    @Autowired
     private ResourceStorageServiceManager resourceStorageServiceManager;
 
+    @Autowired
+    private SongStorageService songStorageService;
+
     @JmsListener(destination = "upl")
+    @Async
     public void upload(ObjectMessage message) throws Exception {
         Resource resource = (Resource) message.getObject();
-        List<Song> result = uploadRecursively(resource);
+        List<Song> result = uploadZip(resource);
 
         jmsTemplate.send(message.getJMSReplyTo(), new MessageCreator() {
             @Override
@@ -56,40 +58,34 @@ public class Consumer {
         });
     }
 
-    public List<Song> uploadRecursively(Resource resource) throws Exception {
-
+    public List<Song> uploadZip(Resource resource) throws Exception {
         final List<Song> entity = new ArrayList<>();
 
-        if (FilenameUtils.getExtension(resource.getName()).equals("zip")) {
-            org.springframework.core.io.Resource source = resourceStorageServiceManager.download(resource);
-
-            ZipInputStream zin = new ZipInputStream(source.getInputStream());
-            ZipEntry entry;
-            while ((entry = zin.getNextEntry()) != null) {
-                if (!entry.isDirectory()) {
-                    //чтобы загрузились остальные песни
-                    try {
-                        byte[] content = IOUtils.toByteArray(zin);
-                        org.springframework.core.io.Resource source1 = new ByteArrayResource(content);
-                        String name1 = entry.getName();
-                        Resource resource1 = resourceStorageServiceManager.upload(source1, name1);
-                        List<Song> entity1 = uploadRecursively(resource1);
-                        entity.addAll(entity1);
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
-                        continue;
+        org.springframework.core.io.Resource source = resourceStorageServiceManager.download(resource);
+        String name = resource.getName();
+        ZipInputStream zin = new ZipInputStream(source.getInputStream());
+        ZipEntry entry;
+        while ((entry = zin.getNextEntry()) != null) {
+            if (!entry.isDirectory()) {
+                try {
+                    byte[] content = IOUtils.toByteArray(zin);
+                    org.springframework.core.io.Resource source1 = new ByteArrayResource(content);
+                    String name1 = entry.getName();
+                    if (FilenameUtils.getExtension(name1).equals("zip")) {
+                        entity.addAll(songStorageService.uploadZip(source1, name1));
+                    } else {
+                        entity.add(songStorageService.upload(source1, name1));
                     }
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    continue;
                 }
-                zin.closeEntry();
             }
-            zin.close();
-
-            resourceStorageServiceManager.delete(resource);
-        } else {
-            Song entity1 = songStorageService.upload(resource);
-            entity.add(entity1);
+            zin.closeEntry();
         }
+        zin.close();
 
         return entity;
     }
+
 }

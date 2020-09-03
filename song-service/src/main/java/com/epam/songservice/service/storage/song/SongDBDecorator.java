@@ -1,6 +1,5 @@
 package com.epam.songservice.service.storage.song;
 
-import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
 import com.epam.songservice.service.repository.SongRepositoryService;
 
@@ -14,14 +13,13 @@ public class SongDBDecorator extends SongStorageDecorator {
     }
 
     @Override
-    public Song upload(Resource resource) throws Exception {
-        Song entity = super.upload(resource);
+    public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
+        Song entity = super.upload(source, name);
 
         try {
             entity = repositoryService.save(entity);
             return entity;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             super.delete(entity);
             throw new Exception("Error when save song to db");
         }

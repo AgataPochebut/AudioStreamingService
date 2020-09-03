@@ -1,6 +1,5 @@
 package com.epam.songservice.service.storage.song;
 
-import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
 
 import java.util.List;
@@ -14,12 +13,17 @@ public abstract class SongStorageDecorator implements SongStorageService {
     }
 
     @Override
-    public Song upload(Resource resource) throws Exception {
-        return storageService.upload(resource);
+    public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
+        return storageService.upload(source, name);
     }
 
     @Override
-    public Resource download(Song entity) throws Exception {
+    public List<Song> uploadZip(org.springframework.core.io.Resource source, String name) throws Exception {
+        return storageService.uploadZip(source, name);
+    }
+
+    @Override
+    public org.springframework.core.io.Resource download(Song entity) throws Exception {
         return storageService.download(entity);
     }
 
@@ -33,18 +37,7 @@ public abstract class SongStorageDecorator implements SongStorageService {
         return storageService.exist(entity);
     }
 
-    @Override
-    public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
-        return storageService.upload(source, name);
-    }
 
-    @Override
-    public List<Song> uploadZip(org.springframework.core.io.Resource source, String name) throws Exception {
-        return storageService.uploadZip(source, name);
-    }
 
-    @Override
-    public org.springframework.core.io.Resource download1(Song entity) throws Exception {
-        return storageService.download1(entity);
-    }
+
 }

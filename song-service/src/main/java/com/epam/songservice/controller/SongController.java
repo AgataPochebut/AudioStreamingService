@@ -1,11 +1,9 @@
 package com.epam.songservice.controller;
 
 import com.epam.songservice.dto.response.SongResponseDto;
-import com.epam.songservice.jms.Producer;
 import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.Song;
 import com.epam.songservice.service.repository.SongRepositoryService;
-import com.epam.songservice.service.storage.resource.ResourceStorageServiceManager;
 import com.epam.songservice.service.storage.song.SongStorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.dozer.Mapper;
@@ -30,18 +28,12 @@ public class SongController {
     private SongStorageService songStorageService;
 
     @Autowired
-    private ResourceStorageServiceManager resourceStorageServiceManager;
-
-    @Autowired
-    private Producer producer;
-
-    @Autowired
     private Mapper mapper;
 
     @GetMapping
     public ResponseEntity<List<SongResponseDto>> getAll() {
-        final List<Song> entity = songRepositoryService.findAll();
-        final List<SongResponseDto> responseDto = entity.stream()
+        final List<Song> list = songRepositoryService.findAll();
+        final List<SongResponseDto> responseDto = list.stream()
                 .map((i) -> mapper.map(i, SongResponseDto.class))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -50,11 +42,8 @@ public class SongController {
     // Accept 'application/octet-stream'
     @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public ResponseEntity<org.springframework.core.io.Resource> download(@PathVariable Long id) throws Exception {
-//        Song entity = songRepositoryService.findById(id);
-//        Resource resource = songStorageService.download(entity);
-//        org.springframework.core.io.Resource source = resourceStorageServiceManager.download(resource);
         Song entity = songRepositoryService.findById(id);
-        org.springframework.core.io.Resource source = songStorageService.download1(entity);
+        org.springframework.core.io.Resource source = songStorageService.download(entity);
         Resource resource = entity.getResource();
 
         HttpHeaders headers = new HttpHeaders();
@@ -68,19 +57,19 @@ public class SongController {
     // Content type 'multipart/form-data;boundary
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<SongResponseDto> upload(@RequestParam("data") MultipartFile multipartFile) throws Exception {
-//        Resource resource = resourceStorageServiceManager.upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
-//        Song entity = songStorageService.upload(resource);
         Song entity = songStorageService.upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
         final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     // Content type 'multipart/form-data;boundary
-    @PostMapping(value = "/async", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public void uploadAsync(@RequestParam("data") MultipartFile multipartFile) throws Exception {
-//        Resource resource = resourceStorageServiceManager.upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
-//        producer.upload(resource, "upl");
-        songStorageService.uploadZip(multipartFile.getResource(), multipartFile.getOriginalFilename());
+    @PostMapping(value = "/zip", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<List<SongResponseDto>> uploadZip(@RequestParam("data") MultipartFile multipartFile) throws Exception {
+        List<Song> list = songStorageService.uploadZip(multipartFile.getResource(), multipartFile.getOriginalFilename());
+        final List<SongResponseDto> responseDto = list.stream()
+                .map((i) -> mapper.map(i, SongResponseDto.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
 //    // Content type 'multipart/form-data;boundary

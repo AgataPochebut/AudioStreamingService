@@ -4,7 +4,6 @@ import com.epam.songservice.annotation.Decorate;
 import com.epam.songservice.annotation.StorageType;
 import com.epam.songservice.feign.conversion.ConversionClient;
 import com.epam.songservice.feign.index.SongIndexClient;
-import com.epam.songservice.jms.Producer;
 import com.epam.songservice.service.repository.ResourceRepositoryService;
 import com.epam.songservice.service.repository.SongRepositoryService;
 import com.epam.songservice.service.storage.resource.*;
@@ -12,9 +11,6 @@ import com.epam.songservice.service.storage.song.*;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -33,18 +29,6 @@ public class BeanPostProcessorImpl implements BeanPostProcessor {
     private SongIndexClient songIndexClient;
 
     @Autowired
-    private Producer producer;
-
-    @Autowired
-    private RedisConnectionFactory connectionFactory;
-
-    @Autowired
-    private RedisTemplate<Object, Object> template;
-
-    @Autowired
-    private RedisCacheManager cacheManager;
-
-    @Autowired
     private SongRepositoryService songRepositoryService;
 
     @Override
@@ -56,7 +40,7 @@ public class BeanPostProcessorImpl implements BeanPostProcessor {
                     && bean.getClass().getAnnotation(Decorate.class).value() == ResourceStorageDecorator.class) {
                 newbean = new ResourceIORetryDecorator(newbean);
                 newbean = new ResourceDBDecorator(newbean, resourceRepositoryService);
-//                        newbean = new ResourceCacheDecorator(newbean, cacheManager);
+//                newbean = new ResourceCacheDecorator(newbean, cacheManager);
             }
             if (bean.getClass().isAnnotationPresent(StorageType.class)) {
                 resourceStorageServiceManager.registerService(bean.getClass().getAnnotation(StorageType.class).value(), newbean);
@@ -68,7 +52,7 @@ public class BeanPostProcessorImpl implements BeanPostProcessor {
             SongStorageService newbean = (SongStorageService) bean;
             if (bean.getClass().isAnnotationPresent(Decorate.class)
                     && bean.getClass().getAnnotation(Decorate.class).value() == SongStorageDecorator.class) {
-                newbean = new SongConversionDecorator(newbean, conversionClient, resourceStorageServiceManager);
+                newbean = new SongConversionDecorator(newbean, conversionClient);
                 newbean = new SongDBDecorator(newbean, songRepositoryService);
                 newbean = new SongIndexDecorator(newbean, songIndexClient);
             }
