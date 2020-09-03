@@ -23,8 +23,8 @@ public class RibbonTestConfiguration {
 
     public RibbonTestConfiguration() throws IOException {
         port = SocketUtils.findAvailableTcpPort();
-        WireMock.configureFor(port);
         wireMockServer = new WireMockServer(port);
+        WireMock.configureFor(port);
     }
 
     @PostConstruct
@@ -36,7 +36,6 @@ public class RibbonTestConfiguration {
     public void preDestroy() {
         wireMockServer.stop();
     }
-
 
     @Bean
     public ServerList<Server> ribbonServerList() {

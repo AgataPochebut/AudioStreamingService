@@ -93,7 +93,7 @@ public class SongIntegrationTest {
 
     @Test
     void upload() throws Exception {
-        org.springframework.core.io.Resource source = new FileSystemResource("src/test/resources/50_Cent_GUnit_Ismell.mp3");
+        org.springframework.core.io.Resource source = new FileSystemResource("src/test/resources/50 Cent GUnit_Ismell.mp3");
         MockMultipartFile mockMultipartFile = new MockMultipartFile("data", source.getFilename(), "multipart/form-data", source.getInputStream());
 
         MvcResult mvcResult = this.mockMvc.perform(multipart("/songs")

@@ -21,7 +21,7 @@
 //
 //    @Test
 //    void test() throws Exception {
-//        org.springframework.core.io.Resource source = new FileSystemResource("src/test/resources/50_Cent_GUnit_Ismell.mp3");
+//        org.springframework.core.io.Resource source = new FileSystemResource("src/test/resources/50 Cent GUnit_Ismell.mp3");
 //        Resource firstString = storageService.upload(source, source.getFilename());
 ////        Resource secondString = storageService.upload(source, source.getFilename());
 //    }

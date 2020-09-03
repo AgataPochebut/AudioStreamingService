@@ -89,7 +89,6 @@ public class SongController {
 //    @PostMapping(value = "/deferred", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 //    public DeferredResult<ResponseEntity<SongResponseDto>> uploadDeferred(@RequestParam("data") MultipartFile multipartFile) throws Exception {
 //        final DeferredResult<ResponseEntity<SongResponseDto>> result = new DeferredResult<>(null, null);
-//
 //        ForkJoinPool.commonPool().submit(() -> {
 //            try {
 //                result.setResult(upload(multipartFile));
@@ -97,7 +96,6 @@ public class SongController {
 //                e.printStackTrace();
 //            }
 //        });
-//
 //        return result;
 //    }
 

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.ByteArrayResource;
+import org.springframework.security.util.InMemoryResource;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.io.IOException;
@@ -30,8 +30,8 @@ class ResourceStorageServiceS3Test {
 
     @Test
     void testAll() throws IOException {
+        org.springframework.core.io.Resource source = new InMemoryResource("test");
         String name = "test.txt";
-        org.springframework.core.io.Resource source = new ByteArrayResource("test_data".getBytes());
 
         Resource resource = storageService.upload(source, name);
         assertThat(amazonS3Client.doesObjectExist(defaultBucketName, name)).isEqualTo(true);
