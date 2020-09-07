@@ -55,14 +55,14 @@ class SongControllerTest {
     private Producer producer;
 
     @Test
-    public void getAllShouldReturnOK() throws Exception {
+    public void getAll() throws Exception {
         when(repositoryService.findAll()).thenReturn(Arrays.asList());
         mockMvc.perform(get("/songs"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void getByIdShouldReturnOK() throws Exception {
+    void getById() throws Exception {
         when(repositoryService.findById(any())).thenReturn(new Song());
         this.mockMvc.perform(get("/songs/{id}", 1L))
                 .andExpect(status().isOk());
@@ -88,7 +88,7 @@ class SongControllerTest {
     }
 
     @Test
-    void deleteShouldReturnOK() throws Exception {
+    void deleteById() throws Exception {
         doNothing().when(repositoryService).deleteById(any());
         this.mockMvc.perform(delete("/songs/{id}", 1L))
                 .andExpect(status().isOk());

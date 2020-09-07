@@ -7,7 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 class SongServiceApplicationTests {
 
     @Test
-    void contextLoads() {
+    void contextLoads() throws Exception {
+
     }
 
 }

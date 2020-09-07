@@ -32,7 +32,7 @@ public class SongIndexDecorator extends SongStorageDecorator {
             indexClient.delete(entity.getId());
         }
         catch (Exception e){
-            throw new Exception("Error when delete song from db");
+            throw new Exception("Error when delete song from es");
         }
 
         super.delete(entity);

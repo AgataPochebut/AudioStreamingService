@@ -42,7 +42,7 @@ class GenreIntegrationTest {
     private Mapper mapper;
 
     @Test
-    void findAll() throws Exception {
+    void getAll() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(get("/genres"))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -53,7 +53,7 @@ class GenreIntegrationTest {
     }
 
     @Test
-    void findById() throws Exception {
+    void getById() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(get("/genres/{id}", 1L))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -102,8 +102,7 @@ class GenreIntegrationTest {
         this.mockMvc.perform(delete("/genres/{id}", 1L))
                 .andExpect(status().isOk());
 
-        Genre obj = repositoryService.findById(1L);
-        assertThat(obj).isNull();
+        assertThat(repositoryService.existById(1L)).isFalse();
     }
 
 }

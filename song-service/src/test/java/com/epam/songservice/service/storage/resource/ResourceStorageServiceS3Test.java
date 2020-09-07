@@ -1,16 +1,14 @@
 package com.epam.songservice.service.storage.resource;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.epam.songservice.configuration.S3TestConfiguration;
 import com.epam.songservice.model.Resource;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.util.InMemoryResource;
 import org.springframework.test.context.ContextConfiguration;
-
-import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,27 +18,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ResourceStorageServiceS3Test {
 
     @Autowired
-    private ResourceStorageServiceS3 storageService;
-
-    @Autowired
-    private AmazonS3 amazonS3Client;
-
-    @Value("${s3.defaultBucket}")
-    private String defaultBucketName;
+    @Qualifier("ResourceStorageServiceS3")
+    private ResourceStorageService storageService;
 
     @Test
-    void testAll() throws IOException {
+    void testAll() throws Exception {
         org.springframework.core.io.Resource source = new InMemoryResource("test");
         String name = "test.txt";
 
         Resource resource = storageService.upload(source, name);
-        assertThat(amazonS3Client.doesObjectExist(defaultBucketName, name)).isEqualTo(true);
+        assertThat(storageService.exist(resource)).isTrue();
+        assertThat(resource.getSize()).isEqualTo(source.contentLength());
+        assertThat(resource.getChecksum()).isEqualTo(DigestUtils.md5Hex(source.getInputStream()));
 
-        assertThat(storageService.exist(resource)).isEqualTo(true);
-
-        assertThat(storageService.download(resource)).isEqualTo(source);
+        org.springframework.core.io.Resource source1 = storageService.download(resource);
+        assertThat(DigestUtils.md5Hex(source1.getInputStream())).isEqualTo(DigestUtils.md5Hex(source.getInputStream()));
 
         storageService.delete(resource);
-        assertThat(amazonS3Client.doesObjectExist(defaultBucketName, name)).isEqualTo(false);
+        assertThat(storageService.exist(resource)).isFalse();
     }
 }

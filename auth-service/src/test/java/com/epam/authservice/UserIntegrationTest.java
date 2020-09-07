@@ -125,8 +125,7 @@ class UserIntegrationTest {
         this.mockMvc.perform(delete("/users/{id}", 1L))
                 .andExpect(status().isOk());
 
-        User obj = repositoryService.findById(1L);
-        assertThat(obj).isNull();
+        assertThat(repositoryService.existById(1L)).isFalse();
     }
 
 }

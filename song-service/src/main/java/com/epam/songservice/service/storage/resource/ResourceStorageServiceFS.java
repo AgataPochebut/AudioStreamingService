@@ -3,7 +3,6 @@ package com.epam.songservice.service.storage.resource;
 import com.epam.songservice.annotation.Decorate;
 import com.epam.songservice.annotation.StorageType;
 import com.epam.songservice.model.FSResource;
-import com.epam.songservice.model.Resource;
 import com.epam.songservice.model.StorageTypes;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -13,43 +12,42 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 
 @Decorate(ResourceStorageDecorator.class)
 @StorageType(StorageTypes.FS)
-@Service
-public class ResourceStorageServiceFS implements ResourceStorageService {
+@Service("ResourceStorageServiceFS")
+public class ResourceStorageServiceFS implements ResourceStorageService<FSResource> {
 
     @Value("${fs.defaultFolder}")
     private String defaultBaseFolder;
 
     @Override
-    public Resource upload(org.springframework.core.io.Resource source, String name) throws IOException {
+    public FSResource upload(org.springframework.core.io.Resource source, String name) throws IOException {
         int count = 0;
-        File file = new File(defaultBaseFolder, name);
-        while (file.exists()){
+        String key = name;
+        while (Files.exists(Paths.get(defaultBaseFolder, key))){
             count++;
-            file = new File(defaultBaseFolder, FilenameUtils.removeExtension(name) + " ("+ count + ")" + "." + FilenameUtils.getExtension(name));
+            key = FilenameUtils.removeExtension(name) + " ("+ count + ")" + "." + FilenameUtils.getExtension(name);
         }
-        file.getParentFile().mkdirs();
 
-        OutputStream output = new FileOutputStream(file);
-        IOUtils.copy(source.getInputStream(), output);
-        output.close();
+        Files.copy(source.getInputStream(), Paths.get(defaultBaseFolder, key));
 
         FSResource resource = new FSResource();
-        resource.setName(file.getName());
+        resource.setName(key);
         resource.setSize(source.contentLength());
         resource.setChecksum(DigestUtils.md5Hex(source.getInputStream()));
-        resource.setFolderName(file.getParentFile().getAbsolutePath());
+        resource.setFolderName(defaultBaseFolder);
         return resource;
     }
 
     @Override
-    public org.springframework.core.io.Resource download(Resource resource) throws IOException {
-        FSResource resource1 = (FSResource)resource;
-        org.springframework.core.io.Resource source = new FileSystemResource(new File(resource1.getFolderName(), resource1.getName()));
+    public org.springframework.core.io.Resource download(FSResource resource) throws IOException {
+        org.springframework.core.io.Resource source = new FileSystemResource(Paths.get(resource.getFolderName(), resource.getName()));
         InputStream in = source.getInputStream();
         byte[] content = IOUtils.toByteArray(in);
         in.close();
@@ -57,15 +55,13 @@ public class ResourceStorageServiceFS implements ResourceStorageService {
     }
 
     @Override
-    public void delete(Resource resource) throws IOException {
-        FSResource resource1 = (FSResource)resource;
-        new File(resource1.getFolderName(), resource1.getName()).delete();
+    public void delete(FSResource resource) throws IOException {
+        Files.delete(Paths.get(resource.getFolderName(), resource.getName()));
     }
 
     @Override
-    public boolean exist(Resource resource) {
-        FSResource resource1 = (FSResource)resource;
-        return new File(resource1.getFolderName(), resource1.getName()).exists();
+    public boolean exist(FSResource resource) {
+        return Files.exists(Paths.get(resource.getFolderName(), resource.getName()));
     }
 
     @Override
