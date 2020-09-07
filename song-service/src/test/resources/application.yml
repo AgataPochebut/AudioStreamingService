@@ -15,9 +15,9 @@ eureka:
   client:
     enabled: false
 
-#feign:
-#  hystrix:
-#    enabled: true
+feign:
+  hystrix:
+    enabled: true
 
 s3:
   defaultBucket: filestest
@@ -29,3 +29,9 @@ fs:
 
 storage:
   type: FS
+
+java:
+  nio:
+    file:
+      spi:
+        DefaultFileSystemProvider: com.google.common.jimfs.JimfsFileSystemProvider

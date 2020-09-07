@@ -2,7 +2,7 @@ package com.epam.songservice.service.storage.resource;
 
 import com.epam.songservice.model.Resource;
 
-public abstract class ResourceStorageDecorator implements ResourceStorageService {
+public abstract class ResourceStorageDecorator implements ResourceStorageService<Resource> {
 
     protected ResourceStorageService storageService;
 

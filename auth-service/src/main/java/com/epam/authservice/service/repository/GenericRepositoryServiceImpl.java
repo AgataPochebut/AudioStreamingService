@@ -35,14 +35,13 @@ public class GenericRepositoryServiceImpl<T,U> implements GenericRepositoryServi
     }
 
     @Override
-    public void delete(T entity) {
-        repository.delete(entity);
-    }
-
-    @Override
     public void deleteById(U id) {
         if (repository.existsById(id)) {
             repository.deleteById(id);}
     }
 
+    @Override
+    public boolean existById(U id) {
+        return repository.existsById(id);
+    }
 }

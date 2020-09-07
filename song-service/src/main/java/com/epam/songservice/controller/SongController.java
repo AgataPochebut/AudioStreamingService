@@ -22,28 +22,36 @@ import java.util.stream.Collectors;
 public class SongController {
 
     @Autowired
-    private SongRepositoryService songRepositoryService;
+    private SongRepositoryService repositoryService;
 
     @Autowired
-    private SongStorageService songStorageService;
+    private SongStorageService storageService;
 
     @Autowired
     private Mapper mapper;
 
     @GetMapping
     public ResponseEntity<List<SongResponseDto>> getAll() {
-        final List<Song> list = songRepositoryService.findAll();
+        final List<Song> list = repositoryService.findAll();
         final List<SongResponseDto> responseDto = list.stream()
                 .map((i) -> mapper.map(i, SongResponseDto.class))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<SongResponseDto> get(@PathVariable Long id) {
+        Song entity = repositoryService.findById(id);
+
+        final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
     // Accept 'application/octet-stream'
     @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public ResponseEntity<org.springframework.core.io.Resource> download(@PathVariable Long id) throws Exception {
-        Song entity = songRepositoryService.findById(id);
-        org.springframework.core.io.Resource source = songStorageService.download(entity);
+        Song entity = repositoryService.findById(id);
+        org.springframework.core.io.Resource source = storageService.download(entity);
         Resource resource = entity.getResource();
 
         HttpHeaders headers = new HttpHeaders();
@@ -57,7 +65,7 @@ public class SongController {
     // Content type 'multipart/form-data;boundary
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<SongResponseDto> upload(@RequestParam("data") MultipartFile multipartFile) throws Exception {
-        Song entity = songStorageService.upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
+        Song entity = storageService.upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
         final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
@@ -65,7 +73,7 @@ public class SongController {
     // Content type 'multipart/form-data;boundary
     @PostMapping(value = "/zip", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<List<SongResponseDto>> uploadZip(@RequestParam("data") MultipartFile multipartFile) throws Exception {
-        List<Song> list = songStorageService.uploadZip(multipartFile.getResource(), multipartFile.getOriginalFilename());
+        List<Song> list = storageService.uploadZip(multipartFile.getResource(), multipartFile.getOriginalFilename());
         final List<SongResponseDto> responseDto = list.stream()
                 .map((i) -> mapper.map(i, SongResponseDto.class))
                 .collect(Collectors.toList());
@@ -102,7 +110,7 @@ public class SongController {
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public void delete(@PathVariable Long id) throws Exception {
-        Song entity = songRepositoryService.findById(id);
-        songStorageService.delete(entity);
+        Song entity = repositoryService.findById(id);
+        storageService.delete(entity);
     }
 }

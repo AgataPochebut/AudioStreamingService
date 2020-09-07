@@ -2,15 +2,15 @@ package com.epam.songservice.service.storage.resource;
 
 import com.epam.songservice.model.Resource;
 
-public interface ResourceStorageService {
+public interface ResourceStorageService<T extends Resource> {
 
-    Resource upload(org.springframework.core.io.Resource source, String name) throws Exception;
+    T upload(org.springframework.core.io.Resource source, String name) throws Exception;
 
-    org.springframework.core.io.Resource download(Resource resource) throws Exception;
+    org.springframework.core.io.Resource download(T resource) throws Exception;
 
-    void delete(Resource resource) throws Exception;
+    void delete(T resource) throws Exception;
 
-    boolean exist(Resource resource);
+    boolean exist(T resource);
 
     boolean supports(Class<?> resource);
 }

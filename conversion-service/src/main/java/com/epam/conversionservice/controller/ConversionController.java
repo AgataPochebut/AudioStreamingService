@@ -26,7 +26,7 @@ public class ConversionController {
 
     // Accept 'application/octet-stream'
     // Content type 'multipart/form-data;boundary
-    @PostMapping//(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public ResponseEntity<Resource> convert(@RequestParam("data") MultipartFile multipartFile, @RequestParam("format") String format) throws Exception {
 
         Resource source = multipartFile.getResource();
@@ -52,7 +52,7 @@ public class ConversionController {
 
     // Accept 'application/octet-stream'
     // Content type 'multipart/form-data;boundary
-    @PostMapping(value = "/future")//, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    @PostMapping(value = "/future", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public CompletableFuture<ResponseEntity<Resource>> convertFuture(@RequestParam("data") MultipartFile multipartFile, @RequestParam("format") String format) {
         return CompletableFuture.supplyAsync(()-> {
             try {

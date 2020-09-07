@@ -42,4 +42,10 @@ public class ResourceDBDecorator extends ResourceStorageDecorator {
 
         super.delete(entity);
     }
+
+    @Override
+    public boolean exist(Resource entity) {
+        if(repositoryService.existById(entity.getId())) return super.exist(entity);
+        else return false;
+    }
 }

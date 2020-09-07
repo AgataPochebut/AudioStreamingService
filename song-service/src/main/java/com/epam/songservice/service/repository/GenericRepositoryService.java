@@ -14,6 +14,5 @@ public interface GenericRepositoryService<T,U> {
 
     void deleteById(U id);
 
-    void delete(T entity);
-
+    boolean existById(U id);
 }

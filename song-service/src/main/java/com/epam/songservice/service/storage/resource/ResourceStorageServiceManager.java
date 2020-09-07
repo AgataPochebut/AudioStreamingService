@@ -67,9 +67,8 @@ public class ResourceStorageServiceManager {
             }
 
             try {
-                provider.delete(resource);
-
-                if (!provider.exist(resource)) {
+                if (provider.exist(resource)) {
+                    provider.delete(resource);
                     return;
                 }
             } catch (Exception e) {
