@@ -9,21 +9,21 @@
         <map-null>false</map-null>
         <relationship-type>non-cumulative</relationship-type>
         <custom-converters>
-            <converter type="com.epam.songservice.converter.SongConverter">
+            <converter type="com.it.songservice.converter.SongConverter">
                 <class-a>java.util.Map</class-a>
-                <class-b>com.epam.songservice.model.Song</class-b>
+                <class-b>com.it.songservice.model.Song</class-b>
             </converter>
-            <converter type="com.epam.songservice.converter.AlbumConverter">
+            <converter type="com.it.songservice.converter.AlbumConverter">
                 <class-a>java.util.Map</class-a>
-                <class-b>com.epam.songservice.model.Album</class-b>
+                <class-b>com.it.songservice.model.Album</class-b>
             </converter>
-            <converter type="com.epam.songservice.converter.ArtistConverter">
+            <converter type="com.it.songservice.converter.ArtistConverter">
                 <class-a>java.util.Map</class-a>
-                <class-b>com.epam.songservice.model.Artist</class-b>
+                <class-b>com.it.songservice.model.Artist</class-b>
             </converter>
-            <converter type="com.epam.songservice.converter.GenreConverter">
+            <converter type="com.it.songservice.converter.GenreConverter">
                 <class-a>java.util.Map</class-a>
-                <class-b>com.epam.songservice.model.Genre</class-b>
+                <class-b>com.it.songservice.model.Genre</class-b>
             </converter>
         </custom-converters>
     </configuration>
