@@ -3,3 +3,4 @@
 .env
 errors.txt
 logs.txt
+threads.txt
