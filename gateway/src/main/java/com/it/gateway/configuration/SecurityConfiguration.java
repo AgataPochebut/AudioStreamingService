@@ -31,6 +31,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .mvcMatchers("/").permitAll()
+                .mvcMatchers("/ui**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()
