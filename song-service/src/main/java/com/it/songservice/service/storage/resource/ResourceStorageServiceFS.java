@@ -26,7 +26,7 @@ public class ResourceStorageServiceFS implements ResourceStorageService<FSResour
     private String defaultBaseFolder;
 
     @Override
-    public FSResource upload(org.springframework.core.io.Resource source, String name) throws IOException {
+    public FSResource upload(org.springframework.core.io.Resource source, String name) throws Exception {
         int count = 0;
         String key = name;
         while (Files.exists(Paths.get(defaultBaseFolder, key))){

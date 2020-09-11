@@ -3,6 +3,7 @@ package com.it.gateway.service;
 import com.it.commonservice.model.auth.AuthUser;
 import com.it.gateway.feign.auth.AuthServiceClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
@@ -22,7 +23,8 @@ public class OidcUserServiceImpl implements OAuth2UserService<OidcUserRequest, O
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2AccessToken accessToken = userRequest.getAccessToken();
         String token = accessToken.getTokenValue();
-        AuthUser user = (AuthUser) authServiceClient.getUser(token).getBody();
+        ResponseEntity<AuthUser> response = authServiceClient.getUser(token);
+        AuthUser user = (AuthUser) response.getBody();
         return new DefaultOidcUser(user.getAuthorities(), userRequest.getIdToken(), new OidcUserInfo(user.getAttributes()), "name");
     }
 }

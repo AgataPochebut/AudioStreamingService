@@ -34,7 +34,7 @@ public abstract class SongStorageDecorator implements SongStorageService {
     }
 
     @Override
-    public boolean exist(Song entity) {
+    public boolean exist(Song entity) throws Exception {
         return storageService.exist(entity);
     }
 

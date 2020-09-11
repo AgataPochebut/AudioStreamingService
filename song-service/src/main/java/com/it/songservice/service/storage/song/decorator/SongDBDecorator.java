@@ -1,5 +1,6 @@
 package com.it.songservice.service.storage.song.decorator;
 
+import com.it.songservice.exception.UploadException;
 import com.it.songservice.model.Song;
 import com.it.songservice.service.repository.SongRepositoryService;
 import com.it.songservice.service.storage.song.SongStorageService;
@@ -18,28 +19,23 @@ public class SongDBDecorator extends SongStorageDecorator {
         Song entity = super.upload(source, name);
 
         try {
-            entity = repositoryService.save(entity);
-            return entity;
+            return repositoryService.save(entity);
         } catch (Exception e) {
             super.delete(entity);
-            throw new Exception("Error when save song to db");
         }
+
+        throw new UploadException("DB");
     }
 
     @Override
     public void delete(Song entity) throws Exception {
-        try {
-            repositoryService.deleteById(entity.getId());
-        }
-        catch (Exception e){
-            throw new Exception("Error when delete song from db");
-        }
+        repositoryService.deleteById(entity.getId());
 
         super.delete(entity);
     }
 
     @Override
-    public boolean exist(Song entity) {
+    public boolean exist(Song entity) throws Exception {
         if(repositoryService.existById(entity.getId())) return super.exist(entity);
         else return false;
     }

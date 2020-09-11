@@ -1,10 +1,11 @@
 package com.it.songservice;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.it.songservice.dto.request.GenreRequestDto;
 import com.it.songservice.dto.response.GenreResponseDto;
 import com.it.songservice.model.Genre;
 import com.it.songservice.service.repository.GenreRepositoryService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.dozer.Mapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +48,12 @@ class GenreIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        int count1 = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), List.class).size();
-        int count2 = repositoryService.findAll().size();
-        assertThat(count1).isEqualTo(count2);
+        List<GenreResponseDto> list = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<List<GenreResponseDto>>(){});
+        assertThat(list.size()).isEqualTo(repositoryService.findAll().size());
+
+        for(GenreResponseDto dto : list) {
+            assertThat(dto).isEqualTo(mapper.map(repositoryService.findById(dto.getId()), GenreResponseDto.class));
+        }
     }
 
     @Test

@@ -59,33 +59,34 @@ public class Consumer {
     }
 
     public List<Song> uploadZip(Resource resource) throws Exception {
-        final List<Song> entity = new ArrayList<>();
+        final List<Song> list = new ArrayList<>();
 
-        org.springframework.core.io.Resource source = resourceStorageServiceManager.download(resource);
-        String name = resource.getName();
-        ZipInputStream zin = new ZipInputStream(source.getInputStream());
-        ZipEntry entry;
-        while ((entry = zin.getNextEntry()) != null) {
-            if (!entry.isDirectory()) {
-                try {
+        try {
+            org.springframework.core.io.Resource source = resourceStorageServiceManager.download(resource);
+            String name = resource.getName();
+            ZipInputStream zin = new ZipInputStream(source.getInputStream());
+            ZipEntry entry;
+            while ((entry = zin.getNextEntry()) != null) {
+                if (!entry.isDirectory()) {
                     byte[] content = IOUtils.toByteArray(zin);
                     org.springframework.core.io.Resource source1 = new ByteArrayResource(content);
                     String name1 = entry.getName();
                     if (FilenameUtils.getExtension(name1).equals("zip")) {
-                        entity.addAll(songStorageService.uploadZip(source1, name1));
+                        list.addAll(songStorageService.uploadZip(source1, name1));
                     } else {
-                        entity.add(songStorageService.upload(source1, name1));
+                        list.add(songStorageService.upload(source1, name1));
                     }
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                    continue;
                 }
+                zin.closeEntry();
             }
-            zin.closeEntry();
+            zin.close();
+            return list;
+        } catch (Exception e) {
+            for (Song i : list) {
+                songStorageService.delete(i);
+            }
+            return null;
         }
-        zin.close();
-
-        return entity;
     }
 
 }

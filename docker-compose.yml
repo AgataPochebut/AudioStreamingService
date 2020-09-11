@@ -9,17 +9,13 @@ volumes:
 services:
 
   mysql:
-    build:
-      context: ./
-      dockerfile: ./Dockerfile
-#    image: mysql:8.0
+    image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
     ports:
       - 3306:3306
     volumes:
       - mysql-data:/var/lib/mysql
-#      - ./init.sql:/docker-entrypoint-initdb.d
 
   redis:
     image: redis:3.0
@@ -58,22 +54,34 @@ services:
 #    depends_on:
 #      - elasticsearch
 
+  config:
+    build: ./config
+    ports:
+      - 8888:8888
+
   discovery:
     build: ./discovery
     ports:
       - 8761:8761
 
-  config:
-    build: ./config
+  gateway:
+    build: ./gateway
+    environment:
+      CONFIG_SERVER: http://config:8888
+      DISCOVERY_SERVER: http://discovery:8761/eureka
+    restart: on-failure
     ports:
-      - 8888:8888
+      - 8080:8080
+    depends_on:
+      - config
+    #      - auth-service
 
   auth-service:
     build: ./auth-service
     environment:
       CONFIG_SERVER: http://config:8888
       DISCOVERY_SERVER: http://discovery:8761/eureka
-      DATASOURCE_URL: jdbc:mysql://mysql:3306/auth_service?useUnicode=true&serverTimezone=UTC
+      DATASOURCE_URL: jdbc:mysql://mysql:3306/auth_service?createDatabaseIfNotExist=true&useUnicode=true&serverTimezone=UTC
     restart: on-failure
     depends_on:
       - config
@@ -84,7 +92,7 @@ services:
 #    environment:
 #      CONFIG_SERVER: http://config:8888
 #      DISCOVERY_SERVER: http://discovery:8761/eureka
-#      DATASOURCE_URL: jdbc:mysql://mysql:3306/song_service?useUnicode=true&serverTimezone=UTC
+#      DATASOURCE_URL: jdbc:mysql://mysql:3306/song_service?createDatabaseIfNotExist=true&useUnicode=true&serverTimezone=UTC
 #      ACTIVEMQ: tcp://activemq:61616
 #    restart: on-failure
 #    depends_on:
@@ -120,20 +128,9 @@ services:
 #    environment:
 #      CONFIG_SERVER: http://config:8888
 #      DISCOVERY_SERVER: http://discovery:8761/eureka
-#      DATASOURCE_URL: jdbc:mysql://mysql:3306/play_service?useUnicode=true&serverTimezone=UTC
+#      DATASOURCE_URL: jdbc:mysql://mysql:3306/play_service?createDatabaseIfNotExist=true&useUnicode=true&serverTimezone=UTC
 #    restart: on-failure
 #    depends_on:
 #      - config
 #      - mysql
 
-#  gateway:
-#    build: ./gateway
-#    environment:
-#      CONFIG_SERVER: http://config:8888
-#      DISCOVERY_SERVER: http://discovery:8761/eureka
-#    restart: on-failure
-#    ports:
-#      - 8080:8080
-#    depends_on:
-#      - config
-##      - auth-service

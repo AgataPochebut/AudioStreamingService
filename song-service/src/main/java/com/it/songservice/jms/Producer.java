@@ -22,21 +22,29 @@ public class Producer {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    public List<Song> upload(Resource resource) throws JMSException {
-        ObjectMessage receiveMessage = (ObjectMessage) jmsTemplate.sendAndReceive("upl", new MessageCreator() {
-            @Override
-            public Message createMessage(Session session) throws JMSException {
-                try {
-                    ObjectMessage sendMessage = session.createObjectMessage();
-                    sendMessage.setObject(resource);
-                    sendMessage.setJMSCorrelationID(RandomStringUtils.randomAscii(24));
-                    return sendMessage;
-                } catch (Exception e) {
-                    return null;
+    public List<Song> upload(Resource resource) throws Exception {
+        try {
+            ObjectMessage receiveMessage = (ObjectMessage) jmsTemplate.sendAndReceive("upl", new MessageCreator() {
+                @Override
+                public Message createMessage(Session session) throws JMSException {
+                    try {
+                        ObjectMessage sendMessage = session.createObjectMessage();
+                        sendMessage.setObject(resource);
+                        sendMessage.setJMSCorrelationID(RandomStringUtils.randomAscii(24));
+                        return sendMessage;
+                    } catch (Exception e) {
+                        return null;
+                    }
                 }
+            });
+            Object result = receiveMessage.getObject();
+            if (result != null) {
+                return (List<Song>) result;
             }
-        });
-        List<Song> result = (List<Song>)receiveMessage.getObject();
-        return result;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
+        throw new Exception("JMS");
     }
 }

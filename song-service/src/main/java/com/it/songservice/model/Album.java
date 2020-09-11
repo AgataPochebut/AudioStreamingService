@@ -35,5 +35,6 @@ public class Album extends BaseEntity {
 
     @ElementCollection
     @CollectionTable(name = "notes", joinColumns = @JoinColumn(name = "source_id"))
+    @Column(name = "note")
     private Set<String> notes;
 }
