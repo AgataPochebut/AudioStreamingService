@@ -1,12 +1,11 @@
 package com.it.songservice;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.it.songservice.dto.response.SongResponseDto;
 import com.it.songservice.model.Song;
 import com.it.songservice.service.repository.SongRepositoryService;
-import com.it.songservice.service.storage.resource.ResourceStorageServiceManager;
 import com.it.songservice.service.storage.song.SongStorageService;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.dozer.Mapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +27,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,7 +35,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest//("storage.type=S3")
+@SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 @Transactional
 @DirtiesContext
@@ -54,9 +52,6 @@ public class SongIntegrationTest {
 
     @Autowired
     private SongStorageService storageService;
-
-    @Autowired
-    private ResourceStorageServiceManager resourceStorageServiceManager;
 
     @Autowired
     private Mapper mapper;
@@ -86,16 +81,12 @@ public class SongIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-//        int count1 = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), List.class).size();
-//        int count2 = repositoryService.findAll().size();
-//        assertThat(count1).isEqualTo(count2);
+        List<SongResponseDto> list = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<List<SongResponseDto>>(){});
+        assertThat(list.size()).isEqualTo(repositoryService.findAll().size());
 
-        List<SongResponseDto> list1 = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<List<SongResponseDto>>(){});
-        List<SongResponseDto> list2 = repositoryService.findAll()
-                .stream()
-                .map(i->mapper.map(i, SongResponseDto.class))
-                .collect(Collectors.toList());
-        org.hamcrest.MatcherAssert.assertThat(list1, org.hamcrest.Matchers.containsInAnyOrder(list2));
+        for(SongResponseDto dto : list) {
+            assertThat(dto).isEqualTo(mapper.map(repositoryService.findById(dto.getId()), SongResponseDto.class));
+        }
     }
 
     @Test
@@ -126,6 +117,8 @@ public class SongIntegrationTest {
         Song song = repositoryService.findById(1L);
         assertThat(source.contentLength()).isEqualTo(song.getResource().getSize());
         assertThat(DigestUtils.md5Hex(source.getInputStream())).isEqualTo(song.getResource().getChecksum());
+
+        storageService.delete(song);
     }
 
     @Test
@@ -143,11 +136,13 @@ public class SongIntegrationTest {
 
         Song song = repositoryService.findById(dto.getId());
         assertThat(storageService.exist(song)).isTrue();
+
+        storageService.delete(song);
     }
 
     @Test
     void uploadZip() throws Exception {
-        org.springframework.core.io.Resource source = new FileSystemResource("src/test/resources/Архив ZIP.zip");
+        org.springframework.core.io.Resource source = new FileSystemResource("src/test/resources/Archive.zip");
         MockMultipartFile mockMultipartFile = new MockMultipartFile("data", source.getFilename(), "multipart/form-data", source.getInputStream());
         MvcResult mvcResult = this.mockMvc.perform(multipart("/songs/zip")
                 .file(mockMultipartFile)
@@ -155,12 +150,14 @@ public class SongIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<SongResponseDto> dto_list = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<List<SongResponseDto>>(){});
-        for(SongResponseDto dto : dto_list) {
+        List<SongResponseDto> list = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<List<SongResponseDto>>(){});
+        for(SongResponseDto dto : list) {
             assertThat(repositoryService.existById(dto.getId())).isTrue();
 
             Song song = repositoryService.findById(dto.getId());
             assertThat(storageService.exist(song)).isTrue();
+
+            storageService.delete(song);
         }
     }
 

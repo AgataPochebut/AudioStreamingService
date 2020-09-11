@@ -22,6 +22,8 @@ public class ResourceStorageDecoratorFactory {
             return new ResourceIORetryDecorator(service);
         } else if (ResourceDBDecorator.class.equals(clazz)) {
             return new ResourceDBDecorator(service, resourceRepositoryService);
+        } else if (ResourceDedupingDecorator.class.equals(clazz)) {
+            return new ResourceDedupingDecorator(service, resourceRepositoryService);
         } else if (ResourceCacheDecorator.class.equals(clazz)) {
             return new ResourceCacheDecorator(service, cacheManager);
         }

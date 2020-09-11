@@ -1,12 +1,10 @@
 package com.it.songservice.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.it.songservice.configuration.MappingConfiguration;
-import com.it.songservice.jms.Producer;
 import com.it.songservice.model.Song;
 import com.it.songservice.service.repository.SongRepositoryService;
-import com.it.songservice.service.storage.resource.ResourceStorageServiceManager;
 import com.it.songservice.service.storage.song.SongStorageService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
@@ -47,12 +45,6 @@ class SongControllerTest {
 
     @MockBean
     private SongStorageService storageService;
-
-    @MockBean
-    private ResourceStorageServiceManager resourceStorageServiceManager;
-
-    @MockBean
-    private Producer producer;
 
     @Test
     public void getAll() throws Exception {

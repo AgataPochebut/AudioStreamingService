@@ -1,8 +1,9 @@
 package com.it.songservice.service.storage.resource.decorator;
 
+import com.it.songservice.exception.DeleteException;
+import com.it.songservice.exception.UploadException;
 import com.it.songservice.model.Resource;
 import com.it.songservice.service.storage.resource.ResourceStorageService;
-import org.springframework.context.ApplicationContext;
 
 public class ResourceIORetryDecorator extends ResourceStorageDecorator {
 
@@ -10,43 +11,40 @@ public class ResourceIORetryDecorator extends ResourceStorageDecorator {
         super(storageService);
     }
 
-    public ResourceIORetryDecorator(ResourceStorageService storageService, ApplicationContext context) {
-        super(storageService);
-    }
-
     @Override
     public Resource upload(org.springframework.core.io.Resource source, String name) throws Exception {
-        Resource resource = null;
         int count = 0;
-        while (resource==null)
+        while (count<3)
         {
-            if(count>=3) throw new Exception("Can't upload file");
-
             try {
-                resource = super.upload(source, name);
+                return super.upload(source, name);
             }
             catch (Exception e) {
-                System.out.println(e.getMessage());
+
             }
             count++;
         }
-        return resource;
+
+        throw new UploadException("IO");
     }
 
     @Override
     public void delete(Resource resource) throws Exception {
         int count = 0;
-        while (super.exist(resource))
+        while (count<3)
         {
-            if(count>=3) throw new Exception("Can't delete file");
-
             try {
                 super.delete(resource);
+                if(!super.exist(resource)) {
+                    return;
+                }
             }
             catch (Exception e) {
-                System.out.println(e.getMessage());
+
             }
             count++;
         }
+
+        throw new DeleteException("IO");
     }
 }

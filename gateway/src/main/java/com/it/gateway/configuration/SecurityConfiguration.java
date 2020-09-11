@@ -5,6 +5,7 @@ import com.it.gateway.feign.auth.AuthServiceClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -47,7 +48,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .introspector(new OpaqueTokenIntrospector() {
                     @Override
                     public OAuth2AuthenticatedPrincipal introspect(String s) {
-                        AuthUser user = (AuthUser) authServiceClient.getUser(s).getBody();
+                        ResponseEntity<AuthUser> response = authServiceClient.getUser(s);
+                        AuthUser user = (AuthUser) response.getBody();
                         return new DefaultOAuth2User(user.getAuthorities(), user.getAttributes(), "name");
                     }
                 })

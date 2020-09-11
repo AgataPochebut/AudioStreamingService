@@ -11,11 +11,11 @@
     <description>Demo project for Spring Boot</description>
 
     <modules>
-<!--        <module>config</module>-->
-<!--        <module>discovery</module>-->
+        <module>config</module>
+        <module>discovery</module>
         <module>common-service</module>
-<!--        <module>gateway</module>-->
-<!--        <module>auth-service</module>-->
+        <module>gateway</module>
+        <module>auth-service</module>
         <module>song-service</module>
 <!--        <module>conversion-service</module>-->
 <!--        <module>search-service</module>-->

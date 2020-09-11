@@ -1,5 +1,6 @@
 package com.it.songservice.service.storage.resource;
 
+import com.it.songservice.exception.DownloadException;
 import com.it.songservice.model.Resource;
 import com.it.songservice.model.StorageTypes;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,41 +24,18 @@ public class ResourceStorageServiceManager {
 
     public Resource upload(org.springframework.core.io.Resource source, String name) throws Exception {
         ResourceStorageService provider = providers.get(StorageTypes.valueOf(storageType));
-
-        Resource result = null;
-
-        try {
-            result = provider.upload(source, name);
-
-            if (result != null) {
-                return result;
-            }
-        } catch (Exception e) {
-
-        }
-        throw new Exception("lalala");
+        return provider.upload(source, name);
     }
 
     public org.springframework.core.io.Resource download(Resource resource) throws Exception {
-
-        org.springframework.core.io.Resource result = null;
-
         for (ResourceStorageService provider : providers.values()) {
             if (!provider.supports(resource.getClass())) {
                 continue;
             }
-
-            try {
-                result = provider.download(resource);
-
-                if (result != null) {
-                    return result;
-                }
-            } catch (Exception e) {
-
-            }
+            return provider.download(resource);
         }
-        throw new Exception("lalala");
+
+        throw new DownloadException("No siutable service");
     }
 
     public void delete(Resource resource) throws Exception{
@@ -65,38 +43,23 @@ public class ResourceStorageServiceManager {
             if (!provider.supports(resource.getClass())) {
                 continue;
             }
-
-            try {
-                if (provider.exist(resource)) {
-                    provider.delete(resource);
-                    return;
-                }
-            } catch (Exception e) {
-
+            provider.delete(resource);
+            if(!provider.exist(resource)) {
+                return;
             }
         }
-        throw new Exception("lalala");
+
+        throw new Exception("No siutable service");
     }
 
-    public boolean exist(Resource resource) {
-        boolean result = false;
-
+    public boolean exist(Resource resource) throws Exception {
         for (ResourceStorageService provider : providers.values()) {
             if (!provider.supports(resource.getClass())) {
                 continue;
             }
-
-            try {
-                result = provider.exist(resource);
-
-                if (result) {
-                    return result;
-                }
-            } catch (Exception e) {
-
-            }
+            return provider.exist(resource);
         }
-        return result;
+        throw new Exception("No siutable service");
     }
 
 }

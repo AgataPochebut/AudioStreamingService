@@ -29,9 +29,3 @@ fs:
 
 storage:
   type: FS
-
-java:
-  nio:
-    file:
-      spi:
-        DefaultFileSystemProvider: com.google.common.jimfs.JimfsFileSystemProvider

@@ -26,10 +26,9 @@ public class User extends BaseEntity {
 
     @NotNull
     @NotEmpty
-    @ElementCollection
     @Enumerated(EnumType.STRING)
-    @JoinTable(name = "User_Role",
-            joinColumns = {@JoinColumn(name = "user_id")})
+    @ElementCollection
+    @CollectionTable(name = "User_Role", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role", nullable = false)
     private Set<Role> roles;
 }
