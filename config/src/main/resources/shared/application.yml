@@ -2,17 +2,6 @@ spring:
   profiles:
     active: prod
 
-  security:
-    oauth2:
-      client:
-        registration:
-          #          github:
-          #            client-id: ce89d42158976382da5d
-          #            client-secret: 3ce85c167dc11f88110d23de46c38c254cdd38d9
-          google:
-            client-id: 696075587142-1aoemai0pdblm3tdqqujkm9blo4h1eoi.apps.googleusercontent.com
-            client-secret: cYunCGV91wrv7KI2M3a31LxS
-
   activemq:
     broker-url: ${ACTIVEMQ:tcp://localhost:61616}
     user: admin

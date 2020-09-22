@@ -6,3 +6,7 @@ server:
 eureka:
   client:
     enabled: false
+
+spring:
+  profiles:
+    active: test

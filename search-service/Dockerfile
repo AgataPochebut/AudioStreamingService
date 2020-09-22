@@ -1,4 +1,7 @@
 FROM openjdk:11
 
-ADD ./target/search-service.jar /app/
-CMD ["java", "-Xmx200m", "-jar", "/app/search-service.jar"]
+COPY ./wait-for-it.sh wait-for-it.sh
+RUN chmod +x /wait-for-it.sh
+
+ADD ./target/search-service.jar app.jar
+ENTRYPOINT ["java", "-jar", "/app.jar"]

@@ -1,10 +1,10 @@
 package com.it.songservice.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.it.songservice.configuration.MappingConfiguration;
 import com.it.songservice.dto.request.GenreRequestDto;
 import com.it.songservice.model.Genre;
 import com.it.songservice.service.repository.GenreRepositoryService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = GenreController.class)
+@WebMvcTest(properties = {"feign.hystrix.enabled=false"}, controllers = GenreController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ImportAutoConfiguration({RibbonAutoConfiguration.class, FeignRibbonClientAutoConfiguration.class, FeignAutoConfiguration.class})
 @Import({MappingConfiguration.class})
@@ -43,7 +43,7 @@ class GenreControllerTest {
     private GenreRepositoryService repositoryService;
 
     @Test
-    public void getAllShouldReturnOK() throws Exception {
+    public void getAll() throws Exception {
         when(repositoryService.findAll()).thenReturn(Arrays.asList());
         mockMvc.perform(get("/genres"))
                 .andExpect(status().isOk());
@@ -79,7 +79,7 @@ class GenreControllerTest {
     }
 
     @Test
-    void saveShouldReturnOK() throws Exception {
+    void save() throws Exception {
         final GenreRequestDto dto = new GenreRequestDto();
         dto.setName("test");
         when(repositoryService.save(any(Genre.class))).then(returnsFirstArg());
@@ -90,7 +90,7 @@ class GenreControllerTest {
     }
 
     @Test
-    void updateShouldReturnOK() throws Exception {
+    void update() throws Exception {
         final GenreRequestDto dto = new GenreRequestDto();
         dto.setName("test");
         when(repositoryService.update(any(Genre.class))).then(returnsFirstArg());
@@ -101,7 +101,7 @@ class GenreControllerTest {
     }
 
     @Test
-    void deleteShouldReturnOK() throws Exception {
+    void deleteById() throws Exception {
         doNothing().when(repositoryService).deleteById(any());
         this.mockMvc.perform(delete("/genres/{id}", 1L))
                 .andExpect(status().isOk());

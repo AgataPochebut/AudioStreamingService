@@ -1,0 +1,12 @@
+server:
+  port: 0
+  servlet:
+    context-path: /
+
+eureka:
+  client:
+    enabled: false
+
+spring:
+  profiles:
+    active: test

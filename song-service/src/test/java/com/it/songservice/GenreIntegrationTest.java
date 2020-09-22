@@ -62,9 +62,8 @@ class GenreIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Genre obj1 = mapper.map(objectMapper.readValue(mvcResult.getResponse().getContentAsString(), GenreResponseDto.class), Genre.class);
-        Genre obj2 = repositoryService.findById(1L);
-        assertThat(obj1).isEqualTo(obj2);
+        GenreResponseDto dto = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), GenreResponseDto.class);
+        assertThat(dto).isEqualTo(mapper.map(repositoryService.findById(1L), GenreResponseDto.class));
     }
 
     @Test
@@ -78,16 +77,15 @@ class GenreIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Genre obj1 = mapper.map(objectMapper.readValue(mvcResult.getResponse().getContentAsString(), GenreResponseDto.class), Genre.class);
-        assertThat(obj1.getName()).isEqualTo(dto.getName());
-        Genre obj2 = repositoryService.findByName("test_new");
-        assertThat(obj2).isEqualTo(obj1);
+        GenreResponseDto responseDto = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), GenreResponseDto.class);
+        Genre obj = repositoryService.findById(responseDto.getId());
+        assertThat(obj.getName()).isEqualTo(dto.getName());
     }
 
     @Test
     void update() throws Exception {
         GenreRequestDto dto = new GenreRequestDto();
-        dto.setName("test_new");
+        dto.setName("test_upd");
 
         MvcResult mvcResult = this.mockMvc.perform(put("/genres/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -95,10 +93,9 @@ class GenreIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Genre obj1 = mapper.map(objectMapper.readValue(mvcResult.getResponse().getContentAsString(), GenreResponseDto.class), Genre.class);
-        assertThat(obj1.getName()).isEqualTo(dto.getName());
-        Genre obj2 = repositoryService.findById(1L);
-        assertThat(obj2).isEqualTo(obj1);
+        GenreResponseDto responseDto = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), GenreResponseDto.class);
+        Genre obj = repositoryService.findById(1L);
+        assertThat(obj.getName()).isEqualTo(dto.getName());
     }
 
     @Test

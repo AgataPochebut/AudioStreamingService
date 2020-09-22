@@ -1,0 +1,27 @@
+server:
+  port: 0
+  servlet:
+    context-path: /
+
+spring:
+  profiles:
+    active: test
+
+eureka:
+  client:
+    enabled: false
+
+feign:
+  hystrix:
+    enabled: true
+
+s3:
+  defaultBucket: files
+  tempBucket: temp
+
+fs:
+  defaultFolder: /Java/files
+  tempFolder: /Java/temp
+
+storage:
+  type: FS

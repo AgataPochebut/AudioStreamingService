@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
-import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 
 @Configuration
 @EnableWebSecurity
@@ -29,9 +28,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint()) //check auth //when introspector failed
-                .and()
                 .oauth2ResourceServer()
                 .opaqueToken()
                 .introspector(new OpaqueTokenIntrospector() {
@@ -44,4 +40,3 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         ;
     }
 }
-

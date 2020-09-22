@@ -77,7 +77,7 @@ class GenreRepositoryTest {
     @Test
     void update() throws Exception {
         Genre obj = new Genre();
-        obj.setName("test_new");
+        obj.setName("test_upd");
         obj.setId(1L);
         repository.save(obj);
         Genre obj1 = repository.findById(1L).orElse(null);

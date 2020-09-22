@@ -20,7 +20,7 @@ feign:
     enabled: true
 
 s3:
-  defaultBucket: filestest
+  defaultBucket: files
   tempBucket: temp
 
 fs:

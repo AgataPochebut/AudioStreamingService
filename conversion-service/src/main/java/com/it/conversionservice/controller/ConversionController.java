@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -28,17 +28,12 @@ public class ConversionController {
     // Content type 'multipart/form-data;boundary
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public ResponseEntity<Resource> convert(@RequestParam("data") MultipartFile multipartFile, @RequestParam("format") String format) throws Exception {
-
         Resource source = multipartFile.getResource();
         String name = multipartFile.getOriginalFilename();
-
+        Files.copy(source.getInputStream(), Paths.get(defaultBaseFolder, name));
         File file = new File(defaultBaseFolder, name);
-        file.getParentFile().mkdirs();
-        FileCopyUtils.copy(source.getInputStream(), new FileOutputStream(file));
 
-        //convert. save new
         File file1 = conversionService.convert(file, format);
-
         Resource source1 = new FileSystemResource(file1);
         String name1 = file1.getName();
 

@@ -10,7 +10,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableDiscoveryClient
 @EnableFeignClients
 @EnableZuulProxy
-//todo
+//to do
 //@EnableHystrix
 //@EnableHystrixDashboard
 public class GatewayApplication {
