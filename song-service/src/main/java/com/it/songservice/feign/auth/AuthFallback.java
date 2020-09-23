@@ -18,6 +18,6 @@ public class AuthFallback implements AuthServiceClient {
     public ResponseEntity<AuthUser> getUser(String s) {
         String errorMessage = throwable.getMessage();
         log.error(errorMessage, throwable);
-        return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(throwable, HttpStatus.BAD_REQUEST);
     }
 }

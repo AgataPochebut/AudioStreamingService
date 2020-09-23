@@ -4,12 +4,12 @@ import com.it.authservice.feign.auth.AuthServiceClient;
 import com.it.commonservice.model.auth.AuthUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
-import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
 
 @Configuration
 @EnableWebSecurity
@@ -30,12 +30,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .oauth2ResourceServer()
                 .opaqueToken()
-                .introspector(new OpaqueTokenIntrospector() {
-                    @Override
-                    public OAuth2AuthenticatedPrincipal introspect(String s) {
-                        AuthUser user = (AuthUser) authServiceClient.getUser(s).getBody();
+                .introspector(token -> {
+                    ResponseEntity response = authServiceClient.getUser(token);
+                    if (response.getStatusCode().is2xxSuccessful()) {
+                        AuthUser user = (AuthUser) response.getBody();
                         return user;
                     }
+                    Throwable throwable = (Throwable) response.getBody();
+                    throw new AuthenticationServiceException(throwable.getCause().getMessage(), throwable);
                 })
         ;
     }

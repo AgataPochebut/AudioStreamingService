@@ -11,7 +11,7 @@ spring:
           google:
             client-id: 696075587142-1aoemai0pdblm3tdqqujkm9blo4h1eoi.apps.googleusercontent.com
             client-secret: cYunCGV91wrv7KI2M3a31LxS
-            redirect-uri: ${REDIRECT_URI:http://localhost:8080/login/oauth2/code/google}
+#            redirect-uri: ${REDIRECT_URI:http://localhost:8080/login/oauth2/code/google}
 
 zuul:
   sensitiveHeaders: Cookie, Set-Cookie

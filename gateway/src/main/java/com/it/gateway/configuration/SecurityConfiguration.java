@@ -5,13 +5,14 @@ import com.it.gateway.feign.auth.AuthServiceClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 
 @Configuration
 @EnableWebSecurity
@@ -21,8 +22,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthServiceClient authServiceClient;
 
-    //no token->bearertokenfilter->LoginUrlAuthenticationEntryPoint->OidcServise->AuthService->if error->try 5-6 times
-    //token->bearertokenfilter->interceptor->if error->BearerTokenAuthenticationEntryPoint
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -32,23 +31,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //                .mvcMatchers("/").permitAll()
                 .mvcMatchers("/ui**").permitAll()
                 .anyRequest().authenticated()
-                //no token
                 .and()
                 .oauth2Login()
-                //token
-                .and()
-                .oauth2ResourceServer()
-                .opaqueToken()
-                .introspector(new OpaqueTokenIntrospector() {
-                    @Override
-                    public OAuth2AuthenticatedPrincipal introspect(String s) {
-                        ResponseEntity<?> response = authServiceClient.getUser(s);
-//                        if(!response.getStatusCode().is2xxSuccessful()) {
-//                            throw new Exception("Login");
-//                        }
+                .userInfoEndpoint()
+                .oidcUserService(userRequest -> {
+                    OAuth2AccessToken accessToken = userRequest.getAccessToken();
+                    String token = accessToken.getTokenValue();
+                    ResponseEntity response = authServiceClient.getUser(token);
+                    if (response.getStatusCode().is2xxSuccessful()) {
                         AuthUser user = (AuthUser) response.getBody();
-                        return new DefaultOAuth2User(user.getAuthorities(), user.getAttributes(), "name");
+                        return new DefaultOidcUser(user.getAuthorities(), userRequest.getIdToken(), new OidcUserInfo(user.getAttributes()), "name");
                     }
+                    Throwable throwable = (Throwable) response.getBody();
+                    throw new AuthenticationServiceException(throwable.getCause().getMessage(), throwable);
                 })
         ;
     }
