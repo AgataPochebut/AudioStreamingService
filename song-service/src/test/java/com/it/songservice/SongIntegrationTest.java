@@ -7,7 +7,6 @@ import com.it.songservice.model.Song;
 import com.it.songservice.service.repository.SongRepositoryService;
 import com.it.songservice.service.storage.song.SongStorageService;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.dozer.Mapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,9 +47,6 @@ public class SongIntegrationTest {
 
     @Autowired
     private SongStorageService storageService;
-
-    @Autowired
-    private Mapper mapper;
 
     @BeforeEach
     void before() throws Exception {
