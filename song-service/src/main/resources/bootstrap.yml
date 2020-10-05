@@ -6,3 +6,16 @@ spring:
     config:
       fail-fast: true
       uri: ${CONFIG_SERVER:http://localhost:8888}
+
+#logging:
+#  file:
+#    name: song-service.log
+#    path: /Java/logs
+#  pattern:
+#    file: "%-4relative [%thread] %-5level %logger{35} - %msg%n"
+#    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+#  level:
+#    - debug
+##    - ".=info"
+##    - "com.memorynotfound=debug"
+##    - "org.springframework=info"

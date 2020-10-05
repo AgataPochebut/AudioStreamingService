@@ -20,7 +20,6 @@ public class ResourceDedupingDecorator extends ResourceStorageDecorator {
         if (repositoryService.findByChecksum(DigestUtils.md5Hex(source.getInputStream())) == null) {
             return super.upload(source, name);
         }
-
-        throw new UploadException("Deduping");
+        throw new UploadException("Deduping exc in " + name);
     }
 }

@@ -22,6 +22,9 @@
         <swagger>2.9.2</swagger>
         <lombok>1.18.12</lombok>
         <hibernate.validator>6.0.16.Final</hibernate.validator>
+        <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
+        <org.projectlombok.version>1.18.2</org.projectlombok.version>
+        <org.apache.maven.plugins.version>3.6.0</org.apache.maven.plugins.version>
     </properties>
 
     <dependencyManagement>
@@ -64,6 +67,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-activemq</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-broker</artifactId>
         </dependency>
 
         <dependency>
@@ -222,12 +229,23 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.jimfs</groupId>
-            <artifactId>jimfs</artifactId>
-            <version>1.1</version>
-            <scope>test</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.google.jimfs</groupId>-->
+<!--            <artifactId>jimfs</artifactId>-->
+<!--            <version>1.1</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.projectlombok</groupId>-->
+<!--            <artifactId>lombok</artifactId>-->
+<!--            <version>${org.projectlombok.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.mapstruct</groupId>-->
+<!--            <artifactId>mapstruct-jdk8</artifactId>-->
+<!--            <version>${org.mapstruct.version}</version>-->
+<!--        </dependency>-->
 
     </dependencies>
 
@@ -235,6 +253,32 @@
         <finalName>song-service</finalName>
 
         <plugins>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-compiler-plugin</artifactId>-->
+<!--                <version>${org.apache.maven.plugins.version}</version>-->
+<!--                <configuration>-->
+<!--                    <source>${java.version}</source>-->
+<!--                    <target>${java.version}</target>-->
+<!--                    <annotationProcessorPaths>-->
+<!--&lt;!&ndash;                        <path>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <groupId>org.projectlombok</groupId>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <artifactId>lombok</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <version>${org.projectlombok.version}</version>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </path>&ndash;&gt;-->
+<!--                        <path>-->
+<!--                            <groupId>org.mapstruct</groupId>-->
+<!--                            <artifactId>mapstruct-processor</artifactId>-->
+<!--                            <version>${org.mapstruct.version}</version>-->
+<!--                        </path>-->
+<!--                    </annotationProcessorPaths>-->
+<!--                    <compilerArgs>-->
+<!--                        <arg>-Amapstruct.suppressGeneratorTimestamp=true</arg>-->
+<!--                        <arg>-Amapstruct.defaultComponentModel=spring</arg>-->
+<!--                    </compilerArgs>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

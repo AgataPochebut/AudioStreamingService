@@ -2,10 +2,16 @@ package com.it.songservice.service.repository;
 
 import com.it.songservice.repository.GenericRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
-public class GenericRepositoryServiceImpl<T,U> implements GenericRepositoryService<T, U> {
+@Transactional
+public abstract class GenericRepositoryServiceImpl<T,U> implements GenericRepositoryService<T, U> {
+
+    @Autowired
+    private EntityManager em;
 
     @Autowired
     private GenericRepository<T,U> repository;
@@ -22,7 +28,8 @@ public class GenericRepositoryServiceImpl<T,U> implements GenericRepositoryServi
 
     @Override
     public T save(T entity) throws Exception {
-        return repository.save(entity);
+//        return repository.save(entity);
+        return em.merge(entity);
     }
 
     @Override

@@ -13,6 +13,7 @@ public class ResourceIORetryDecorator extends ResourceStorageDecorator {
 
     @Override
     public Resource upload(org.springframework.core.io.Resource source, String name) throws Exception {
+        Throwable lastException = null;
         int count = 0;
         while (count<3)
         {
@@ -20,12 +21,11 @@ public class ResourceIORetryDecorator extends ResourceStorageDecorator {
                 return super.upload(source, name);
             }
             catch (Exception e) {
-
+                lastException = e;
             }
             count++;
         }
-
-        throw new UploadException("IO");
+        throw new UploadException("IO exc in "+ name, lastException);
     }
 
     @Override

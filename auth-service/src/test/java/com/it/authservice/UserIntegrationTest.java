@@ -1,11 +1,11 @@
 package com.it.authservice;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.it.authservice.dto.request.UserRequestDto;
 import com.it.authservice.dto.response.UserResponseDto;
 import com.it.authservice.model.Role;
 import com.it.authservice.model.User;
 import com.it.authservice.service.repository.UserRepositoryService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.dozer.Mapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

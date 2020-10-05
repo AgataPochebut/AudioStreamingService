@@ -1,10 +1,10 @@
 package com.it.songservice.jms;
 
+import com.it.songservice.exception.UploadException;
 import com.it.songservice.model.Resource;
 import com.it.songservice.model.Song;
 import com.it.songservice.service.storage.resource.ResourceStorageServiceManager;
 import com.it.songservice.service.storage.song.SongStorageService;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 @Component
-@Slf4j
 public class Consumer {
 
     @Autowired
@@ -42,7 +41,7 @@ public class Consumer {
     @Async
     public void upload(ObjectMessage message) throws Exception {
         Resource resource = (Resource) message.getObject();
-        List<Song> result = uploadZip(resource);
+        Object result = uploadZip(resource);
 
         jmsTemplate.send(message.getJMSReplyTo(), new MessageCreator() {
             @Override
@@ -58,19 +57,19 @@ public class Consumer {
         });
     }
 
-    public List<Song> uploadZip(Resource resource) throws Exception {
+    public Object uploadZip(Resource resource) throws Exception {
         final List<Song> list = new ArrayList<>();
 
+        Throwable lastException;
         try {
             org.springframework.core.io.Resource source = resourceStorageServiceManager.download(resource);
-            String name = resource.getName();
             ZipInputStream zin = new ZipInputStream(source.getInputStream());
             ZipEntry entry;
             while ((entry = zin.getNextEntry()) != null) {
                 if (!entry.isDirectory()) {
                     byte[] content = IOUtils.toByteArray(zin);
                     org.springframework.core.io.Resource source1 = new ByteArrayResource(content);
-                    String name1 = entry.getName();
+                    String name1 = FilenameUtils.getName(entry.getName());
                     if (FilenameUtils.getExtension(name1).equals("zip")) {
                         list.addAll(songStorageService.uploadZip(source1, name1));
                     } else {
@@ -85,8 +84,9 @@ public class Consumer {
             for (Song i : list) {
                 songStorageService.delete(i);
             }
-            return null;
+            lastException = e;
         }
+        return new UploadException("Zip exc in " + resource.getName(), lastException);
     }
 
 }

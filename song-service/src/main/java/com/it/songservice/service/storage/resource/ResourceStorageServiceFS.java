@@ -34,6 +34,7 @@ public class ResourceStorageServiceFS implements ResourceStorageService<FSResour
             key = FilenameUtils.removeExtension(name) + " ("+ count + ")" + "." + FilenameUtils.getExtension(name);
         }
 
+        Files.createDirectories(Paths.get(defaultBaseFolder, key).getParent());
         Files.copy(source.getInputStream(), Paths.get(defaultBaseFolder, key));
 
         FSResource resource = new FSResource();

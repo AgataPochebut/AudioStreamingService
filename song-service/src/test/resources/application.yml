@@ -8,6 +8,9 @@ spring:
     active: test
 
   activemq:
+    broker-url: vm://embedded?broker.persistent=false,useShutdownHook=false
+    in-memory: true
+    non-blocking-redelivery: true
     packages:
       trust-all: true
 
@@ -29,3 +32,4 @@ fs:
 
 storage:
   type: FS
+

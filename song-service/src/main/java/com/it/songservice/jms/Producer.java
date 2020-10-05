@@ -1,5 +1,6 @@
 package com.it.songservice.jms;
 
+import com.it.songservice.exception.UploadException;
 import com.it.songservice.model.Resource;
 import com.it.songservice.model.Song;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ public class Producer {
     private JmsTemplate jmsTemplate;
 
     public List<Song> upload(Resource resource) throws Exception {
+        Throwable lastException;
         try {
             ObjectMessage receiveMessage = (ObjectMessage) jmsTemplate.sendAndReceive("upl", new MessageCreator() {
                 @Override
@@ -37,14 +39,19 @@ public class Producer {
                     }
                 }
             });
-            Object result = receiveMessage.getObject();
-            if (result != null) {
-                return (List<Song>) result;
-            }
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
 
-        throw new Exception("JMS");
+            if (receiveMessage == null) {
+                throw new UploadException("Nothing is upload");
+            }
+
+            if (receiveMessage.getObject() instanceof Exception) {
+                throw (Exception) receiveMessage.getObject();
+            }
+
+            return (List<Song>)receiveMessage.getObject();
+        } catch (Exception e) {
+            lastException = e;
+        }
+        throw new UploadException("JMS exc in " + resource.getName(), lastException);
     }
 }

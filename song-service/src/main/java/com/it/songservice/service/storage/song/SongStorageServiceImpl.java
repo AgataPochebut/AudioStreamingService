@@ -22,22 +22,20 @@ public class SongStorageServiceImpl implements SongStorageService {
     public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
         Resource resource = resourceStorageServiceManager.upload(source, name);
 
-        Song entity = new Song();
-        entity.setResource(resource);
-        return entity;
+        return Song.builder()
+            .resource(resource)
+            .build();
     }
 
     @Override
     public List<Song> uploadZip(org.springframework.core.io.Resource source, String name) throws Exception {
         Resource resource = resourceStorageServiceManager.upload(source, name);
 
-        List<Song> list = null;
         try {
-            list = producer.upload(resource);
+            return producer.upload(resource);
         } finally {
             resourceStorageServiceManager.delete(resource);
         }
-        return list;
     }
 
     @Override

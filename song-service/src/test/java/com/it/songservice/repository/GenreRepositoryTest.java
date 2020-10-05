@@ -69,6 +69,7 @@ class GenreRepositoryTest {
         Genre obj = new Genre();
         obj.setName("test_new");
         repository.save(obj);
+
         Genre obj1 = repository.findByName("test_new").orElse(null);
         assertThat(obj1).isNotNull();
         assertThat(obj1.getName()).isEqualTo(obj.getName());
@@ -80,6 +81,7 @@ class GenreRepositoryTest {
         obj.setName("test_upd");
         obj.setId(1L);
         repository.save(obj);
+
         Genre obj1 = repository.findById(1L).orElse(null);
         assertThat(obj1).isNotNull();
         assertThat(obj1).isEqualTo(obj);

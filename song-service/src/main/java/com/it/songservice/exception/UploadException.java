@@ -6,4 +6,8 @@ public class UploadException extends Exception {
         super(errorMessage);
     }
 
+    public UploadException(String errorMessage, Throwable cause) {
+        super(errorMessage, cause);
+    }
+
 }

@@ -17,8 +17,8 @@
         <module>gateway</module>
         <module>auth-service</module>
         <module>song-service</module>
-        <module>play-service</module>
-        <module>conversion-service</module>
+<!--        <module>play-service</module>-->
+<!--        <module>conversion-service</module>-->
         <!--        <module>search-service</module>-->
     </modules>
 

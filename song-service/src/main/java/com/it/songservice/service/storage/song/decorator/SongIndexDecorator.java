@@ -18,20 +18,21 @@ public class SongIndexDecorator extends SongStorageDecorator {
     public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
         Song entity = super.upload(source, name);
 
+        Throwable lastException;
         try {
             indexClient.save(entity);
             return entity;
         }
         catch (Exception e){
             super.delete(entity);
+            lastException = e;
         }
-        throw new UploadException("ES");
+        throw new UploadException("ES exc in "+ name, lastException);
     }
 
     @Override
     public void delete(Song entity) throws Exception {
         indexClient.delete(entity.getId());
-
         super.delete(entity);
     }
 }

@@ -30,6 +30,7 @@ public class SongMetadataDecorator extends SongStorageDecorator {
     public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
         Song entity = super.upload(source, name);
 
+        Throwable lastException;
         try {
             InputStream input = source.getInputStream();
             ContentHandler handler = new DefaultHandler();
@@ -79,14 +80,14 @@ public class SongMetadataDecorator extends SongStorageDecorator {
             entity.setAlbum(entity1.getAlbum());
             entity.setTitle(entity1.getTitle());
             entity.setYear(entity1.getYear());
-            entity.setNotes(entity1.getNotes());
+//            entity.setNotes(entity1.getNotes());
             return entity;
         }
         catch (Exception e) {
             super.delete(entity);
+            lastException = e;
         }
-
-        throw new UploadException("Metadata");
+        throw new UploadException("Metadata exc in "+ name, lastException);
     }
 
 }

@@ -20,7 +20,7 @@ public class ConversionServiceImpl implements ConversionService {
     private FFmpegExecutor executor;
 
     public File convert(File file, String format) throws Exception {
-        if(FilenameUtils.getExtension(file.getName()).equals(format)) throw new IncorrectFormatException("The same format");
+        if(FilenameUtils.getExtension(file.getName()).equalsIgnoreCase(format)) throw new IncorrectFormatException("The same format");
 
         String newname = FilenameUtils.removeExtension(file.getName()) + "." + format;
         File newfile = new File(defaultBaseFolder, newname);

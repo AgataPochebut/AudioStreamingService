@@ -2,7 +2,6 @@ package com.it.songservice.converter;
 
 import com.it.songservice.model.Album;
 import com.it.songservice.service.repository.AlbumRepositoryService;
-import lombok.SneakyThrows;
 import org.dozer.CustomConverter;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,26 +29,16 @@ public class AlbumConverter implements CustomConverter {
     public AlbumConverter() {
     }
 
-    @SneakyThrows
     @Override
     public Object convert(Object dest, Object source, Class<?> destinationClass, Class<?> sourceClass) {
-
         if (source == null)
             return null;
-
         else if (source instanceof Map) {
             Map<String, Object> metadataMap = (Map<String, Object>) source;
-
             Album entity = repositoryService.findByTitle((String) metadataMap.get("Title"));
-
             if (entity == null) {
                 entity = mapper.map(metadataMap, Album.class);
-                repositoryService.save(entity);
             }
-            else {
-                entity = mapper.map(entity, Album.class);
-            }
-
             return entity;
         } else if (source instanceof Long) {
             return repositoryService.findById((Long) source);

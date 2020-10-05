@@ -10,7 +10,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.Set;
 
 @Builder
 @Data
@@ -32,12 +31,13 @@ public class Song extends BaseEntity {
     @JoinColumn(name = "resource_id")
     private Resource resource;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE })
     @JoinColumn(name = "album_id")
     private Album album;
 
-    @ElementCollection
-    @CollectionTable(name = "notes", joinColumns = @JoinColumn(name = "source_id"))
-    @Column(name = "note")
-    private Set<String> notes;
+//    @ElementCollection
+//    @CollectionTable(name = "notes", joinColumns = @JoinColumn(name = "source_id"))
+//    @Column(name = "note")
+//    private Set<String> notes;
+
 }

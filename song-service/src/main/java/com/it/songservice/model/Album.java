@@ -27,14 +27,14 @@ public class Album extends BaseEntity {
 
     private Date year;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "Album_Artist",
             joinColumns = {@JoinColumn(name = "album_id")},
             inverseJoinColumns = {@JoinColumn(name = "artist_id")})
     private Set<Artist> artists;
 
-    @ElementCollection
-    @CollectionTable(name = "notes", joinColumns = @JoinColumn(name = "source_id"))
-    @Column(name = "note")
-    private Set<String> notes;
+//    @ElementCollection
+//    @CollectionTable(name = "notes", joinColumns = @JoinColumn(name = "source_id"))
+//    @Column(name = "note")
+//    private Set<String> notes;
 }
