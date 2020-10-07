@@ -9,8 +9,8 @@ spring:
       client:
         registration:
           google:
-            client-id: 696075587142-1aoemai0pdblm3tdqqujkm9blo4h1eoi.apps.googleusercontent.com
-            client-secret: cYunCGV91wrv7KI2M3a31LxS
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
 #            redirect-uri: ${REDIRECT_URI:http://localhost:8080/login/oauth2/code/google}
 
 zuul:
