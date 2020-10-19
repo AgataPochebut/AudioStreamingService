@@ -10,6 +10,7 @@ import com.it.songservice.service.storage.song.decorator.SongMetadataDecorator;
 import java.util.List;
 
 @Decorate(decorations = {SongMetadataDecorator.class, SongDBDecorator.class, SongIndexDecorator.class, SongConversionDecorator.class})
+//@Decorate(decorations = {SongMetadataDecorator.class, SongDBDecorator.class, SongConversionDecorator.class})
 public interface SongStorageService {
 
     Song upload(org.springframework.core.io.Resource source, String name) throws Exception;

@@ -3,10 +3,15 @@ server:
   servlet:
     context-path: /
 
+spring:
+  profiles:
+    active: test
+  elasticsearch:
+    properties:
+      http:
+        enabled: true
+
 eureka:
   client:
     enabled: false
 
-spring:
-  profiles:
-    active: test

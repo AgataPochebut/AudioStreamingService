@@ -14,7 +14,7 @@ public class GenreRepositoryServiceImpl extends GenericRepositoryServiceImpl<Gen
     private GenreRepository repository;
 
     @Override
-    public Genre findByName(String s) {
+public Genre findByName(String s) {
         return repository.findByName(s).orElse(null);
-    }
-}
+        }
+        }

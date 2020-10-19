@@ -1,11 +1,11 @@
 package com.it.songservice;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.it.songservice.dto.response.SongResponseDto;
 import com.it.songservice.model.Song;
 import com.it.songservice.service.repository.SongRepositoryService;
 import com.it.songservice.service.storage.song.SongStorageService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -59,11 +60,11 @@ public class SongIntegrationTest {
 //                        .withBody(Files.readAllBytes(source.getFile().toPath()))));
 //////                        .withBodyFile("HURTS - WONDERFUL LIFE.MP3")));
 
-        stubFor(com.github.tomakehurst.wiremock.client.WireMock.post(urlPathMatching(("/songs")))
+        stubFor(com.github.tomakehurst.wiremock.client.WireMock.post(urlPathMatching(("/index")))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.OK.value())));
 
-        stubFor(com.github.tomakehurst.wiremock.client.WireMock.delete(urlPathMatching(("/songs")))
+        stubFor(com.github.tomakehurst.wiremock.client.WireMock.delete(urlPathMatching(("/delete")))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.OK.value())));
 
@@ -96,24 +97,24 @@ public class SongIntegrationTest {
         assertThat(storageService.exist(song)).isTrue();
     }
 
-    @Test
-    void uploadZip() throws Exception {
-        org.springframework.core.io.Resource source = new FileSystemResource("src/test/resources/Hurts - Exile.zip");
-        MockMultipartFile mockMultipartFile = new MockMultipartFile("data", source.getFilename(), "multipart/form-data", source.getInputStream());
-        MvcResult mvcResult = this.mockMvc.perform(multipart("/songs/zip")
-                .file(mockMultipartFile)
-                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        List<SongResponseDto> list = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<List<SongResponseDto>>(){});
-        for(SongResponseDto dto : list) {
-            assertThat(repositoryService.existById(dto.getId())).isTrue();
-
-            Song song = repositoryService.findById(dto.getId());
-            assertThat(storageService.exist(song)).isTrue();
-        }
-    }
+//    @Test
+//    void uploadZip() throws Exception {
+//        org.springframework.core.io.Resource source = new FileSystemResource("src/test/resources/Hurts - Exile.zip");
+//        MockMultipartFile mockMultipartFile = new MockMultipartFile("data", source.getFilename(), "multipart/form-data", source.getInputStream());
+//        MvcResult mvcResult = this.mockMvc.perform(multipart("/songs/zip")
+//                .file(mockMultipartFile)
+//                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE))
+//                .andExpect(status().isOk())
+//                .andReturn();
+//
+//        List<SongResponseDto> list = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<List<SongResponseDto>>(){});
+//        for(SongResponseDto dto : list) {
+//            assertThat(repositoryService.existById(dto.getId())).isTrue();
+//
+//            Song song = repositoryService.findById(dto.getId());
+//            assertThat(storageService.exist(song)).isTrue();
+//        }
+//    }
 
     @Test
     void download() throws Exception {

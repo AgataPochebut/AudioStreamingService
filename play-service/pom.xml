@@ -127,6 +127,12 @@
             <version>${hibernate.validator}</version>
         </dependency>
 
+        <!--		если включено то работает templates, иначе static-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.it</groupId>
             <artifactId>common-service</artifactId>

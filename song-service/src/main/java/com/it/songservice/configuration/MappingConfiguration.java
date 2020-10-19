@@ -3,6 +3,9 @@ package com.it.songservice.configuration;
 import com.it.songservice.converter.AlbumConverter;
 import com.it.songservice.converter.ArtistConverter;
 import com.it.songservice.converter.GenreConverter;
+import com.it.songservice.dto.request.AlbumRequestDto;
+import com.it.songservice.dto.request.ArtistRequestDto;
+import com.it.songservice.dto.request.GenreRequestDto;
 import com.it.songservice.model.Album;
 import com.it.songservice.model.Artist;
 import com.it.songservice.model.Genre;
@@ -46,6 +49,20 @@ public class MappingConfiguration {
 
                 mapping(Map.class, Genre.class)
                         .fields("Name", "Name");
+
+                mapping(AlbumRequestDto.class, Album.class,
+                        TypeMappingOptions.dateFormat("yyyy"))
+                        .fields("Artists", "Artists", FieldsMappingOptions.customConverter(ArtistConverter.class))
+                        .fields("Year", "Year")
+                        .fields("Title", "Title");
+
+                mapping(ArtistRequestDto.class, Artist.class)
+                        .fields("Genres", "Genres", FieldsMappingOptions.customConverter(GenreConverter.class))
+                        .fields("Name", "Name");
+
+                mapping(GenreRequestDto.class, Genre.class)
+                        .fields("Name", "Name");
+
             }
         });
 

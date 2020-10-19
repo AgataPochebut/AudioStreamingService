@@ -14,6 +14,14 @@ spring:
     packages:
       trust-all: true
 
+  cloud:
+    discovery:
+      enabled: false
+
+#stubrunner:
+#  ids-to-service-ids:
+#    search-service: search-service
+
 eureka:
   client:
     enabled: false

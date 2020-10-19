@@ -28,19 +28,32 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable().cors()
                 .and()
                 .authorizeRequests()
-//                .mvcMatchers("/").permitAll()
                 .mvcMatchers("/ui**").permitAll()
                 .anyRequest().authenticated()
+
                 .and()
                 .oauth2Login()
-                .userInfoEndpoint()
-                .oidcUserService(userRequest -> {
-                    OAuth2AccessToken accessToken = userRequest.getAccessToken();
-                    String token = accessToken.getTokenValue();
+                    .userInfoEndpoint()
+                        .oidcUserService(userRequest -> {
+                            OAuth2AccessToken accessToken = userRequest.getAccessToken();
+                            String token = accessToken.getTokenValue();
+                            ResponseEntity response = authServiceClient.getUser(token);
+                            if (response.getStatusCode().is2xxSuccessful()) {
+                                AuthUser user = (AuthUser) response.getBody();
+                                return new DefaultOidcUser(user.getAuthorities(), userRequest.getIdToken(), new OidcUserInfo(user.getAttributes()), "name");
+                            }
+                            Throwable throwable = (Throwable) response.getBody();
+                            throw new AuthenticationServiceException(throwable.getCause().getMessage(), throwable);
+                        });
+
+        http
+                .oauth2ResourceServer()
+                .opaqueToken()
+                .introspector(token -> {
                     ResponseEntity response = authServiceClient.getUser(token);
                     if (response.getStatusCode().is2xxSuccessful()) {
                         AuthUser user = (AuthUser) response.getBody();
-                        return new DefaultOidcUser(user.getAuthorities(), userRequest.getIdToken(), new OidcUserInfo(user.getAttributes()), "name");
+                        return user;
                     }
                     Throwable throwable = (Throwable) response.getBody();
                     throw new AuthenticationServiceException(throwable.getCause().getMessage(), throwable);

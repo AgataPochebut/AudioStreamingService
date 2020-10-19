@@ -92,16 +92,7 @@ public class PlaylistController {
         entity.getSongs().remove(song);
         entity = playlistRepositoryService.update(entity);
 
-//        if (song.getPlaylists().isEmpty()) songService.delete(song);
-
         final PlaylistResponseDto responseDto = mapper.map(entity, PlaylistResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/song/{song_id}")
-    @ResponseStatus(value = HttpStatus.OK)
-    public void del1(@PathVariable Long song_id) throws Exception {
-        Song song = songService.get(song_id);
-        songService.delete(song);
     }
 }

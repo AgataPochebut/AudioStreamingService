@@ -10,11 +10,11 @@ import org.springframework.jms.annotation.EnableJms;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
+@EnableDiscoveryClient
+@EnableFeignClients
 @EnableAsync
 @EnableJms
 @EnableCaching
-@EnableDiscoveryClient
-@EnableFeignClients
 public class SongServiceApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {

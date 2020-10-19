@@ -3,7 +3,6 @@ package com.it.songservice.dto.response;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
 import java.util.Set;
 
 @Data
@@ -14,7 +13,7 @@ public class AlbumResponseDto {
 
     private String title;
 
-    private Date year;
+    private Integer year;
 
     private Set<String> notes;
 

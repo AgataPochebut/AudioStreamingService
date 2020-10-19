@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 import java.util.Set;
 
 @Data
@@ -16,7 +15,7 @@ public class AlbumRequestDto {
     @NotEmpty
     private String title;
 
-    private Date year;
+    private Integer year;
 
     private Set<Long> artists;
 

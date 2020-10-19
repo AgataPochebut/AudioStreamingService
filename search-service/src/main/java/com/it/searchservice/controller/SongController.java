@@ -2,7 +2,6 @@ package com.it.searchservice.controller;
 
 import com.it.searchservice.model.Song;
 import com.it.searchservice.service.SongRepositoryService;
-import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +11,6 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/songs")
 public class SongController {
-
-    @Autowired
-    private Mapper mapper;
 
     @Autowired
     private SongRepositoryService repositoryService;

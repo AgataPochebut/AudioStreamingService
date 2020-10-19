@@ -4,8 +4,8 @@ import com.it.playservice.model.Playlist;
 
 public interface PlaylistRepositoryService extends GenericRepositoryService<Playlist, Long> {
 
-//    List<Playlist> findByUser(Long user_id);
+//    List<Playlist> findAllByUser(User user);
 //
-//    List<Playlist> findBySong(Long song_id);
+//    Playlist findByIdByUser(Long id, User user);
 
 }

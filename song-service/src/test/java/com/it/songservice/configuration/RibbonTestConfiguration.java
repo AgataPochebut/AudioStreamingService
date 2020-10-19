@@ -19,6 +19,7 @@ import java.io.IOException;
 public class RibbonTestConfiguration {
 
     private int port;
+
     private WireMockServer wireMockServer;
 
     public RibbonTestConfiguration() throws IOException {

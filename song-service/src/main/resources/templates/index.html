@@ -3,64 +3,47 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Song-service</title>
-    <!--    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>-->
 </head>
 <body>
 
-<!--<form method="POST" enctype="multipart/form-data" id="fileUploadForm">-->
-<!--    &lt;!&ndash;    <input type="text" name="extraField"/><br/><br/>&ndash;&gt;-->
-<!--    &lt;!&ndash;    <input type="file" name="files"/><br/><br/>&ndash;&gt;-->
-<!--    &lt;!&ndash;    <input type="file" name="files"/><br/><br/>&ndash;&gt;-->
-<!--    <input type="file" name="data"/><br/><br/>-->
-<!--    <input type="submit" value="Upload" id="btnUpload"/>-->
-<!--    <input type="submit" value="Upload zip" id="btnUploadZip"/>-->
-<!--</form>-->
-
-<!--<h2>Ajax Post Result</h2>-->
-<!--<pre>-->
-<!--    <span id="result"></span>-->
-<!--</pre>-->
-
-<div th:switch="${songs}" class="container my-5">
-    <div class="row">
-        <div class="col-md-6">
-            <div th:case="*">
-                <table class="table table-striped table-responsive-md">
-                    <thead>
-                    <tr>
-                        <th>Title</th>
-<!--                        <th>Play</th>-->
-<!--                        <th>Download</th>-->
-<!--                        <th>Delete</th>-->
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="song : ${songs}">
-                        <td th:text="${song.title}"></td>
-<!--                        <td><a th:href="@{/song-service/songs/download/{id}(id=${song.id})}" class="btn btn-primary" id="btnPlay"><i class="fas fa-user-edit ml-2"></i>Play</a></td>-->
-<!--                        <td><a th:href="@{/song-service/songs/download/{id}(id=${song.id})}" class="btn btn-primary" id="btnDownload"><i class="fas fa-user-edit ml-2"></i>Download</a></td>-->
-<!--                        <td><a th:href="@{/song-service/songs/delete/{id}(id=${song.id})}" class="btn btn-primary" id="btnDelete"><i class="fas fa-user-times ml-2"></i>Delete</a></td>-->
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<div th:switch="${songs}">
+    <div th:case="*">
+        <table>
+            <thead>
+            <tr>
+                <th>Title</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="song : ${songs}">
+                <td th:text="${song.title}"></td>
+<!--                <td>-->
+<!--                    <figure>-->
+<!--                        <figcaption th:text="${song.title}">No name</figcaption>-->
+<!--                        <audio controls id="player" th:src="@{/songs/27}" type="audio/mpeg">-->
+<!--                            Your browser does not support the audio element.-->
+<!--                        </audio>-->
+<!--                    </figure>-->
+<!--                </td>-->
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 
-<!--<h2>Ajax Stream Result</h2>-->
-<!--<pre>-->
-<!--    <span id="stream_result"></span>-->
-<!--</pre>-->
+<!--<audio id="player" controls th:each="song : ${songs}">-->
+<!--    <source th:src="@{/songs/27}">-->
+<!--    <source th:src="@{/songs/27}">-->
+<!--</audio>-->
 
-<!--<h2>Ajax Download Result</h2>-->
-<!--<pre>-->
-<!--    <span id="download_result"></span>-->
-<!--</pre>-->
+<!--<script>-->
+<!--    var aud = document.getElementById("player");-->
+<!--    aud.onplay = function () {-->
+<!--        alert("The audio has started to play");-->
+<!--        var audio = new Audio('audio_file.mp3');-->
+<!--        audio.play();-->
+<!--    };-->
+<!--</script>-->
 
-<script type="text/javascript"
-        src="webjars/jquery/2.2.4/jquery.min.js"></script>
-
-<script type="text/javascript" src="js/songs.js"></script>
 </body>
 </html>

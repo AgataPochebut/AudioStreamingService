@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 import java.util.Set;
 
 @Builder
@@ -25,7 +24,7 @@ public class Album extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    private Date year;
+    private Integer year;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "Album_Artist",

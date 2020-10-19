@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.persistence.EntityManager;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,6 +26,9 @@ class GenreRepositoryServiceImplTest {
 
     @Mock
     private GenreRepository repository;
+
+    @Mock
+    private EntityManager em;
 
     @InjectMocks
     private GenreRepositoryServiceImpl repositoryService;
@@ -54,7 +58,8 @@ class GenreRepositoryServiceImplTest {
     void save() throws Exception {
         Genre obj = new Genre();
         obj.setName("test");
-        when(repository.save(any(Genre.class))).then(returnsFirstArg());
+//        when(repository.save(any())).then(returnsFirstArg());
+        when(em.merge(any())).then(returnsFirstArg());
         assertThat(repositoryService.save(obj)).isEqualTo(obj);
     }
 
@@ -63,7 +68,8 @@ class GenreRepositoryServiceImplTest {
         Genre obj = new Genre();
         obj.setName("test");
         obj.setId(1L);
-        when(repository.save(any(Genre.class))).then(returnsFirstArg());
+//        when(repository.save(any(Genre.class))).then(returnsFirstArg());
+        when(em.merge(any())).then(returnsFirstArg());
         assertThat(repositoryService.save(obj)).isEqualTo(obj);
     }
 

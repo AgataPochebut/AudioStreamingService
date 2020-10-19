@@ -3,7 +3,6 @@ package com.it.searchservice.controller;
 import com.it.searchservice.dto.response.SearchResponseDto;
 import org.dozer.Mapper;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +25,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/search")
 public class SearchController {
-
-    @Autowired
-    private RestHighLevelClient elasticsearchClient;
 
     @Autowired
     private ElasticsearchRestTemplate elasticsearchTemplate;

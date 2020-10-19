@@ -1,0 +1,14 @@
+{
+  "request" : {
+    "url" : "/index",
+    "method" : "POST"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "Hello World",
+    "headers" : {
+      "X-Application-Context" : "application:-1",
+      "Content-Type" : "text/plain"
+    }
+  }
+}

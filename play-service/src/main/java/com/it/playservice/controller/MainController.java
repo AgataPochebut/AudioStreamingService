@@ -1,8 +1,8 @@
-package com.it.songservice.controller;
+package com.it.playservice.controller;
 
-import com.it.songservice.dto.response.SongResponseDto;
-import com.it.songservice.model.Song;
-import com.it.songservice.service.repository.SongRepositoryService;
+import com.it.playservice.dto.response.PlaylistResponseDto;
+import com.it.playservice.model.Playlist;
+import com.it.playservice.service.repository.PlaylistRepositoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,21 +19,20 @@ import java.util.stream.Collectors;
 public class MainController {
 
     @Autowired
-    private SongRepositoryService repositoryService;
+    private PlaylistRepositoryService repositoryService;
 
     @Autowired
     private Mapper mapper;
 
     @RequestMapping(value = { "/", "/index" }, method = RequestMethod.GET)
-    public String index(Model model) {
+    public String index(Model model) throws Exception {
 
-        final List<Song> entity = repositoryService.findAll();
-
-        final List<SongResponseDto> responseDto = entity.stream()
-                .map((i) -> mapper.map(i, SongResponseDto.class))
+        final List<Playlist> list = repositoryService.findAll();
+        final List<PlaylistResponseDto> responseDto = list.stream()
+                .map((i) -> mapper.map(i, PlaylistResponseDto.class))
                 .collect(Collectors.toList());
 
-        model.addAttribute("songs", responseDto);
+        model.addAttribute("playlists", responseDto);
 
         return "index";
     }

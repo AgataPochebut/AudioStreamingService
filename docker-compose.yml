@@ -1,4 +1,4 @@
-version: '3.1'
+version: '2.1'
 
 volumes:
   mysql-data:
@@ -17,18 +17,6 @@ services:
     build: ./discovery
     ports:
       - 8761:8761
-
-  gateway:
-    build: ./gateway
-    environment:
-      CONFIG_SERVER: http://config:8888
-      DISCOVERY_SERVER: http://discovery:8761/eureka
-    restart: on-failure
-    ports:
-      - 8080:8080
-    depends_on:
-      - config
-    entrypoint: ["./wait-for-it.sh", "config:8888", "--timeout=20","--strict", "--", "java", "-jar","app.jar" ]
 
 
   mysql:
@@ -58,17 +46,43 @@ services:
     #      - activemq-data:/opt/activemq/data
 
 
+  gateway:
+    build: ./gateway
+    environment:
+      CONFIG_SERVER: http://config:8888
+      DISCOVERY_SERVER: http://discovery:8761/eureka
+      GOOGLE_CLIENT_ID: $GOOGLE_CLIENT_ID
+      GOOGLE_CLIENT_SECRET: $GOOGLE_CLIENT_SECRET
+    ports:
+      - 8080:8080
+    restart: always
+    depends_on:
+      - config
+    entrypoint: ["./wait-for-it.sh", "config:8888", "--timeout=20","--strict", "--", "java", "-jar","app.jar" ]
+
   auth-service:
     build: ./auth-service
     environment:
       CONFIG_SERVER: http://config:8888
       DISCOVERY_SERVER: http://discovery:8761/eureka
       DATASOURCE_URL: jdbc:mysql://mysql:3306/auth_service?createDatabaseIfNotExist=true&useUnicode=true&serverTimezone=UTC
-    restart: on-failure
+    restart: always
     depends_on:
       - mysql
       - config
     entrypoint: ["./wait-for-it.sh", "config:8888", "--timeout=60","--strict", "--", "java", "-jar","app.jar" ]
+
+  play-service:
+    build: ./play-service
+    environment:
+      CONFIG_SERVER: http://config:8888
+      DISCOVERY_SERVER: http://discovery:8761/eureka
+      DATASOURCE_URL: jdbc:mysql://mysql:3306/play_service?createDatabaseIfNotExist=true&useUnicode=true&serverTimezone=UTC
+    restart: always
+    depends_on:
+      - mysql
+      - config
+    entrypoint: ["./wait-for-it.sh", "config:8888", "--timeout=20","--strict", "--", "java", "-jar","app.jar" ]
 
   song-service:
     build: ./song-service
@@ -79,23 +93,11 @@ services:
       ACTIVEMQ: tcp://activemq:61616
       AWS_ACCESS_KEY: $AWS_ACCESS_KEY
       AWS_SECRET_KEY: $AWS_SECRET_KEY
-    restart: on-failure
+    restart: always
     depends_on:
       - mysql
       - redis
       - activemq
-      - config
-    entrypoint: ["./wait-for-it.sh", "config:8888", "--timeout=20","--strict", "--", "java", "-jar","app.jar" ]
-
-  play-service:
-    build: ./play-service
-    environment:
-      CONFIG_SERVER: http://config:8888
-      DISCOVERY_SERVER: http://discovery:8761/eureka
-      DATASOURCE_URL: jdbc:mysql://mysql:3306/play_service?createDatabaseIfNotExist=true&useUnicode=true&serverTimezone=UTC
-    restart: on-failure
-    depends_on:
-      - mysql
       - config
     entrypoint: ["./wait-for-it.sh", "config:8888", "--timeout=20","--strict", "--", "java", "-jar","app.jar" ]
 
@@ -105,23 +107,25 @@ services:
     environment:
       CONFIG_SERVER: http://config:8888
       DISCOVERY_SERVER: http://discovery:8761/eureka
-    restart: on-failure
+    restart: always
     depends_on:
       - config
     entrypoint: ["./wait-for-it.sh", "config:8888", "--timeout=20","--strict", "--", "java", "-jar","app.jar" ]
 
 
-#  elasticsearch:
-#    image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
-#    environment:
-#      - cluster.name=docker-cluster
-#      - discovery.type=single-node
-#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-#    volumes:
-#      - es-data:/usr/share/elasticsearch/data
-#    ports:
-#      - 9200:9200
-#
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
+    environment:
+      - cluster.name=docker-cluster
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    restart: always
+    mem_limit: 512m
+
 #  kibana:
 #    image: docker.elastic.co/kibana/kibana:7.8.0
 #    environment:
@@ -131,15 +135,15 @@ services:
 #      - 5601:5601
 #    depends_on:
 #      - elasticsearch
-#
-#  search-service:
-#    build: ./search-service
-#    environment:
-#      CONFIG_SERVER: http://config:8888
-#      DISCOVERY_SERVER: http://discovery:8761/eureka
-#      ELASTICSEARCH: http://elasticsearch:9200
-#    restart: on-failure
-#    depends_on:
-#      - elasticsearch
-#      - config
-#    entrypoint: ["./wait-for-it.sh", "config:8888", "--timeout=20","--strict", "--", "java", "-jar","app.jar" ]
+
+  search-service:
+    build: ./search-service
+    environment:
+      CONFIG_SERVER: http://config:8888
+      DISCOVERY_SERVER: http://discovery:8761/eureka
+      ELASTICSEARCH: http://elasticsearch:9200
+    restart: always
+    depends_on:
+      - elasticsearch
+      - config
+    entrypoint: ["./wait-for-it.sh", "config:8888", "--timeout=20","--strict", "--", "java", "-jar","app.jar" ]

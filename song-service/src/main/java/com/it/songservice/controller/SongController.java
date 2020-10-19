@@ -6,12 +6,14 @@ import com.it.songservice.model.Song;
 import com.it.songservice.service.repository.SongRepositoryService;
 import com.it.songservice.service.storage.song.SongStorageService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,12 +41,21 @@ public class SongController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<SongResponseDto> get(@PathVariable Long id) {
+    // Accept 'application/octet-stream'
+    @GetMapping(value = "/stream/{id}", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    public void stream(@PathVariable Long id, HttpServletResponse response) throws Exception {
         Song entity = repositoryService.findById(id);
+        org.springframework.core.io.Resource source = storageService.download(entity);
+        Resource resource = entity.getResource();
 
-        final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        response.setContentType("application/octet-stream");
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION,
+                ContentDisposition.builder("attachment")
+                .filename(resource.getName())
+                .build().toString());
+
+        IOUtils.copy(source.getInputStream(), response.getOutputStream());
+        response.flushBuffer();
     }
 
     // Accept 'application/octet-stream'

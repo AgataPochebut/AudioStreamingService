@@ -1,8 +1,8 @@
-package com.it.songservice.controller;
+package com.it.authservice.controller;
 
-import com.it.songservice.dto.response.SongResponseDto;
-import com.it.songservice.model.Song;
-import com.it.songservice.service.repository.SongRepositoryService;
+import com.it.authservice.dto.response.UserResponseDto;
+import com.it.authservice.model.User;
+import com.it.authservice.service.repository.UserRepositoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,21 +19,20 @@ import java.util.stream.Collectors;
 public class MainController {
 
     @Autowired
-    private SongRepositoryService repositoryService;
+    private UserRepositoryService repositoryService;
 
     @Autowired
     private Mapper mapper;
 
     @RequestMapping(value = { "/", "/index" }, method = RequestMethod.GET)
-    public String index(Model model) {
+    public String index(Model model) throws Exception {
 
-        final List<Song> entity = repositoryService.findAll();
-
-        final List<SongResponseDto> responseDto = entity.stream()
-                .map((i) -> mapper.map(i, SongResponseDto.class))
+        final List<User> list = repositoryService.findAll();
+        final List<UserResponseDto> responseDto = list.stream()
+                .map((i) -> mapper.map(i, UserResponseDto.class))
                 .collect(Collectors.toList());
 
-        model.addAttribute("songs", responseDto);
+        model.addAttribute("users", responseDto);
 
         return "index";
     }

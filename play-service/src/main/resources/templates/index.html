@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Play-service</title>
+</head>
+<body>
+
+<div th:switch="${playlists}">
+    <div>
+        <div>
+            <div th:case="*">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="playlist : ${playlists}">
+                        <td th:text="${playlist.title}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
