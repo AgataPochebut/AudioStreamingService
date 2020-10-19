@@ -4,6 +4,7 @@
     <meta charset="UTF-8"/>
     <title>Song-service</title>
 </head>
+
 <body>
 
 <div th:switch="${songs}">
@@ -16,34 +17,20 @@
             </thead>
             <tbody>
             <tr th:each="song : ${songs}">
-                <td th:text="${song.title}"></td>
-<!--                <td>-->
-<!--                    <figure>-->
-<!--                        <figcaption th:text="${song.title}">No name</figcaption>-->
-<!--                        <audio controls id="player" th:src="@{/songs/27}" type="audio/mpeg">-->
-<!--                            Your browser does not support the audio element.-->
-<!--                        </audio>-->
-<!--                    </figure>-->
-<!--                </td>-->
+                <td>
+                    <figure>
+                        <figcaption th:text="${song.title}">No name</figcaption>
+                        <audio controls preload="metadata" th:src="@{/song-service/songs/{id}(id=${song.id})}"
+                               type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </figure>
+                </td>
             </tr>
             </tbody>
         </table>
     </div>
 </div>
-
-<!--<audio id="player" controls th:each="song : ${songs}">-->
-<!--    <source th:src="@{/songs/27}">-->
-<!--    <source th:src="@{/songs/27}">-->
-<!--</audio>-->
-
-<!--<script>-->
-<!--    var aud = document.getElementById("player");-->
-<!--    aud.onplay = function () {-->
-<!--        alert("The audio has started to play");-->
-<!--        var audio = new Audio('audio_file.mp3');-->
-<!--        audio.play();-->
-<!--    };-->
-<!--</script>-->
 
 </body>
 </html>
