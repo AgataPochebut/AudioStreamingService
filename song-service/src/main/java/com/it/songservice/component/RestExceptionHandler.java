@@ -1,7 +1,7 @@
 package com.it.songservice.component;
 
+import com.it.commonservice.dto.ErrorResponseDto;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -25,20 +25,32 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                 .map(constraintViolation -> constraintViolation.getMessage().concat(SEMICOLON))
                 .reduce(EMPTY, String::concat);
         log.error(errorMessage, exception);
-        return new ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
+
+        ErrorResponseDto responseDTO = new ErrorResponseDto(HttpStatus.BAD_REQUEST, errorMessage);
+        return ResponseEntity
+                .status(responseDTO.getHttpStatus())
+                .body(responseDTO);
     }
 
     @ExceptionHandler(value = {Exception.class})
     protected ResponseEntity<Object> handle(Exception exception, WebRequest request) {
         String errorMessage = exception.getMessage();
         log.error(errorMessage, exception);
-        return handleExceptionInternal(exception, exception.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+
+        ErrorResponseDto responseDTO = new ErrorResponseDto(HttpStatus.BAD_REQUEST, errorMessage);
+        return ResponseEntity
+                .status(responseDTO.getHttpStatus())
+                .body(responseDTO);
     }
 
     @ExceptionHandler(value = {RuntimeException.class})
     protected ResponseEntity<Object> handle(RuntimeException exception, WebRequest request) {
         String errorMessage = exception.getMessage();
         log.error(errorMessage, exception);
-        return handleExceptionInternal(exception, exception.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+
+        ErrorResponseDto responseDTO = new ErrorResponseDto(HttpStatus.BAD_REQUEST, errorMessage);
+        return ResponseEntity
+                .status(responseDTO.getHttpStatus())
+                .body(responseDTO);
     }
 }
