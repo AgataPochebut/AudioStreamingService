@@ -14,7 +14,7 @@ public class AlbumRepositoryServiceImpl extends GenericRepositoryServiceImpl<Alb
     private AlbumRepository repository;
 
     @Override
-    public Album findByTitle(String s) {
-        return repository.findByTitle(s).orElse(null);
+    public Album findByName(String s) {
+        return repository.findByName(s).orElse(null);
     }
 }

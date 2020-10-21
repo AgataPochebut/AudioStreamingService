@@ -11,7 +11,7 @@ public class AlbumResponseDto {
 
     private Long id;
 
-    private String title;
+    private String name;
 
     private Integer year;
 

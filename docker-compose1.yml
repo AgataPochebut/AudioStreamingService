@@ -1,0 +1,58 @@
+version: '2.1'
+
+volumes:
+  mysql-data:
+  redis-data:
+  activemq-data:
+  es-data:
+
+services:
+
+  config:
+    build: ./config
+    ports:
+      - 8888:8888
+
+  discovery:
+    build: ./discovery
+    ports:
+      - 8761:8761
+
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
+    environment:
+      - cluster.name=docker-cluster
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    restart: always
+    mem_limit: 512m
+
+#
+#  kibana:
+#    image: docker.elastic.co/kibana/kibana:7.8.0
+#    environment:
+#      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+#    restart: on-failure
+#    ports:
+#      - 5601:5601
+#    depends_on:
+#      - elasticsearch
+
+  search-service:
+    build: ./search-service
+    environment:
+      CONFIG_SERVER: http://config:8888
+      DISCOVERY_SERVER: http://discovery:8761/eureka
+      ELASTICSEARCH: http://elasticsearch:9200
+    restart: always
+    depends_on:
+      - elasticsearch
+      - config
+    entrypoint: ["./wait-for-it.sh", "config:8888", "--timeout=20","--strict", "--", "java", "-jar","app.jar" ]
+
+

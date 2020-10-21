@@ -4,15 +4,15 @@ import com.it.songservice.model.Song;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(value = "search-service")
+@FeignClient(value = "search-service/songs")
 public interface SongIndexClient {
 
-    @PostMapping(value = "index")
+    @PostMapping(value = "/index")
     public void save(@RequestBody Song entity);
 
-    @PutMapping(value = "index/{id}")
+    @PutMapping(value = "/index/{id}")
     public void update(@PathVariable Long id, @RequestBody Song entity);
 
-    @DeleteMapping(value = "delete/{id}")
+    @DeleteMapping(value = "/delete/{id}")
     public void delete(@PathVariable Long id);
 }

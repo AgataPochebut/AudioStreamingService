@@ -13,7 +13,7 @@ public class AlbumRequestDto {
 
     @NotNull
     @NotEmpty
-    private String title;
+    private String name;
 
     private Integer year;
 

@@ -35,13 +35,13 @@ public class MappingConfiguration {
                         TypeMappingOptions.dateFormat("yyyy"))
                         .fields("Album", "Album", FieldsMappingOptions.customConverter(AlbumConverter.class))
                         .fields("Year", "Year")
-                        .fields("Title", "Title");
+                        .fields("Name", "Name");
 
                 mapping(Map.class, Album.class,
                         TypeMappingOptions.dateFormat("yyyy"))
                         .fields("Artists", "Artists", FieldsMappingOptions.customConverter(ArtistConverter.class))
                         .fields("Year", "Year")
-                        .fields("Title", "Title");
+                        .fields("Name", "Name");
 
                 mapping(Map.class, Artist.class)
                         .fields("Genres", "Genres", FieldsMappingOptions.customConverter(GenreConverter.class))
@@ -54,7 +54,7 @@ public class MappingConfiguration {
                         TypeMappingOptions.dateFormat("yyyy"))
                         .fields("Artists", "Artists", FieldsMappingOptions.customConverter(ArtistConverter.class))
                         .fields("Year", "Year")
-                        .fields("Title", "Title");
+                        .fields("Name", "Name");
 
                 mapping(ArtistRequestDto.class, Artist.class)
                         .fields("Genres", "Genres", FieldsMappingOptions.customConverter(GenreConverter.class))

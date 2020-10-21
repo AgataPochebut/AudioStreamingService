@@ -10,11 +10,10 @@ import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.ResultsExtractor;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -32,13 +31,14 @@ public class SearchController {
     @Autowired
     private Mapper mapper;
 
-    @GetMapping("/")
-    public ResponseEntity<List<SearchResponseDto>> searchAll(@PathVariable String index) throws IOException {
-
-        QueryBuilder queryBuilder = QueryBuilders.matchAllQuery();
+    @GetMapping
+    public ResponseEntity<List<SearchResponseDto>> search(@RequestParam(required = false) String keyword) throws IOException {
+        QueryBuilder queryBuilder = (keyword == null)
+                ? QueryBuilders.matchAllQuery()
+                : QueryBuilders.queryStringQuery(keyword);
 
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
-//                .withIndices(index)
+                .withIndices("songs")
                 .withQuery(queryBuilder)
                 .build();
 
@@ -50,29 +50,8 @@ public class SearchController {
                 return responseDto;
             }
         });
-
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
-
-    @GetMapping("/{keyword}")
-    public ResponseEntity<List<SearchResponseDto>> search(@PathVariable String index, @PathVariable String keyword) throws IOException {
-
-        QueryBuilder queryBuilder = QueryBuilders.queryStringQuery(keyword);
-
-        SearchQuery searchQuery = new NativeSearchQueryBuilder()
-//                .withIndices(index)
-                .withQuery(queryBuilder)
-                .build();
-
-        List<SearchResponseDto> responseDto = elasticsearchTemplate.query(searchQuery, new ResultsExtractor<List<SearchResponseDto>>() {
-            @Override
-            public List<SearchResponseDto> extract(SearchResponse response) {
-                List<SearchResponseDto> responseDto = new ArrayList<>();
-                response.getHits().iterator().forEachRemaining(hit->responseDto.add(mapper.map(hit, SearchResponseDto.class)));
-                return responseDto;
-            }
-        });
-
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        return ResponseEntity
+                .ok()
+                .body(responseDto);
     }
 }

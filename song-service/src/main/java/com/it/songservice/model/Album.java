@@ -22,7 +22,7 @@ public class Album extends BaseEntity {
     @NotNull
     @NotEmpty
     @Column(nullable = false)
-    private String title;
+    private String name;
 
     private Integer year;
 

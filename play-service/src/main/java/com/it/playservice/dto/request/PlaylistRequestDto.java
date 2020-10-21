@@ -12,6 +12,6 @@ public class PlaylistRequestDto {
 
     @NotNull
     @NotEmpty
-    private String title;
+    private String name;
 
 }

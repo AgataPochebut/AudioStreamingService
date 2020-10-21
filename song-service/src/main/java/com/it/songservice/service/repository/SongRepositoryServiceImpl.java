@@ -14,7 +14,7 @@ public class SongRepositoryServiceImpl extends GenericRepositoryServiceImpl<Song
     private SongRepository repository;
 
     @Override
-    public Song findByTitle(String s) {
-        return repository.findByTitle(s).orElse(null);
+    public Song findByName(String s) {
+        return repository.findByName(s).orElse(null);
     }
 }

@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 import java.util.Set;
 
 @Data
@@ -14,9 +13,9 @@ public class SongRequestDto {
 
     @NotNull
     @NotEmpty
-    private String title;
+    private String name;
 
-    private Date year;
+    private Integer year;
 
     @NotNull
     @NotEmpty

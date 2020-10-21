@@ -2,19 +2,21 @@ package com.it.songservice.jms;
 
 import com.it.songservice.exception.UploadException;
 import com.it.songservice.model.Resource;
-import com.it.songservice.model.Song;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.SerializationUtils;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
-import java.util.List;
+import javax.xml.bind.DatatypeConverter;
 
 @Component
 @Slf4j
@@ -23,32 +25,26 @@ public class Producer {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    public List<Song> upload(Resource resource) throws Exception {
+    public void uploadZip(Resource resource) throws Exception {
         Throwable lastException;
         try {
-            ObjectMessage receiveMessage = (ObjectMessage) jmsTemplate.sendAndReceive("upl", new MessageCreator() {
+            jmsTemplate.send("upl", new MessageCreator() {
                 @Override
                 public Message createMessage(Session session) throws JMSException {
-                    try {
-                        ObjectMessage sendMessage = session.createObjectMessage();
-                        sendMessage.setObject(resource);
-                        sendMessage.setJMSCorrelationID(RandomStringUtils.randomAscii(24));
-                        return sendMessage;
-                    } catch (Exception e) {
-                        return null;
-                    }
+                    ObjectMessage sendMessage = session.createObjectMessage();
+                    sendMessage.setObject(resource);
+
+                    // TODO: 21.10.2020
+                    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                    byte[] bytes = SerializationUtils.serialize(authentication);
+                    String auth = DatatypeConverter.printBase64Binary(bytes);
+                    sendMessage.setStringProperty("authentication", auth);
+
+                    sendMessage.setJMSCorrelationID(RandomStringUtils.randomAscii(24));
+                    return sendMessage;
                 }
             });
-
-            if (receiveMessage == null) {
-                throw new UploadException("Nothing is upload");
-            }
-
-            if (receiveMessage.getObject() instanceof Exception) {
-                throw (Exception) receiveMessage.getObject();
-            }
-
-            return (List<Song>)receiveMessage.getObject();
+            return;
         } catch (Exception e) {
             lastException = e;
         }

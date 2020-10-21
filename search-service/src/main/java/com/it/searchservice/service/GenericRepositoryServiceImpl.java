@@ -3,8 +3,6 @@ package com.it.searchservice.service;
 import com.it.searchservice.repository.GenericRepository;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.sort.SortBuilders;
-import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
@@ -52,13 +50,13 @@ public class GenericRepositoryServiceImpl<T,U> implements GenericRepositoryServi
 
     @Override
     public List<T> search(String keyword){
-
-        QueryBuilder queryBuilder = QueryBuilders.queryStringQuery(keyword);
+        QueryBuilder queryBuilder = (keyword == null)
+                ? QueryBuilders.matchAllQuery()
+                : QueryBuilders.queryStringQuery(keyword);
 
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withIndices("songs")
                 .withQuery(queryBuilder)
-                .withSort(SortBuilders.scoreSort().order(SortOrder.DESC))
-                // .withSort(new FieldSortBuilder("createTime").order(SortOrder.DESC))
                 .build();
 
         List<T> list = new ArrayList<>();

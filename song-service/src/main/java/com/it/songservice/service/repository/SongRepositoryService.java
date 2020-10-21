@@ -4,6 +4,6 @@ import com.it.songservice.model.Song;
 
 public interface SongRepositoryService extends GenericRepositoryService<Song, Long> {
 
-    Song findByTitle(String s);
+    Song findByName(String s);
 
 }
