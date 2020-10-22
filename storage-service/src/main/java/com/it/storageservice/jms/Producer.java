@@ -25,7 +25,27 @@ public class Producer {
     private JmsTemplate jmsTemplate;
 
     public void uploadZip(Resource resource) throws Exception {
-        jmsTemplate.send("zip", new MessageCreator() {
+        jmsTemplate.send("upload_zip", new MessageCreator() {
+            @Override
+            public Message createMessage(Session session) throws JMSException {
+                ObjectMessage sendMessage = session.createObjectMessage();
+                sendMessage.setObject(resource);
+
+                // TODO: 21.10.2020
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                byte[] bytes = SerializationUtils.serialize(authentication);
+                String auth = DatatypeConverter.printBase64Binary(bytes);
+                sendMessage.setStringProperty("authentication", auth);
+
+                sendMessage.setJMSCorrelationID(RandomStringUtils.randomAscii(24));
+                return sendMessage;
+            }
+        });
+        //если не вернуло вывалить ошибку
+    }
+
+    public void upload(Resource resource) throws Exception {
+        jmsTemplate.send("upload_audio", new MessageCreator() {
             @Override
             public Message createMessage(Session session) throws JMSException {
                 ObjectMessage sendMessage = session.createObjectMessage();
@@ -43,8 +63,8 @@ public class Producer {
         });
     }
 
-    public void upload(Resource resource) throws Exception {
-        jmsTemplate.send("audio", new MessageCreator() {
+    public void delete(Resource resource) throws Exception {
+        jmsTemplate.send("delete_audio", new MessageCreator() {
             @Override
             public Message createMessage(Session session) throws JMSException {
                 ObjectMessage sendMessage = session.createObjectMessage();

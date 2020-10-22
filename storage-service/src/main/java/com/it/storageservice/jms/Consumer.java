@@ -1,7 +1,5 @@
 package com.it.storageservice.jms;
 
-import com.it.songservice.model.Song;
-import com.it.songservice.service.storage.song.SongStorageService;
 import com.it.storageservice.model.Resource;
 import com.it.storageservice.service.storage.ResourceStorageServiceManager;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +34,7 @@ public class Consumer {
     @Autowired
     private Producer producer;
 
-    @JmsListener(destination = "zip")
+    @JmsListener(destination = "upload_zip")
     public void upload(ObjectMessage message) throws Exception {
         // TODO: 21.10.2020  
         String auth = message.getStringProperty("authentication");
@@ -65,8 +63,8 @@ public class Consumer {
                         list.addAll(uploadZip(resource1));
                     } else {
                         Resource resource1 = resourceStorageServiceManager.upload(source1, name1);
+                        list.add(resource1);
                         producer.upload(resource1);
-                        list.add(songStorageService.upload(source1, name1));
                     }
                 }
                 zin.closeEntry();
