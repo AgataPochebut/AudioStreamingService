@@ -6,8 +6,7 @@ import com.it.songservice.service.storage.song.decorator.SongConversionDecorator
 import com.it.songservice.service.storage.song.decorator.SongDBDecorator;
 import com.it.songservice.service.storage.song.decorator.SongIndexDecorator;
 import com.it.songservice.service.storage.song.decorator.SongMetadataDecorator;
-
-import java.util.List;
+import org.springframework.core.io.Resource;
 
 @Decorate(decorations = {SongMetadataDecorator.class, SongDBDecorator.class, SongIndexDecorator.class, SongConversionDecorator.class})
 //@Decorate(decorations = {SongMetadataDecorator.class, SongDBDecorator.class, SongConversionDecorator.class})
@@ -15,7 +14,7 @@ public interface SongStorageService {
 
     Song upload(org.springframework.core.io.Resource source, String name) throws Exception;
 
-    List<Song> uploadZip(org.springframework.core.io.Resource source, String name) throws Exception;
+    void uploadZip(Resource source, String name) throws Exception;
 
     org.springframework.core.io.Resource download(Song entity) throws Exception;
 

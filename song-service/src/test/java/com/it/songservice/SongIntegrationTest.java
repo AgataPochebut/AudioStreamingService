@@ -60,11 +60,11 @@ public class SongIntegrationTest {
 //                        .withBody(Files.readAllBytes(source.getFile().toPath()))));
 //////                        .withBodyFile("HURTS - WONDERFUL LIFE.MP3")));
 
-        stubFor(com.github.tomakehurst.wiremock.client.WireMock.post(urlPathMatching(("/index")))
+        stubFor(com.github.tomakehurst.wiremock.client.WireMock.post(urlPathMatching(("/songs/index")))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.OK.value())));
 
-        stubFor(com.github.tomakehurst.wiremock.client.WireMock.delete(urlPathMatching(("/delete")))
+        stubFor(com.github.tomakehurst.wiremock.client.WireMock.delete(urlPathMatching(("/songs/delete")))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.OK.value())));
 

@@ -4,6 +4,6 @@ import com.it.songservice.model.Album;
 
 public interface AlbumRepositoryService extends GenericRepositoryService<Album, Long> {
 
-    Album findByTitle(String s);
+    Album findByName(String s);
 
 }

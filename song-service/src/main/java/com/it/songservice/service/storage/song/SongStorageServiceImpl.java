@@ -7,8 +7,6 @@ import com.it.songservice.service.storage.resource.ResourceStorageServiceManager
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class SongStorageServiceImpl implements SongStorageService {
 
@@ -21,21 +19,15 @@ public class SongStorageServiceImpl implements SongStorageService {
     @Override
     public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
         Resource resource = resourceStorageServiceManager.upload(source, name);
-
         return Song.builder()
             .resource(resource)
             .build();
     }
 
     @Override
-    public List<Song> uploadZip(org.springframework.core.io.Resource source, String name) throws Exception {
+    public void uploadZip(org.springframework.core.io.Resource source, String name) throws Exception {
         Resource resource = resourceStorageServiceManager.upload(source, name);
-
-        try {
-            return producer.upload(resource);
-        } finally {
-            resourceStorageServiceManager.delete(resource);
-        }
+        producer.uploadZip(resource);
     }
 
     @Override

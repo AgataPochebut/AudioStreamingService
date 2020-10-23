@@ -8,7 +8,5 @@ public class SearchResponseDto {
     private String id;
 
     private String index;
-
-//    private String type;
-
+    
 }

@@ -11,7 +11,7 @@ public class PlaylistResponseDto {
 
     private Long id;
 
-    private String title;
+    private String name;
 
     private Set<SongResponseDto> songs;
 

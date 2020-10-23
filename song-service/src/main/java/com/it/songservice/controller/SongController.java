@@ -49,8 +49,7 @@ public class SongController {
     }
 
     // Accept 'application/octet-stream'
-    @RequestMapping(method = {RequestMethod.GET, RequestMethod.HEAD},
-            value = "/{id}", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public void download(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Song entity = repositoryService.findById(id);
         org.springframework.core.io.Resource source = storageService.download(entity);
@@ -74,6 +73,28 @@ public class SongController {
         } else {
             writeContent(response, source, mediaType, entity.getResource().getName());
         }
+    }
+
+    // Content type 'multipart/form-data;boundary
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<SongResponseDto> upload(@RequestParam("data") MultipartFile multipartFile) throws Exception {
+        Song entity = storageService.upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
+        final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    // Content type 'multipart/form-data;boundary
+    @PostMapping(value = "/zip", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @ResponseStatus(value = HttpStatus.OK)
+    public void uploadZip(@RequestParam("data") MultipartFile multipartFile) throws Exception {
+        storageService.uploadZip(multipartFile.getResource(), multipartFile.getOriginalFilename());
+    }
+
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void delete(@PathVariable Long id) throws Exception {
+        Song entity = repositoryService.findById(id);
+        storageService.delete(entity);
     }
 
     void writeContent(HttpServletResponse response,
@@ -208,74 +229,4 @@ public class SongController {
         }
     }
 
-//    // Accept 'application/octet-stream'
-//    @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
-//    public ResponseEntity<org.springframework.core.io.Resource> download(@PathVariable Long id) throws Exception {
-//        Song entity = repositoryService.findById(id);
-//        org.springframework.core.io.Resource source = storageService.download(entity);
-//        Resource resource = entity.getResource();
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-//        headers.setContentDisposition(ContentDisposition.builder("attachment")
-//                .filename(resource.getName())
-//                .build());
-//
-//        return ResponseEntity
-//                .ok()
-//                .headers(headers)
-//                .body(source);
-//    }
-
-    // Content type 'multipart/form-data;boundary
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<SongResponseDto> upload(@RequestParam("data") MultipartFile multipartFile) throws Exception {
-        Song entity = storageService.upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
-        final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
-
-    // Content type 'multipart/form-data;boundary
-    @PostMapping(value = "/zip", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<List<SongResponseDto>> uploadZip(@RequestParam("data") MultipartFile multipartFile) throws Exception {
-        List<Song> list = storageService.uploadZip(multipartFile.getResource(), multipartFile.getOriginalFilename());
-        final List<SongResponseDto> responseDto = list.stream()
-                .map((i) -> mapper.map(i, SongResponseDto.class))
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
-
-//    // Content type 'multipart/form-data;boundary
-//    @PostMapping(value = "/future", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-//    public CompletableFuture<ResponseEntity<SongResponseDto>> uploadFuture(@RequestParam("data") MultipartFile multipartFile) throws Exception {
-//        return CompletableFuture.supplyAsync(() -> {
-//            try {
-//                return upload(multipartFile);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            return null;
-//        });
-//    }
-//
-//    // Content type 'multipart/form-data;boundary
-//    @PostMapping(value = "/deferred", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-//    public DeferredResult<ResponseEntity<SongResponseDto>> uploadDeferred(@RequestParam("data") MultipartFile multipartFile) throws Exception {
-//        final DeferredResult<ResponseEntity<SongResponseDto>> result = new DeferredResult<>(null, null);
-//        ForkJoinPool.commonPool().submit(() -> {
-//            try {
-//                result.setResult(upload(multipartFile));
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        });
-//        return result;
-//    }
-
-    @DeleteMapping(value = "/{id}")
-    @ResponseStatus(value = HttpStatus.OK)
-    public void delete(@PathVariable Long id) throws Exception {
-        Song entity = repositoryService.findById(id);
-        storageService.delete(entity);
-    }
 }

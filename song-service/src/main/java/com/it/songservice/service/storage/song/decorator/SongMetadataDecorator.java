@@ -41,15 +41,15 @@ public class SongMetadataDecorator extends SongStorageDecorator {
 
             Map<String, Object> metadataMap = new HashMap<>();
             if (metadata.get("title") != null && !metadata.get("title").isEmpty()) {
-                metadataMap.put("Title", metadata.get("title"));
+                metadataMap.put("Name", metadata.get("title"));
             } else {
-                metadataMap.put("Title", "Без названия");
+                metadataMap.put("Name", "Без названия");
             }
             metadataMap.put("Year", metadata.get("xmpDM:releaseDate"));
 
             if (metadata.get("xmpDM:album") != null && !metadata.get("xmpDM:album").isEmpty()) {
                 Map<String, Object> albumMap = new HashMap<>();
-                albumMap.put("Title", metadata.get("xmpDM:album"));
+                albumMap.put("Name", metadata.get("xmpDM:album"));
                 albumMap.put("Year", metadata.get("xmpDM:releaseDate"));
 
                 if (metadata.get("xmpDM:artist") != null && !metadata.get("xmpDM:artist").isEmpty()) {
@@ -78,7 +78,7 @@ public class SongMetadataDecorator extends SongStorageDecorator {
 
             Song entity1 = mapper.map(metadataMap, Song.class);
             entity.setAlbum(entity1.getAlbum());
-            entity.setTitle(entity1.getTitle());
+            entity.setName(entity1.getName());
             entity.setYear(entity1.getYear());
 //            entity.setNotes(entity1.getNotes());
             return entity;

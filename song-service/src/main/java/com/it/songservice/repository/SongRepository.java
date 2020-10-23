@@ -8,6 +8,6 @@ import java.util.Optional;
 @Repository
 public interface SongRepository extends GenericRepository<Song, Long> {
 
-    Optional<Song> findByTitle(String s);
+    Optional<Song> findByName(String s);
 
 }

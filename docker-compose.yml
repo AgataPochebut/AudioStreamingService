@@ -101,6 +101,22 @@ services:
       - config
     entrypoint: ["./wait-for-it.sh", "config:8888", "--timeout=20","--strict", "--", "java", "-jar","app.jar" ]
 
+  song-service1:
+    build: ./song-service
+    environment:
+      CONFIG_SERVER: http://config:8888
+      DISCOVERY_SERVER: http://discovery:8761/eureka
+      DATASOURCE_URL: jdbc:mysql://mysql:3306/song_service?createDatabaseIfNotExist=true&useUnicode=true&serverTimezone=UTC
+      ACTIVEMQ: tcp://activemq:61616
+      AWS_ACCESS_KEY: $AWS_ACCESS_KEY
+      AWS_SECRET_KEY: $AWS_SECRET_KEY
+    restart: always
+    depends_on:
+      - mysql
+      - redis
+      - activemq
+      - config
+    entrypoint: ["./wait-for-it.sh", "config:8888", "--timeout=20","--strict", "--", "java", "-jar","app.jar" ]
 
   conversion-service:
     build: ./conversion-service

@@ -21,7 +21,7 @@ public class Playlist extends BaseEntity {
 
     @NotNull
     @NotEmpty
-    private String title;
+    private String name;
 
     @NotNull
     @ManyToOne
