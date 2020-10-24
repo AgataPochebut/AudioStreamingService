@@ -1,5 +1,6 @@
 package com.it.songservice.service.storage.resource.decorator;
 
+import com.it.songservice.feign.conversion.ConversionClient;
 import com.it.songservice.service.repository.ResourceRepositoryService;
 import com.it.songservice.service.storage.resource.ResourceStorageService;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,9 @@ public class ResourceStorageDecoratorFactory {
     @Autowired
     private CacheManager cacheManager;
 
+    @Autowired
+    private ConversionClient conversionClient;
+
     public ResourceStorageService create(ResourceStorageService service, Class<?> clazz) {
         if (ResourceIORetryDecorator.class.equals(clazz)) {
             return new ResourceIORetryDecorator(service);
@@ -26,6 +30,8 @@ public class ResourceStorageDecoratorFactory {
             return new ResourceDedupingDecorator(service, resourceRepositoryService);
         } else if (ResourceCacheDecorator.class.equals(clazz)) {
             return new ResourceCacheDecorator(service, cacheManager);
+        } else if (ResourceConversionDecorator.class.equals(clazz)) {
+            return new ResourceConversionDecorator(service, conversionClient);
         }
         return service;
     }

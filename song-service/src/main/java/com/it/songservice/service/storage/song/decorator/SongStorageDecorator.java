@@ -1,8 +1,8 @@
 package com.it.songservice.service.storage.song.decorator;
 
+import com.it.songservice.model.Resource;
 import com.it.songservice.model.Song;
 import com.it.songservice.service.storage.song.SongStorageService;
-import org.springframework.core.io.Resource;
 
 public abstract class SongStorageDecorator implements SongStorageService {
 
@@ -13,12 +13,17 @@ public abstract class SongStorageDecorator implements SongStorageService {
     }
 
     @Override
+    public Song upload(Resource resource) throws Exception {
+        return storageService.upload(resource);
+    }
+
+    @Override
     public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
         return storageService.upload(source, name);
     }
 
     @Override
-    public void uploadZip(Resource source, String name) throws Exception {
+    public void uploadZip(org.springframework.core.io.Resource source, String name) throws Exception {
         storageService.uploadZip(source, name);
     }
 

@@ -17,6 +17,13 @@ public class SongStorageServiceImpl implements SongStorageService {
     private Producer producer;
 
     @Override
+    public Song upload(Resource resource) throws Exception {
+        return Song.builder()
+                .resource(resource)
+                .build();
+    }
+
+    @Override
     public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
         Resource resource = resourceStorageServiceManager.upload(source, name);
         return Song.builder()
@@ -27,7 +34,7 @@ public class SongStorageServiceImpl implements SongStorageService {
     @Override
     public void uploadZip(org.springframework.core.io.Resource source, String name) throws Exception {
         Resource resource = resourceStorageServiceManager.upload(source, name);
-        producer.uploadZip(resource);
+        producer.uploadResource(resource);
     }
 
     @Override

@@ -25,29 +25,43 @@ public class Producer {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    public void uploadZip(Resource resource) throws Exception {
-        Throwable lastException;
-        try {
-            jmsTemplate.send("upl", new MessageCreator() {
-                @Override
-                public Message createMessage(Session session) throws JMSException {
-                    ObjectMessage sendMessage = session.createObjectMessage();
-                    sendMessage.setObject(resource);
+    public void uploadResource(Resource resource) throws Exception {
+        jmsTemplate.send("upload_resource", new MessageCreator() {
+            @Override
+            public Message createMessage(Session session) throws JMSException {
+                ObjectMessage sendMessage = session.createObjectMessage();
+                sendMessage.setObject(resource);
 
-                    // TODO: 21.10.2020
-                    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-                    byte[] bytes = SerializationUtils.serialize(authentication);
-                    String auth = DatatypeConverter.printBase64Binary(bytes);
-                    sendMessage.setStringProperty("authentication", auth);
+                // TODO: 21.10.2020
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                byte[] bytes = SerializationUtils.serialize(authentication);
+                String auth = DatatypeConverter.printBase64Binary(bytes);
+                sendMessage.setStringProperty("authentication", auth);
 
-                    sendMessage.setJMSCorrelationID(RandomStringUtils.randomAscii(24));
-                    return sendMessage;
-                }
-            });
-            return;
-        } catch (Exception e) {
-            lastException = e;
-        }
-        throw new UploadException("JMS exc in " + resource.getName(), lastException);
+                sendMessage.setJMSCorrelationID(RandomStringUtils.randomAscii(24));
+                return sendMessage;
+            }
+        });
+        //если не вернуло вывалить ошибку
     }
+
+    public void uploadAudio(Resource resource) throws Exception {
+        jmsTemplate.send("upload_audio", new MessageCreator() {
+            @Override
+            public Message createMessage(Session session) throws JMSException {
+                ObjectMessage sendMessage = session.createObjectMessage();
+                sendMessage.setObject(resource);
+
+                // TODO: 21.10.2020
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                byte[] bytes = SerializationUtils.serialize(authentication);
+                String auth = DatatypeConverter.printBase64Binary(bytes);
+                sendMessage.setStringProperty("authentication", auth);
+
+                sendMessage.setJMSCorrelationID(RandomStringUtils.randomAscii(24));
+                return sendMessage;
+            }
+        });
+    }
+
 }

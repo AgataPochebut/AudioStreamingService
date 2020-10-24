@@ -1,8 +1,11 @@
 package com.it.songservice.controller;
 
 import com.it.songservice.dto.response.SongResponseDto;
+import com.it.songservice.jms.Producer;
+import com.it.songservice.model.Resource;
 import com.it.songservice.model.Song;
 import com.it.songservice.service.repository.SongRepositoryService;
+import com.it.songservice.service.storage.resource.ResourceStorageServiceManager;
 import com.it.songservice.service.storage.song.SongStorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.dozer.Mapper;
@@ -38,6 +41,12 @@ public class SongController {
 
     @Autowired
     private Mapper mapper;
+
+    @Autowired
+    private ResourceStorageServiceManager resourceStorageServiceManager;
+
+    @Autowired
+    private Producer producer;
 
     @GetMapping
     public ResponseEntity<List<SongResponseDto>> getAll() {
@@ -78,16 +87,10 @@ public class SongController {
     // Content type 'multipart/form-data;boundary
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<SongResponseDto> upload(@RequestParam("data") MultipartFile multipartFile) throws Exception {
-        Song entity = storageService.upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
+        Resource resource = resourceStorageServiceManager.upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
+        Song entity = storageService.upload(resource);
         final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
-
-    // Content type 'multipart/form-data;boundary
-    @PostMapping(value = "/zip", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    @ResponseStatus(value = HttpStatus.OK)
-    public void uploadZip(@RequestParam("data") MultipartFile multipartFile) throws Exception {
-        storageService.uploadZip(multipartFile.getResource(), multipartFile.getOriginalFilename());
     }
 
     @DeleteMapping(value = "/{id}")
@@ -103,7 +106,8 @@ public class SongController {
         setHeaders(response, resource, contentType);
         response.addHeader(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.builder("attachment")
                 .filename(filename)
-                .build().toString());
+                .build()
+                .toString());
 
         try {
             InputStream in = resource.getInputStream();

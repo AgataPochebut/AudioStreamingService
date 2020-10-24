@@ -3,6 +3,7 @@ package com.it.songservice.service.storage.song.decorator;
 import com.it.songservice.feign.conversion.ConversionClient;
 import com.it.songservice.feign.index.SongIndexClient;
 import com.it.songservice.service.repository.SongRepositoryService;
+import com.it.songservice.service.storage.resource.ResourceStorageServiceManager;
 import com.it.songservice.service.storage.song.SongStorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.dozer.Mapper;
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class SongStorageDecoratorFactory {
+
+    @Autowired
+    private ResourceStorageServiceManager resourceStorageServiceManager;
 
     @Autowired
     private SongRepositoryService songRepositoryService;
@@ -33,7 +37,7 @@ public class SongStorageDecoratorFactory {
         } else if (SongIndexDecorator.class.equals(clazz)) {
             return new SongIndexDecorator(service, songIndexClient);
         } else if (SongMetadataDecorator.class.equals(clazz)) {
-            return new SongMetadataDecorator(service, mapper);
+            return new SongMetadataDecorator(service, resourceStorageServiceManager, mapper);
         }
         return service;
     }

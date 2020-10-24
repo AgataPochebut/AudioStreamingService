@@ -10,7 +10,6 @@ import org.springframework.data.redis.cache.RedisCache;
 public class ResourceCacheDecorator extends ResourceStorageDecorator {
 
     private CacheManager cacheManager;
-    RedisCache cache;
 
     public ResourceCacheDecorator(ResourceStorageService storageService, CacheManager cacheManager) {
         super(storageService);
