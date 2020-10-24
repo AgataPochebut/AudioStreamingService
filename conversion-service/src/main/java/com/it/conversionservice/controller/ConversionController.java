@@ -1,17 +1,15 @@
 package com.it.conversionservice.controller;
 
 import com.it.conversionservice.service.ConversionService;
+import com.it.conversionservice.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -21,33 +19,30 @@ public class ConversionController {
     @Autowired
     private ConversionService conversionService;
 
-    @Value("${fs.tempFolder}")
-    private String defaultBaseFolder;
+    @Autowired
+    private StorageService storageService;
 
     // Accept 'application/octet-stream'
-    // Content type 'multipart/form-data;boundary
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Resource> convert(@RequestParam("data") MultipartFile multipartFile, @RequestParam("format") String format) throws Exception {
         Resource source = multipartFile.getResource();
         String name = multipartFile.getOriginalFilename();
-        Files.copy(source.getInputStream(), Paths.get(defaultBaseFolder, name));
-        File file = new File(defaultBaseFolder, name);
-
-        File file1 = conversionService.convert(file, format);
-        Resource source1 = new FileSystemResource(file1);
-        String name1 = file1.getName();
-
-        HttpHeaders headers = new HttpHeaders();
-        ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
-                .filename(name1)
-                .build();
-        headers.setContentDisposition(contentDisposition);
-        return new ResponseEntity<>(source1, headers, HttpStatus.OK);
+        File resource = storageService.upload(source, name);
+        File resource1 = conversionService.convert(resource, format);
+        Resource source1 = storageService.download(resource1);
+        String name1 = resource1.getName();
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.builder("attachment")
+                        .filename(name1)
+                        .build()
+                        .toString())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(source1);
     }
 
     // Accept 'application/octet-stream'
-    // Content type 'multipart/form-data;boundary
-    @PostMapping(value = "/future", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    @PostMapping(value = "/future", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public CompletableFuture<ResponseEntity<Resource>> convertFuture(@RequestParam("data") MultipartFile multipartFile, @RequestParam("format") String format) {
         return CompletableFuture.supplyAsync(()-> {
             try {
