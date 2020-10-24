@@ -40,10 +40,4 @@ public class SongController {
     public void delete(@PathVariable Long id) throws IOException {
         repositoryService.deleteById(id);
     }
-
-    @GetMapping(value = "/search")
-    @ResponseBody
-    public List<Song> search(@RequestParam(required = false) String keyword) throws Exception {
-        return repositoryService.search(keyword);
-    }
 }
