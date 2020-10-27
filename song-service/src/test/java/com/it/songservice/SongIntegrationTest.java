@@ -46,14 +46,6 @@ public class SongIntegrationTest {
         storageService.upload(source_test, source_test.getFilename());
     }
 
-//    @AfterEach
-//    void after() throws Exception {
-//        List<Song> list = repositoryService.findAll();
-//        for(Song song : list) {
-//            storageService.delete(song);
-//        }
-//    }
-
     @Test
     void upload() throws Exception {
         org.springframework.core.io.Resource source = new FileSystemResource("src/test/resources/HURTS - WONDERFUL LIFE.MP3");
