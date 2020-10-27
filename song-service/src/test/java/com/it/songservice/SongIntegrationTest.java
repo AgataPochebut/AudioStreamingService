@@ -5,9 +5,7 @@ import com.it.songservice.dto.response.SongResponseDto;
 import com.it.songservice.model.Song;
 import com.it.songservice.service.repository.SongRepositoryService;
 import com.it.songservice.service.storage.song.SongStorageService;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,26 +13,19 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.List;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Slf4j
-@SpringBootTest
+@SpringBootTest("storage.type=S3")
 @AutoConfigureMockMvc(addFilters = false)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class SongIntegrationTest {
 
     @Autowired
@@ -51,34 +42,17 @@ public class SongIntegrationTest {
 
     @BeforeEach
     void before() throws Exception {
-//        org.springframework.core.io.Resource source = new FileSystemResource("src/test/resources/HURTS - WONDERFUL LIFE.MP3");
-//        stubFor(com.github.tomakehurst.wiremock.client.WireMock.post(urlPathMatching(("/conversion")))
-//                .willReturn(aResponse()
-//                        .withStatus(HttpStatus.OK.value())
-//                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE)
-//                        .withHeader(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.builder("attachment").filename(source.getFilename()).build().toString())
-//                        .withBody(Files.readAllBytes(source.getFile().toPath()))));
-//////                        .withBodyFile("HURTS - WONDERFUL LIFE.MP3")));
-
-        stubFor(com.github.tomakehurst.wiremock.client.WireMock.post(urlPathMatching(("/songs/index")))
-                .willReturn(aResponse()
-                        .withStatus(HttpStatus.OK.value())));
-
-        stubFor(com.github.tomakehurst.wiremock.client.WireMock.delete(urlPathMatching(("/songs/delete")))
-                .willReturn(aResponse()
-                        .withStatus(HttpStatus.OK.value())));
-
         org.springframework.core.io.Resource source_test = new FileSystemResource("src/test/resources/hurts - stay.mp3");
         storageService.upload(source_test, source_test.getFilename());
     }
 
-    @AfterEach
-    void after() throws Exception {
-        List<Song> list = repositoryService.findAll();
-        for(Song song : list) {
-            storageService.delete(song);
-        }
-    }
+//    @AfterEach
+//    void after() throws Exception {
+//        List<Song> list = repositoryService.findAll();
+//        for(Song song : list) {
+//            storageService.delete(song);
+//        }
+//    }
 
     @Test
     void upload() throws Exception {
@@ -96,25 +70,6 @@ public class SongIntegrationTest {
         Song song = repositoryService.findById(dto.getId());
         assertThat(storageService.exist(song)).isTrue();
     }
-
-//    @Test
-//    void uploadZip() throws Exception {
-//        org.springframework.core.io.Resource source = new FileSystemResource("src/test/resources/Hurts - Exile.zip");
-//        MockMultipartFile mockMultipartFile = new MockMultipartFile("data", source.getFilename(), "multipart/form-data", source.getInputStream());
-//        MvcResult mvcResult = this.mockMvc.perform(multipart("/songs/zip")
-//                .file(mockMultipartFile)
-//                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//
-//        List<SongResponseDto> list = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<List<SongResponseDto>>(){});
-//        for(SongResponseDto dto : list) {
-//            assertThat(repositoryService.existById(dto.getId())).isTrue();
-//
-//            Song song = repositoryService.findById(dto.getId());
-//            assertThat(storageService.exist(song)).isTrue();
-//        }
-//    }
 
     @Test
     void download() throws Exception {

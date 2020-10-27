@@ -31,11 +31,11 @@ feign:
     enabled: true
 
 s3:
-  defaultBucket: files
+  defaultBucket: test
   tempBucket: temp
 
 fs:
-  defaultFolder: /Java/files
+  defaultFolder: /Java/test
   tempFolder: /Java/temp
 
 storage:
