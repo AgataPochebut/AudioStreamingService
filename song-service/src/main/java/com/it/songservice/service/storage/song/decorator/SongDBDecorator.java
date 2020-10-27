@@ -18,29 +18,24 @@ public class SongDBDecorator extends SongStorageDecorator {
     @Override
     public Song upload(Resource resource) throws Exception {
         Song entity = super.upload(resource);
-
-        Throwable lastException;
         try {
             return repositoryService.save(entity);
         } catch (Exception e) {
             super.delete(entity);
-            lastException = e;
+            throw new UploadException("DB exc in "+ resource.getName(), e);
         }
-        throw new UploadException("DB exc in "+ resource.getName(), lastException);
     }
 
     @Override
     public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
         Song entity = super.upload(source, name);
-
-        Throwable lastException;
         try {
             return repositoryService.save(entity);
         } catch (Exception e) {
             super.delete(entity);
-            lastException = e;
+            throw new UploadException("DB exc in "+ name, e);
         }
-        throw new UploadException("DB exc in "+ name, lastException);
+
     }
 
     @Override

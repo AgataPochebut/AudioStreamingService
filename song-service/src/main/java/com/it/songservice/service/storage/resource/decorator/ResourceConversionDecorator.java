@@ -20,19 +20,17 @@ public class ResourceConversionDecorator extends ResourceStorageDecorator {
 
     @Override
     public Resource upload(org.springframework.core.io.Resource source, String name) throws Exception {
-        Throwable lastException;
         if (FilenameUtils.getExtension(name).equalsIgnoreCase("wav")) {
             try {
                 MultipartFile multipartFile = new MockMultipartFile(name, name, "multipart/form-data", source.getInputStream());
                 ResponseEntity<org.springframework.core.io.Resource> response = conversionClient.convert(multipartFile, "mp3");
                 source = response.getBody();
                 name = response.getHeaders().getContentDisposition().getFilename();
-                return super.upload(source, name);
             } catch (Exception e) {
-                lastException = e;
+                throw new UploadException("Conv exc in " + name, e);
             }
-        } else return super.upload(source, name);
-        throw new UploadException("Conv exc in " + name, lastException);
+        }
+        return super.upload(source, name);
     }
 
 }

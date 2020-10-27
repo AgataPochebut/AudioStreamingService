@@ -27,7 +27,8 @@ public class ResourceController {
     @ResponseStatus(value = HttpStatus.OK)
     public void upload(@RequestParam("data") MultipartFile multipartFile) throws Exception {
         Resource resource = resourceStorageServiceManager.upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
-        producer.uploadResource(resource);
+        producer.upload(resource);
+        // exception & del res - handle in producer + throw uplExc - handle in restExcHandler
     }
 
 }

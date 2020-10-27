@@ -1,5 +1,6 @@
 package com.it.songservice.service.storage.song.decorator;
 
+import com.it.songservice.exception.UploadException;
 import com.it.songservice.feign.index.SongIndexClient;
 import com.it.songservice.model.Resource;
 import com.it.songservice.model.Song;
@@ -17,50 +18,25 @@ public class SongIndexDecorator extends SongStorageDecorator {
     @Override
     public Song upload(Resource resource) throws Exception {
         Song entity = super.upload(resource);
-
         try {
             indexClient.save(entity);
         } catch (Exception e) {
-
+            super.delete(entity);
+            throw new UploadException("ES exc in "+ resource.getName(), e);
         }
-
         return entity;
-
-//        Throwable lastException;
-//        try {
-//            indexClient.save(entity);
-//            return entity;
-//        }
-//        catch (Exception e){
-//            super.delete(entity);
-//            lastException = e;
-//        }
-//        throw new UploadException("ES exc in "+ name, lastException);
     }
 
     @Override
     public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
         Song entity = super.upload(source, name);
-
         try {
             indexClient.save(entity);
-        } catch (
-                Exception e) {
-
-        }
-
-        return entity;
-
-//        Throwable lastException;
-//        try {
-//            indexClient.save(entity);
-//            return entity;
-//        }
-//        catch (Exception e){
+        } catch (Exception e) {
 //            super.delete(entity);
-//            lastException = e;
-//        }
-//        throw new UploadException("ES exc in "+ name, lastException);
+//            throw new UploadException("ES exc in "+ name, e);
+        }
+        return entity;
     }
 
     @Override
@@ -70,7 +46,6 @@ public class SongIndexDecorator extends SongStorageDecorator {
         } catch (Exception e) {
 
         }
-
         super.delete(entity);
     }
 }

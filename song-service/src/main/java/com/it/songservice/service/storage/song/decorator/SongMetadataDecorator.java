@@ -41,8 +41,6 @@ public class SongMetadataDecorator extends SongStorageDecorator {
     @Override
     public Song upload(Resource resource) throws Exception {
         Song entity = super.upload(resource);
-
-        Throwable lastException;
         try {
             org.springframework.core.io.Resource source = resourceStorageServiceManager.download(resource);
             Song entity1 = parse(source);
@@ -54,16 +52,13 @@ public class SongMetadataDecorator extends SongStorageDecorator {
         }
         catch (Exception e) {
             super.delete(entity);
-            lastException = e;
+            throw new UploadException("Metadata exc in "+ resource.getName(), e);
         }
-        throw new UploadException("Metadata exc in "+ resource.getName(), lastException);
     }
 
     @Override
     public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
         Song entity = super.upload(source, name);
-
-        Throwable lastException;
         try {
             Song entity1 = parse(source);
             entity.setAlbum(entity1.getAlbum());
@@ -74,9 +69,8 @@ public class SongMetadataDecorator extends SongStorageDecorator {
         }
         catch (Exception e) {
             super.delete(entity);
-            lastException = e;
+            throw new UploadException("Metadata exc in "+ name, e);
         }
-        throw new UploadException("Metadata exc in "+ name, lastException);
     }
 
     public Song parse(org.springframework.core.io.Resource source) throws IOException, TikaException, SAXException, ParseException {

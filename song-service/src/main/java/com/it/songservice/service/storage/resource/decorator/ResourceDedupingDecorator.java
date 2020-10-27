@@ -17,9 +17,9 @@ public class ResourceDedupingDecorator extends ResourceStorageDecorator {
 
     @Override
     public Resource upload(org.springframework.core.io.Resource source, String name) throws Exception {
-        if (repositoryService.findByChecksum(DigestUtils.md5Hex(source.getInputStream())) == null) {
-            return super.upload(source, name);
+        if (repositoryService.findByChecksum(DigestUtils.md5Hex(source.getInputStream())) != null) {
+            throw new UploadException("Deduping exc in " + name);
         }
-        throw new UploadException("Deduping exc in " + name);
+        return super.upload(source, name);
     }
 }
