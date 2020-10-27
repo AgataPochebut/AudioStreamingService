@@ -1,7 +1,6 @@
 package com.it.songservice.controller;
 
 import com.it.songservice.dto.response.SongResponseDto;
-import com.it.songservice.jms.Producer;
 import com.it.songservice.model.Resource;
 import com.it.songservice.model.Song;
 import com.it.songservice.service.repository.SongRepositoryService;
@@ -34,6 +33,9 @@ import java.util.stream.Collectors;
 public class SongController {
 
     @Autowired
+    private ResourceStorageServiceManager resourceStorageServiceManager;
+
+    @Autowired
     private SongRepositoryService repositoryService;
 
     @Autowired
@@ -41,12 +43,6 @@ public class SongController {
 
     @Autowired
     private Mapper mapper;
-
-    @Autowired
-    private ResourceStorageServiceManager resourceStorageServiceManager;
-
-    @Autowired
-    private Producer producer;
 
     @GetMapping
     public ResponseEntity<List<SongResponseDto>> getAll() {

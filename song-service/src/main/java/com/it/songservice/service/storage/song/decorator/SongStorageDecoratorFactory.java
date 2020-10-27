@@ -30,9 +30,7 @@ public class SongStorageDecoratorFactory {
     private Mapper mapper;
 
     public SongStorageService create(SongStorageService service, Class<?> clazz) {
-        if (SongConversionDecorator.class.equals(clazz)) {
-            return new SongConversionDecorator(service, conversionClient);
-        } else if (SongDBDecorator.class.equals(clazz)) {
+        if (SongDBDecorator.class.equals(clazz)) {
             return new SongDBDecorator(service, songRepositoryService);
         } else if (SongIndexDecorator.class.equals(clazz)) {
             return new SongIndexDecorator(service, songIndexClient);

@@ -1,7 +1,6 @@
 package com.it.songservice.service.storage.song.decorator;
 
 import com.it.songservice.exception.UploadException;
-import com.it.songservice.model.Genre;
 import com.it.songservice.model.Resource;
 import com.it.songservice.model.Song;
 import com.it.songservice.service.storage.resource.ResourceStorageServiceManager;
@@ -18,12 +17,11 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SongMetadataDecorator extends SongStorageDecorator {
@@ -92,7 +90,7 @@ public class SongMetadataDecorator extends SongStorageDecorator {
         Integer year = 0;
         if (metadata.get("xmpDM:releaseDate") != null
                 && !metadata.get("xmpDM:releaseDate").isEmpty()) {
-            LocalDate.parse(metadata.get("xmpDM:releaseDate"), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")).getYear();
+            year = Integer.parseInt(metadata.get("xmpDM:releaseDate").substring(0,4));
         }
 
         Set genres = null;

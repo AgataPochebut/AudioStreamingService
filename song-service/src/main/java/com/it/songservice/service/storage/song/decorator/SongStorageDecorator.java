@@ -23,11 +23,6 @@ public abstract class SongStorageDecorator implements SongStorageService {
     }
 
     @Override
-    public void uploadZip(org.springframework.core.io.Resource source, String name) throws Exception {
-        storageService.uploadZip(source, name);
-    }
-
-    @Override
     public org.springframework.core.io.Resource download(Song entity) throws Exception {
         return storageService.download(entity);
     }

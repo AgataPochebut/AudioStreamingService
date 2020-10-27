@@ -1,6 +1,5 @@
 package com.it.songservice.service.storage.song;
 
-import com.it.songservice.jms.Producer;
 import com.it.songservice.model.Resource;
 import com.it.songservice.model.Song;
 import com.it.songservice.service.storage.resource.ResourceStorageServiceManager;
@@ -12,9 +11,6 @@ public class SongStorageServiceImpl implements SongStorageService {
 
     @Autowired
     private ResourceStorageServiceManager resourceStorageServiceManager;
-
-    @Autowired
-    private Producer producer;
 
     @Override
     public Song upload(Resource resource) throws Exception {
@@ -29,12 +25,6 @@ public class SongStorageServiceImpl implements SongStorageService {
         return Song.builder()
             .resource(resource)
             .build();
-    }
-
-    @Override
-    public void uploadZip(org.springframework.core.io.Resource source, String name) throws Exception {
-        Resource resource = resourceStorageServiceManager.upload(source, name);
-        producer.uploadResource(resource);
     }
 
     @Override

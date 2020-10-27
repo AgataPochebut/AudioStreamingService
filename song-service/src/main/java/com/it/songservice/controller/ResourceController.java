@@ -2,10 +2,8 @@ package com.it.songservice.controller;
 
 import com.it.songservice.jms.Producer;
 import com.it.songservice.model.Resource;
-import com.it.songservice.service.repository.ResourceRepositoryService;
 import com.it.songservice.service.storage.resource.ResourceStorageServiceManager;
 import lombok.extern.slf4j.Slf4j;
-import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

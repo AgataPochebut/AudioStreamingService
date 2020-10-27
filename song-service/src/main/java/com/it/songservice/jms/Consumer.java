@@ -2,7 +2,6 @@ package com.it.songservice.jms;
 
 import com.it.songservice.exception.UploadException;
 import com.it.songservice.model.Resource;
-import com.it.songservice.model.Song;
 import com.it.songservice.service.storage.resource.ResourceStorageServiceManager;
 import com.it.songservice.service.storage.song.SongStorageService;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +18,6 @@ import org.springframework.util.SerializationUtils;
 
 import javax.jms.ObjectMessage;
 import javax.xml.bind.DatatypeConverter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -44,9 +41,11 @@ public class Consumer {
     public void uploadResource(ObjectMessage message) throws Exception {
         // TODO: 21.10.2020  
         String auth = message.getStringProperty("authentication");
-        byte[] bytes = DatatypeConverter.parseBase64Binary(auth);
-        Authentication authentication = (Authentication) SerializationUtils.deserialize(bytes);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        if (auth != null) {
+            byte[] bytes = DatatypeConverter.parseBase64Binary(auth);
+            Authentication authentication = (Authentication) SerializationUtils.deserialize(bytes);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
 
         Resource resource = (Resource) message.getObject();
         upload_resource(resource);
@@ -86,9 +85,11 @@ public class Consumer {
     public void uploadAudio(ObjectMessage message) throws Exception {
         // TODO: 21.10.2020
         String auth = message.getStringProperty("authentication");
-        byte[] bytes = DatatypeConverter.parseBase64Binary(auth);
-        Authentication authentication = (Authentication) SerializationUtils.deserialize(bytes);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        if (auth != null) {
+            byte[] bytes = DatatypeConverter.parseBase64Binary(auth);
+            Authentication authentication = (Authentication) SerializationUtils.deserialize(bytes);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
 
         Resource resource = (Resource) message.getObject();
         upload_audio(resource);

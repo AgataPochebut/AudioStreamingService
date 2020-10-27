@@ -5,7 +5,6 @@ import com.it.songservice.service.storage.resource.ResourceStorageService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.cache.CacheManager;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.data.redis.cache.RedisCache;
 
 public class ResourceCacheDecorator extends ResourceStorageDecorator {
 
