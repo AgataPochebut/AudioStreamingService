@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -33,7 +35,11 @@ public class AlbumConverter implements CustomConverter {
     public Object convert(Object dest, Object source, Class<?> destinationClass, Class<?> sourceClass) {
         if (source == null)
             return null;
-        else if (source instanceof Map) {
+        else if (source instanceof Set) {
+            return ((Set) source).stream().map(s -> {
+                return convert(dest, s, destinationClass, s.getClass());
+            }).collect(Collectors.toSet());
+        } else if (source instanceof Map) {
             Map<String, Object> metadataMap = (Map<String, Object>) source;
             Album entity = repositoryService.findByName((String) metadataMap.get("Title"));
             if (entity == null) {

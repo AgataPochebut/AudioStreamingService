@@ -19,6 +19,8 @@ public class AlbumRequestDto {
 
     private Set<Long> artists;
 
+    private Set<Long> genres;
+
     private  Set<String> notes;
 
 }

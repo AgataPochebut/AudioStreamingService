@@ -5,16 +5,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Transactional
-public abstract class GenericRepositoryServiceImpl<T,U> implements GenericRepositoryService<T, U> {
+public abstract class GenericRepositoryServiceImpl<T, U> implements GenericRepositoryService<T, U> {
 
     @Autowired
     private EntityManager em;
 
     @Autowired
-    private GenericRepository<T,U> repository;
+    private GenericRepository<T, U> repository;
 
     @Override
     public List<T> findAll() {
@@ -23,12 +24,11 @@ public abstract class GenericRepositoryServiceImpl<T,U> implements GenericReposi
 
     @Override
     public T findById(U id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Entity with this id not exist"));
     }
 
     @Override
     public T save(T entity) throws Exception {
-//        return repository.save(entity);
         return em.merge(entity);
     }
 
@@ -39,8 +39,8 @@ public abstract class GenericRepositoryServiceImpl<T,U> implements GenericReposi
 
     @Override
     public void deleteById(U id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);}
+        if(existById(id)) repository.deleteById(id);
+        else throw new EntityNotFoundException("Entity with this id not exist");
     }
 
     @Override

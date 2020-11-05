@@ -32,6 +32,12 @@ public class Album extends BaseEntity {
             inverseJoinColumns = {@JoinColumn(name = "artist_id")})
     private Set<Artist> artists;
 
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "Album_Genre",
+            joinColumns = {@JoinColumn(name = "album_id")},
+            inverseJoinColumns = {@JoinColumn(name = "genre_id")})
+    private Set<Genre> genres;
+
 //    @ElementCollection
 //    @CollectionTable(name = "notes", joinColumns = @JoinColumn(name = "source_id"))
 //    @Column(name = "note")

@@ -1,5 +1,6 @@
 package com.it.songservice.controller;
 
+import com.it.songservice.dto.request.ArtistGetRequestDto;
 import com.it.songservice.dto.request.ArtistRequestDto;
 import com.it.songservice.dto.response.ArtistResponseDto;
 import com.it.songservice.model.Artist;
@@ -11,7 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Size;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -25,10 +29,9 @@ public class ArtistController {
     private Mapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<ArtistResponseDto>> getAll() {
-        final List<Artist> entity = repositoryService.findAll();
-
-        final List<ArtistResponseDto> responseDto = entity.stream()
+    public ResponseEntity<List<ArtistResponseDto>> get(@Valid ArtistGetRequestDto requestDto) {
+        final List<Artist> list = repositoryService.findAll(requestDto);
+        final List<ArtistResponseDto> responseDto = list.stream()
                 .map((i) -> mapper.map(i, ArtistResponseDto.class))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -37,28 +40,43 @@ public class ArtistController {
     @GetMapping(value = "/{id}")
     public ResponseEntity<ArtistResponseDto> get(@PathVariable Long id) {
         Artist entity = repositoryService.findById(id);
-
         final ArtistResponseDto responseDto = mapper.map(entity, ArtistResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<ArtistResponseDto> save(@Valid @RequestBody ArtistRequestDto requestDto) throws Exception {
+    public ResponseEntity<Long> save(@Valid @RequestBody ArtistRequestDto requestDto) throws Exception {
         Artist entity = mapper.map(requestDto, Artist.class);
         entity = repositoryService.save(entity);
-
-        final ArtistResponseDto responseDto = mapper.map(entity, ArtistResponseDto.class);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        return new ResponseEntity<>(entity.getId(), HttpStatus.OK);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ArtistResponseDto> update(@PathVariable Long id, @Valid @RequestBody ArtistRequestDto requestDto) throws Exception {
+    @ResponseStatus(value = HttpStatus.OK)
+    public void update(@PathVariable Long id, @Valid @RequestBody ArtistRequestDto requestDto) throws Exception {
         Artist entity = mapper.map(requestDto, Artist.class);
         entity.setId(id);
-        entity = repositoryService.update(entity);
+        repositoryService.update(entity);
+    }
 
-        final ArtistResponseDto responseDto = mapper.map(entity, ArtistResponseDto.class);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    @DeleteMapping
+    public ResponseEntity<Set<Long>> delete(
+            @Valid @Size(max = 200) @RequestParam(required = false) String id) {
+        Set<Long> list = Arrays.stream(id.split(","))
+                .map(s -> {
+                    Long i = Long.parseLong(s);
+                    try {
+                        repositoryService.deleteById(i);
+                        return i;
+                    } catch (Exception e) {
+                        return null;
+                    }
+                })
+                .filter(i -> i != null)
+                .collect(Collectors.toSet());
+        return ResponseEntity
+                .ok()
+                .body(list);
     }
 
     @DeleteMapping(value = "/{id}")
@@ -66,5 +84,4 @@ public class ArtistController {
     public void delete(@PathVariable Long id) {
         repositoryService.deleteById(id);
     }
-
 }

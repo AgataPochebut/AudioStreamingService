@@ -13,11 +13,8 @@ public class SongResponseDto {
 
     private String name;
 
-    private Integer year;
+    private AlbumResponseDto album;
 
     private Set<String> notes;
 
-    private AlbumResponseDto album;
-
-    private ResourceResponseDto resource;
 }

@@ -23,6 +23,19 @@ import java.util.Map;
 @Configuration
 public class MappingConfiguration {
 
+//    private class CustomConverterImpl implements CustomConverter {
+//        @Override
+//        public Object convert(Object dest, Object source, Class<?> destinationClass, Class<?> sourceClass) {
+//            if (source == null)
+//                return null;
+//            else if (source instanceof String) {
+//                return Arrays.stream(((String) source).split(","))
+//                        .map(s -> Long.parseLong(s))
+//                        .collect(Collectors.toSet());
+//            } else return null;
+//        }
+//    }
+
     @Bean
     public Mapper mapper() {
 
@@ -31,15 +44,15 @@ public class MappingConfiguration {
             @Override
             protected void configure() {
 
-                mapping(Map.class, Song.class,
-                        TypeMappingOptions.dateFormat("yyyy"))
+                mapping(Map.class, Song.class)
                         .fields("Album", "Album", FieldsMappingOptions.customConverter(AlbumConverter.class))
-                        .fields("Year", "Year")
+//                        .fields("Albums", "Albums", FieldsMappingOptions.customConverter(AlbumConverter.class))
+//                        .fields("Artists", "Artists", FieldsMappingOptions.customConverter(ArtistConverter.class))
                         .fields("Name", "Name");
 
-                mapping(Map.class, Album.class,
-                        TypeMappingOptions.dateFormat("yyyy"))
+                mapping(Map.class, Album.class, TypeMappingOptions.dateFormat("yyyy"))
                         .fields("Artists", "Artists", FieldsMappingOptions.customConverter(ArtistConverter.class))
+                        .fields("Genres", "Genres", FieldsMappingOptions.customConverter(GenreConverter.class))
                         .fields("Year", "Year")
                         .fields("Name", "Name");
 
@@ -50,9 +63,10 @@ public class MappingConfiguration {
                 mapping(Map.class, Genre.class)
                         .fields("Name", "Name");
 
-                mapping(AlbumRequestDto.class, Album.class,
-                        TypeMappingOptions.dateFormat("yyyy"))
+
+                mapping(AlbumRequestDto.class, Album.class, TypeMappingOptions.dateFormat("yyyy"))
                         .fields("Artists", "Artists", FieldsMappingOptions.customConverter(ArtistConverter.class))
+                        .fields("Genres", "Genres", FieldsMappingOptions.customConverter(GenreConverter.class))
                         .fields("Year", "Year")
                         .fields("Name", "Name");
 

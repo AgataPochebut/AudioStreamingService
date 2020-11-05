@@ -10,10 +10,10 @@ import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
 import org.apache.tika.parser.mp3.Mp3Parser;
+import org.apache.tika.sax.BodyContentHandler;
 import org.dozer.Mapper;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,7 +46,6 @@ public class SongMetadataDecorator extends SongStorageDecorator {
             Song entity1 = parse(source);
             entity.setAlbum(entity1.getAlbum());
             entity.setName(entity1.getName());
-            entity.setYear(entity1.getYear());
 //            entity.setNotes(entity1.getNotes());
             return entity;
         }
@@ -63,7 +62,6 @@ public class SongMetadataDecorator extends SongStorageDecorator {
             Song entity1 = parse(source);
             entity.setAlbum(entity1.getAlbum());
             entity.setName(entity1.getName());
-            entity.setYear(entity1.getYear());
 //            entity.setNotes(entity1.getNotes());
             return entity;
         }
@@ -75,9 +73,10 @@ public class SongMetadataDecorator extends SongStorageDecorator {
 
     public Song parse(org.springframework.core.io.Resource source) throws IOException, TikaException, SAXException, ParseException {
         InputStream input = source.getInputStream();
-        ContentHandler handler = new DefaultHandler();
-        Metadata metadata = new Metadata();
+        ContentHandler handler = new BodyContentHandler();
+
         Parser parser = new Mp3Parser();
+        Metadata metadata = new Metadata();
         ParseContext parseCtx = new ParseContext();
         parser.parse(input, handler, metadata, parseCtx);
 
@@ -112,23 +111,24 @@ public class SongMetadataDecorator extends SongStorageDecorator {
                 }).collect(Collectors.toSet());
         }
 
-        Map album = null;
-        if (metadata.get("xmpDM:album") != null
-                && !metadata.get("xmpDM:album").isEmpty()) {
-            album = new HashMap<>();
-            album.put("Name", metadata.get("xmpDM:album"));
-            album.put("Year",  year);
-            album.put("Artists", artists);
-        }
-
-        Map song = new HashMap<String, Object>();
+        String title = "Без названия";
         if (metadata.get("title") != null
                 && !metadata.get("title").isEmpty()) {
-            song.put("Name", metadata.get("title"));
-        } else {
-            song.put("Name", "Без названия");
+            title = metadata.get("title");
         }
-        song.put("Year", year);
+
+        Map album = new HashMap<>();
+        if (metadata.get("xmpDM:album") != null
+                && !metadata.get("xmpDM:album").isEmpty()) {
+            album.put("Name", metadata.get("xmpDM:album"));
+        } else {
+            album.put("Name", title);
+        }
+        album.put("Year", year);
+        album.put("Artists", artists);
+
+        Map song = new HashMap<String, Object>();
+        song.put("Name", title);
         song.put("Album", album);
 
         return mapper.map(song, Song.class);
