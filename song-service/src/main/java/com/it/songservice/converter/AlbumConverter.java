@@ -1,5 +1,6 @@
 package com.it.songservice.converter;
 
+import com.it.commonservice.model.BaseEntity;
 import com.it.songservice.model.Album;
 import com.it.songservice.service.repository.AlbumRepositoryService;
 import org.dozer.CustomConverter;
@@ -48,6 +49,8 @@ public class AlbumConverter implements CustomConverter {
             return entity;
         } else if (source instanceof Long) {
             return repositoryService.findById((Long) source);
+        } else if (source instanceof BaseEntity) {
+            return ((BaseEntity) source).getId();
         } else return null;
     }
 }

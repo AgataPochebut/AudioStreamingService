@@ -13,7 +13,7 @@ public class ArtistResponseDto {
 
     private String name;
 
-    private Set<GenreResponseDto> genres;
+    private Set<Long> genres;
 
     private Set<String> notes;
 

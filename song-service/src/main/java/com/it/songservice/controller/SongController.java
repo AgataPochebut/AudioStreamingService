@@ -1,7 +1,6 @@
 package com.it.songservice.controller;
 
 import com.it.songservice.dto.response.SongResponseDto;
-import com.it.songservice.model.Resource;
 import com.it.songservice.model.Song;
 import com.it.songservice.service.repository.SongRepositoryService;
 import com.it.songservice.service.storage.resource.ResourceStorageServiceManager;
@@ -14,8 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import java.util.Arrays;
@@ -56,15 +53,6 @@ public class SongController {
         Song entity = repositoryService.findById(id);
         final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
-
-    // Accept 'application/octet-stream'
-    @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
-    public void download(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Song entity = repositoryService.findById(id);
-        Resource resource = entity.getResource();
-        // TODO: 11/6/2020
-        response.sendRedirect(String.format("/resource/%d", resource.getId()));
     }
 
     @DeleteMapping

@@ -35,7 +35,7 @@ public class AlbumRepositoryServiceImpl extends GenericRepositoryServiceImpl<Alb
         if (requestDto.getName()!=null)
             specification = specification.and(hasName(requestDto.getName()));
 
-        if (requestDto.getYear()!=0)
+        if (requestDto.getYear()!=null)
             specification = specification.and(hasYear(requestDto.getYear()));
 
         if (requestDto.getArtists()!=null) {

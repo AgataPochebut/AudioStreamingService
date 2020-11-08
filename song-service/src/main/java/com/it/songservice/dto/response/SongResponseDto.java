@@ -13,7 +13,9 @@ public class SongResponseDto {
 
     private String name;
 
-    private AlbumResponseDto album;
+    private Long resource;
+
+    private Long album;
 
     private Set<String> notes;
 

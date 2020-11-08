@@ -15,9 +15,9 @@ public class AlbumResponseDto {
 
     private Integer year;
 
-    private Set<ArtistResponseDto> artists;
+    private Set<Long> artists;
 
-    private Set<GenreResponseDto> genres;
+    private Set<Long> genres;
 
     private Set<String> notes;
 

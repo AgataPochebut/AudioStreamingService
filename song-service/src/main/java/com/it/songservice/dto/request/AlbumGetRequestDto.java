@@ -20,6 +20,6 @@ public class AlbumGetRequestDto {
     @Size(max = 200)
     private String genres;
 
-    private  String notes;
+    private String notes;
 
 }
