@@ -27,6 +27,13 @@
         <org.apache.maven.plugins.version>3.6.0</org.apache.maven.plugins.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>ithaka</id>
+            <url>http://beckchr.github.com/ithaka-maven/mvnrepo/</url>
+        </repository>
+    </repositories>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -196,6 +203,12 @@
             <version>0.10</version>
         </dependency>
 
+        <dependency>
+            <groupId>de.odysseus.ithaka</groupId>
+            <artifactId>ithaka-audioinfo</artifactId>
+            <version>1.0</version>
+        </dependency>
+
         <!--		если включено то работает templates, иначе static-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -224,6 +237,8 @@
         </dependency>
 
     </dependencies>
+
+
 
     <build>
         <finalName>song-service</finalName>

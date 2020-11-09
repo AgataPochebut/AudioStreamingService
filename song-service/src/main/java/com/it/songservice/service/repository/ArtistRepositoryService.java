@@ -11,4 +11,6 @@ public interface ArtistRepositoryService extends GenericRepositoryService<Artist
 
     List<Artist> findAll(ArtistGetRequestDto requestDto);
 
+    List<Artist> findAll(Artist requestDto);
+
 }

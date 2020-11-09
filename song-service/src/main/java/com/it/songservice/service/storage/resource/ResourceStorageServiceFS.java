@@ -6,14 +6,11 @@ import com.it.songservice.model.Resource;
 import com.it.songservice.model.StorageTypes;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -47,11 +44,11 @@ public class ResourceStorageServiceFS implements ResourceStorageService<FSResour
 
     @Override
     public org.springframework.core.io.Resource download(FSResource resource) throws IOException {
-        org.springframework.core.io.Resource source = new FileSystemResource(Paths.get(resource.getFolderName(), resource.getName()));
-        InputStream in = source.getInputStream();
-        byte[] content = IOUtils.toByteArray(in);
-        in.close();
-        return new ByteArrayResource(content);
+//        InputStream in = Files.newInputStream(Paths.get(resource.getFolderName(), resource.getName()));
+//        byte[] content = IOUtils.toByteArray(in);
+//        in.close();
+//        return new ByteArrayResource(content);
+        return new FileSystemResource(Paths.get(resource.getFolderName(), resource.getName()));
     }
 
     @Override

@@ -35,7 +35,6 @@ public class SongDBDecorator extends SongStorageDecorator {
             super.delete(entity);
             throw new UploadException("DB exc in "+ name, e);
         }
-
     }
 
     @Override

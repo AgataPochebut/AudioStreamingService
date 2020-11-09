@@ -55,6 +55,35 @@ public class AlbumRepositoryServiceImpl extends GenericRepositoryServiceImpl<Alb
         return repository.findAll(specification);
     }
 
+    @Override
+    public List<Album> findAll(Album requestDto) {
+        Specification<Album> specification = Specification.where(null);
+
+        if (requestDto.getName()!=null)
+            specification = specification.and(hasName(requestDto.getName()));
+
+        if (requestDto.getYear()!=null)
+            specification = specification.and(hasYear(requestDto.getYear()));
+
+        if (requestDto.getArtists()!=null) {
+            Set<Long> set = requestDto.getArtists()
+                    .stream()
+                    .map(s -> s.getId())
+                    .collect(Collectors.toSet());
+            specification = specification.and(hasArtists(set));
+        }
+
+        if (requestDto.getGenres()!=null) {
+            Set<Long> set = requestDto.getGenres()
+                    .stream()
+                    .map(s -> s.getId())
+                    .collect(Collectors.toSet());
+            specification = specification.and(hasGenres(set));
+        }
+
+        return repository.findAll(specification);
+    }
+
     private Specification<Album> hasName(String name){
         return (root, criteriaQuery, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.like(root.get("name"), "%" + name + "%");

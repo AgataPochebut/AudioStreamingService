@@ -19,7 +19,6 @@ import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 import org.dozer.loader.api.BeanMappingBuilder;
 import org.dozer.loader.api.FieldsMappingOptions;
-import org.dozer.loader.api.TypeMappingOptions;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -40,7 +39,7 @@ public class MappingConfiguration {
                         .fields("Album", "Album", FieldsMappingOptions.customConverter(AlbumConverter.class))
                         .fields("Name", "Name");
 
-                mapping(Map.class, Album.class, TypeMappingOptions.dateFormat("yyyy"))
+                mapping(Map.class, Album.class)
                         .fields("Artists", "Artists", FieldsMappingOptions.customConverter(ArtistConverter.class))
                         .fields("Genres", "Genres", FieldsMappingOptions.customConverter(GenreConverter.class))
                         .fields("Year", "Year")
@@ -54,7 +53,7 @@ public class MappingConfiguration {
                         .fields("Name", "Name");
 
 
-                mapping(AlbumRequestDto.class, Album.class, TypeMappingOptions.dateFormat("yyyy"))
+                mapping(AlbumRequestDto.class, Album.class)
                         .fields("Artists", "Artists", FieldsMappingOptions.customConverter(ArtistConverter.class))
                         .fields("Genres", "Genres", FieldsMappingOptions.customConverter(GenreConverter.class))
                         .fields("Year", "Year")
@@ -73,7 +72,7 @@ public class MappingConfiguration {
                         .fields("Resource", "Resource", FieldsMappingOptions.customConverter(LongConverter.class))
                         .fields("Name", "Name");
 
-                mapping(Album.class, AlbumResponseDto.class, TypeMappingOptions.dateFormat("yyyy"))
+                mapping(Album.class, AlbumResponseDto.class)
                         .fields("Artists", "Artists", FieldsMappingOptions.customConverter(LongConverter.class))
                         .fields("Genres", "Genres", FieldsMappingOptions.customConverter(LongConverter.class))
                         .fields("Year", "Year")

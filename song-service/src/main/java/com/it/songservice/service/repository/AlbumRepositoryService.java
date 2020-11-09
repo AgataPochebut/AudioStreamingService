@@ -11,4 +11,6 @@ public interface AlbumRepositoryService extends GenericRepositoryService<Album, 
 
     List<Album> findAll(AlbumGetRequestDto requestDto);
 
+    List<Album> findAll(Album requestDto);
+
 }

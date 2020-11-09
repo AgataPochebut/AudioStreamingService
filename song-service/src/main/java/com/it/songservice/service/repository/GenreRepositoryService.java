@@ -11,4 +11,6 @@ public interface GenreRepositoryService extends GenericRepositoryService<Genre, 
 
     List<Genre> findAll(GenreGetRequestDto requestDto);
 
+    List<Genre> findAll(Genre requestDto);
+
 }

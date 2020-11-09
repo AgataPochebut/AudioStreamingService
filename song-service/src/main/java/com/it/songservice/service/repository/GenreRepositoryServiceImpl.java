@@ -33,6 +33,16 @@ public class GenreRepositoryServiceImpl extends GenericRepositoryServiceImpl<Gen
         return repository.findAll(specification);
     }
 
+    @Override
+    public List<Genre> findAll(Genre requestDto) {
+        Specification<Genre> specification = Specification.where(null);
+
+        if (requestDto.getName() != null)
+            specification = specification.and(hasName(requestDto.getName()));
+
+        return repository.findAll(specification);
+    }
+
     private Specification<Genre> hasName(String name) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.like(root.get("name"), "%" + name + "%");

@@ -45,6 +45,24 @@ public class ArtistRepositoryServiceImpl extends GenericRepositoryServiceImpl<Ar
         return repository.findAll(specification);
     }
 
+    @Override
+    public List<Artist> findAll(Artist requestDto) {
+        Specification<Artist> specification = Specification.where(null);
+
+        if (requestDto.getName()!=null)
+            specification = specification.and(hasName(requestDto.getName()));
+
+        if (requestDto.getGenres()!=null) {
+            Set<Long> set = requestDto.getGenres()
+                    .stream()
+                    .map(s -> s.getId())
+                    .collect(Collectors.toSet());
+            specification = specification.and(hasGenres(set));
+        }
+
+        return repository.findAll(specification);
+    }
+
     private Specification<Artist> hasName(String name){
         return (root, criteriaQuery, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.like(root.get("name"), "%" + name + "%");

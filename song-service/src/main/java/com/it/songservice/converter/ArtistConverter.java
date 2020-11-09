@@ -1,6 +1,5 @@
 package com.it.songservice.converter;
 
-import com.it.commonservice.model.BaseEntity;
 import com.it.songservice.model.Artist;
 import com.it.songservice.service.repository.ArtistRepositoryService;
 import org.dozer.CustomConverter;
@@ -38,9 +37,7 @@ class ArtistConverter implements CustomConverter {
         if (source == null)
             return null;
         else if (source instanceof Set) {
-            return ((Set) source).stream().map(s -> {
-                return convert(dest, s, destinationClass, s.getClass());
-            }).collect(Collectors.toSet());
+            return ((Set) source).stream().map(s -> convert(dest, s, destinationClass, s.getClass())).collect(Collectors.toSet());
         } else if (source instanceof Map) {
             Map<String, Object> metadataMap = (Map<String, Object>) source;
             Artist entity = repositoryService.findByName((String) metadataMap.get("Name"));
@@ -50,8 +47,6 @@ class ArtistConverter implements CustomConverter {
             return entity;
         } else if (source instanceof Long) {
             return repositoryService.findById((Long) source);
-        } else if (source instanceof BaseEntity) {
-            return ((BaseEntity) source).getId();
         } else return null;
     }
 }

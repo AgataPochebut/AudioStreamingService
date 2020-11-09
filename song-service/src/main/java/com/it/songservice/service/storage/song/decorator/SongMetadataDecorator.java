@@ -5,6 +5,11 @@ import com.it.songservice.model.Resource;
 import com.it.songservice.model.Song;
 import com.it.songservice.service.storage.resource.ResourceStorageServiceManager;
 import com.it.songservice.service.storage.song.SongStorageService;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.UnsupportedTagException;
+import de.odysseus.ithaka.audioinfo.AudioInfo;
+import de.odysseus.ithaka.audioinfo.mp3.ID3v2Exception;
+import de.odysseus.ithaka.audioinfo.mp3.ID3v2Info;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
@@ -15,6 +20,7 @@ import org.dozer.Mapper;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -43,7 +49,9 @@ public class SongMetadataDecorator extends SongStorageDecorator {
         Song entity = super.upload(resource);
         try {
             org.springframework.core.io.Resource source = resourceStorageServiceManager.download(resource);
-            Song entity1 = parse(source);
+            BufferedInputStream inputStream = new BufferedInputStream(source.getInputStream());
+
+            Song entity1 = parse(inputStream);
             entity.setAlbum(entity1.getAlbum());
             entity.setName(entity1.getName());
 //            entity.setNotes(entity1.getNotes());
@@ -59,7 +67,9 @@ public class SongMetadataDecorator extends SongStorageDecorator {
     public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
         Song entity = super.upload(source, name);
         try {
-            Song entity1 = parse(source);
+            BufferedInputStream inputStream = new BufferedInputStream(source.getInputStream());
+
+            Song entity1 = parse(inputStream);
             entity.setAlbum(entity1.getAlbum());
             entity.setName(entity1.getName());
 //            entity.setNotes(entity1.getNotes());
@@ -71,27 +81,19 @@ public class SongMetadataDecorator extends SongStorageDecorator {
         }
     }
 
-    public Song parse(org.springframework.core.io.Resource source) throws IOException, TikaException, SAXException, ParseException {
-        InputStream input = source.getInputStream();
+    public Song parse_(InputStream input) throws IOException, TikaException, SAXException, ParseException, InvalidDataException, UnsupportedTagException, ID3v2Exception {
         ContentHandler handler = new BodyContentHandler();
-
         Parser parser = new Mp3Parser();
         Metadata metadata = new Metadata();
         ParseContext parseCtx = new ParseContext();
         parser.parse(input, handler, metadata, parseCtx);
-
-        Integer year = 0;
-        if (metadata.get("xmpDM:releaseDate") != null
-                && !metadata.get("xmpDM:releaseDate").isEmpty()) {
-            year = Integer.parseInt(metadata.get("xmpDM:releaseDate").substring(0,4));
-        }
 
         Set genres = null;
         if (metadata.get("xmpDM:genre") != null
                 && !metadata.get("xmpDM:genre").isEmpty()) {
             genres = Arrays.stream(metadata.get("xmpDM:genre").split(", "))
                     .map(g -> {
-                        Map<String, Object> genreMap = new HashMap<>();
+                        Map genreMap = new HashMap<>();
                         genreMap.put("Name", g);
                         return genreMap;
                     })
@@ -101,14 +103,18 @@ public class SongMetadataDecorator extends SongStorageDecorator {
         Set artists = null;
         if (metadata.get("xmpDM:artist") != null
                 && !metadata.get("xmpDM:artist").isEmpty()) {
-            Set finalGenres = genres;
             artists = Arrays.stream(metadata.get("xmpDM:artist").split(", "))
-                .map(a -> {
-                    Map<String, Object> artistMap = new HashMap<>();
-                    artistMap.put("Name", a);
-                    artistMap.put("Genres", finalGenres);
-                    return artistMap;
-                }).collect(Collectors.toSet());
+                    .map(a -> {
+                        Map artistMap = new HashMap<>();
+                        artistMap.put("Name", a);
+                        return artistMap;
+                    }).collect(Collectors.toSet());
+        }
+
+        Integer year = 0;
+        if (metadata.get("xmpDM:releaseDate") != null
+                && !metadata.get("xmpDM:releaseDate").isEmpty()) {
+            year = Integer.parseInt(metadata.get("xmpDM:releaseDate").substring(0,4));
         }
 
         String title = "Без названия";
@@ -117,21 +123,72 @@ public class SongMetadataDecorator extends SongStorageDecorator {
             title = metadata.get("title");
         }
 
-        Map album = new HashMap<>();
+        Map albumMap = new HashMap<>();
         if (metadata.get("xmpDM:album") != null
                 && !metadata.get("xmpDM:album").isEmpty()) {
-            album.put("Name", metadata.get("xmpDM:album"));
+            albumMap.put("Name", metadata.get("xmpDM:album"));
         } else {
-            album.put("Name", title);
+            albumMap.put("Name", title);
         }
-        album.put("Year", year);
-        album.put("Artists", artists);
+        albumMap.put("Year", year);
+        albumMap.put("Artists", artists);
+        albumMap.put("Genres", genres);
 
-        Map song = new HashMap<String, Object>();
-        song.put("Name", title);
-        song.put("Album", album);
+        Map songMap = new HashMap<>();
+        songMap.put("Name", title);
+        songMap.put("Album", albumMap);
 
-        return mapper.map(song, Song.class);
+        return mapper.map(songMap, Song.class);
+    }
+
+    public Song parse(InputStream input) throws IOException, TikaException, SAXException, ParseException, InvalidDataException, UnsupportedTagException, ID3v2Exception {
+        AudioInfo audioInfo = new ID3v2Info(input);
+
+        String genresName = audioInfo.getGenre();
+        Set genres = null;
+        if (genresName != null && !genresName.isEmpty()) {
+            genres = Arrays.stream(genresName.split(", "))
+                    .map(g -> {
+                        Map genreMap = new HashMap<>();
+                        genreMap.put("Name", g);
+                        return genreMap;
+                    })
+                    .collect(Collectors.toSet());
+        }
+
+        String artistsName = audioInfo.getArtist();
+        Set artists = null;
+        if (artistsName != null && !artistsName.isEmpty()) {
+            artists = Arrays.stream(artistsName.split(", "))
+                    .map(a -> {
+                        Map artistMap = new HashMap<>();
+                        artistMap.put("Name", a);
+                        return artistMap;
+                    }).collect(Collectors.toSet());
+        }
+
+        Integer year = Integer.valueOf(audioInfo.getYear());
+
+        String albumName = audioInfo.getAlbum();
+        String songName = audioInfo.getTitle();
+
+        Map albumMap = new HashMap<>();
+        if (albumName != null && !albumName.isEmpty()) {
+            albumMap.put("Name", albumName);
+        } else if (songName != null && !songName.isEmpty()) {
+            albumMap.put("Name", songName);
+        } else albumMap.put("Name", "Без названия");
+        albumMap.put("Year", year);
+        albumMap.put("Artists", artists);
+        albumMap.put("Genres", genres);
+
+        Map songMap = new HashMap<>();
+        if (songName != null && !songName.isEmpty()) {
+            songMap.put("Name", songName);
+        } else songMap.put("Name", "Без названия");
+        songMap.put("Album", albumMap);
+
+        return mapper.map(songMap, Song.class);
     }
 
 }
