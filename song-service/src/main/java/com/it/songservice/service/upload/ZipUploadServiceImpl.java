@@ -46,26 +46,26 @@ public class ZipUploadServiceImpl implements ZipUploadService {
                         Resource resource1 = resourceStorageServiceManager.upload(source1, name1);
                         resourceUploadService.upload(resource1);//or uploadResource
 
-                        resourceUploadService.setCorr(resource, resource1);
+                        resourceUploadService.setCorr(resource.getId(), resource1.getId());
                     } catch (Exception e) {
                         String errorMessage = e.getMessage();
                         log.error(errorMessage, e);
 
-                        resourceUploadService.setMess(resource, errorMessage);
+                        resourceUploadService.setMess(resource.getId(), errorMessage);
                     }
                 }
                 zin.closeEntry();
             }
             zin.close();
 
-            resourceUploadService.setStatus(resource, UploadStatus.FINISHED);
+            resourceUploadService.setStatus(resource.getId(), UploadStatus.FINISHED);
         }
         catch (Exception e) {
             String errorMessage = e.getMessage();
             log.error(errorMessage, e);
 
-            resourceUploadService.setMess(resource, errorMessage);
-            resourceUploadService.setStatus(resource, UploadStatus.FAILED);
+            resourceUploadService.setMess(resource.getId(), errorMessage);
+            resourceUploadService.setStatus(resource.getId(), UploadStatus.FAILED);
 
             throw new UploadException("Can't unzip archive " + resource.getName(), e);
         }

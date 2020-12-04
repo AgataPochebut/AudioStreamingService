@@ -10,12 +10,12 @@ public interface ResourceUploadService {
 
     void upload(Resource resource) throws Exception;
 
-    UploadResult getResultById(Long id) throws JMSException;
+    UploadResult getResultById(Long upload_id) throws JMSException;
 
-    void setStatus(Resource resource, UploadStatus status) throws Exception;
+    void setStatus(Long upload_id, UploadStatus status) throws Exception;
 
-    void setMess(Resource resource, String mess) throws Exception;
+    void setMess(Long upload_id, String mess) throws Exception;
 
-    void setCorr(Resource resource, Resource resource1) throws Exception;
+    void setCorr(Long upload_id, Long corr_upload_id) throws Exception;
 
 }

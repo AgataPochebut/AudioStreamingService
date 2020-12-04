@@ -34,7 +34,7 @@ public class ResourceUploadServiceImpl implements ResourceUploadService {
 
     @Override
     public void upload(Resource resource) throws Exception {
-        setStatus(resource, UploadStatus.PROCEEDED);
+        setStatus(resource.getId(), UploadStatus.PROCEEDED);
 
         try {
             String name = resource.getName();
@@ -56,8 +56,8 @@ public class ResourceUploadServiceImpl implements ResourceUploadService {
             String errorMessage = e.getMessage();
             log.error(errorMessage, e);
 
-            setMess(resource, errorMessage);
-            setStatus(resource, UploadStatus.FAILED);
+            setMess(resource.getId(), errorMessage);
+            setStatus(resource.getId(), UploadStatus.FAILED);
 
             throw new UploadException("Can't upload file " + resource.getName(), e);
         }
@@ -89,12 +89,12 @@ public class ResourceUploadServiceImpl implements ResourceUploadService {
 
 
     @Override
-    public UploadResult getResultById(Long id) {
+    public UploadResult getResultById(Long upload_id) {
         UploadResult uploadResult = new UploadResult();
-        uploadResult.setId(id);
-        uploadResult.setMessages(getMess(id));
+        uploadResult.setId(upload_id);
+        uploadResult.setMessages(getMess(upload_id));
 
-        Set<Long> corr = getCorr(id);
+        Set<Long> corr = getCorr(upload_id);
         if (corr!= null && !corr.isEmpty()) {
             Set<UploadResult> details = corr.stream()
                     .map(i -> getResultById(i))
@@ -108,51 +108,50 @@ public class ResourceUploadServiceImpl implements ResourceUploadService {
 
             uploadResult.setStatus(status);
         } else {
-            uploadResult.setStatus(getStatus(id));
+            uploadResult.setStatus(getStatus(upload_id));
         }
 
         return uploadResult;
     }
 
-    public void setStatus(Resource resource, UploadStatus status) {
+    public void setStatus(Long upload_id, UploadStatus status) {
         jmsTemplate.execute((session, producer) -> {
             Destination dest = session.createQueue("status");
 
             Message message = session.createObjectMessage(status);
-            message.setJMSCorrelationID(String.valueOf(resource.getId()));
+            message.setJMSCorrelationID(String.valueOf(upload_id));
 
             producer.send(dest, message);
             return null;
         });
     }
 
-    public void setMess(Resource resource, String mess) {
+    public void setMess(Long upload_id, String mess) {
         jmsTemplate.execute((session, producer) -> {
             Destination dest = session.createQueue("mess");
 
             Message message = session.createTextMessage(mess);
-//            Message message = session.createObjectMessage(e);
-            message.setJMSCorrelationID(String.valueOf(resource.getId()));
+            message.setJMSCorrelationID(String.valueOf(upload_id));
 
             producer.send(dest, message);
             return null;
         });
     }
 
-    public void setCorr(Resource resource, Resource resource1) {
+    public void setCorr(Long upload_id, Long corr_upload_id) {
         jmsTemplate.execute((session, producer) -> {
             Destination dest = session.createQueue("corr");
 
-            Message message = session.createTextMessage(String.valueOf(resource1.getId()));
-            message.setJMSCorrelationID(String.valueOf(resource.getId()));
+            Message message = session.createTextMessage(String.valueOf(corr_upload_id));
+            message.setJMSCorrelationID(String.valueOf(upload_id));
 
             producer.send(dest, message);
             return null;
         });
     }
 
-    public UploadStatus getStatus(Long id) {
-        String selector = String.format("JMSCorrelationID='%s'", id);
+    public UploadStatus getStatus(Long upload_id) {
+        String selector = String.format("JMSCorrelationID='%s'", upload_id);
 
         return jmsTemplate.execute((session) -> {
             UploadStatus result = null;
@@ -172,8 +171,8 @@ public class ResourceUploadServiceImpl implements ResourceUploadService {
         }, true);
     }
 
-    public Set<String> getMess(Long id) {
-        String selector = String.format("JMSCorrelationID='%s'", id);
+    public Set<String> getMess(Long upload_id) {
+        String selector = String.format("JMSCorrelationID='%s'", upload_id);
 
         return jmsTemplate.execute((session) -> {
             Set<String> result = new HashSet<>();
@@ -193,8 +192,8 @@ public class ResourceUploadServiceImpl implements ResourceUploadService {
         }, true);
     }
 
-    public Set<Long> getCorr(Long id) {
-        String selector = String.format("JMSCorrelationID='%s'", id);
+    public Set<Long> getCorr(Long upload_id) {
+        String selector = String.format("JMSCorrelationID='%s'", upload_id);
 
         return jmsTemplate.execute((session) -> {
             Set<Long> result = new HashSet<>();

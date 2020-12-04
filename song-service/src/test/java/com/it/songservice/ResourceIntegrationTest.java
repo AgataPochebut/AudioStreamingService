@@ -80,7 +80,7 @@ public class ResourceIntegrationTest {
                 ObjectMessage objectMessage = (ObjectMessage) message;
                 Resource resource = (Resource) objectMessage.getObject();
 
-                uploadService.setStatus(resource, UploadStatus.FINISHED);
+                uploadService.setStatus(resource.getId(), UploadStatus.FINISHED);
 
                 latch.countDown();
             }
@@ -123,7 +123,7 @@ public class ResourceIntegrationTest {
                 ObjectMessage objectMessage = (ObjectMessage) message;
                 Resource resource = (Resource) objectMessage.getObject();
 
-                uploadService.setStatus(resource, UploadStatus.FINISHED);
+                uploadService.setStatus(resource.getId(), UploadStatus.FINISHED);
 
                 latch.countDown();
             }

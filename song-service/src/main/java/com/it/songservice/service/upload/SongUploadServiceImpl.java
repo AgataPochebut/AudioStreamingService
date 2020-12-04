@@ -24,13 +24,13 @@ public class SongUploadServiceImpl implements SongUploadService {
         try {
             songStorageService.upload(resource);
 
-            resourceUploadService.setStatus(resource, UploadStatus.FINISHED);
+            resourceUploadService.setStatus(resource.getId(), UploadStatus.FINISHED);
         } catch (Exception e) {
             String errorMessage = e.getMessage();
             log.error(errorMessage, e);
 
-            resourceUploadService.setMess(resource, errorMessage);
-            resourceUploadService.setStatus(resource,UploadStatus.FAILED);
+            resourceUploadService.setMess(resource.getId(), errorMessage);
+            resourceUploadService.setStatus(resource.getId(),UploadStatus.FAILED);
 
             throw new UploadException("Can't upload song " + resource.getName(), e);
         }
