@@ -35,10 +35,10 @@ class GenreIntegrationTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private GenreRepositoryService repositoryService;
+    private Mapper mapper;
 
     @Autowired
-    private Mapper mapper;
+    private GenreRepositoryService repositoryService;
 
     @Test
     void getAll() throws Exception {

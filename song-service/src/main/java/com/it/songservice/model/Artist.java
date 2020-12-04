@@ -30,8 +30,4 @@ public class Artist extends BaseEntity {
             inverseJoinColumns = {@JoinColumn(name = "genre_id")})
     private Set<Genre> genres;
 
-//    @ElementCollection
-//    @CollectionTable(name = "notes", joinColumns = @JoinColumn(name = "source_id"))
-//    @Column(name = "note")
-//    private Set<String> notes;
 }

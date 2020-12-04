@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 
 @StorageType(StorageTypes.S3)
-@Service("ResourceStorageServiceS3")
+@Service
 public class ResourceStorageServiceS3 implements ResourceStorageService<S3Resource> {
 
     @Autowired

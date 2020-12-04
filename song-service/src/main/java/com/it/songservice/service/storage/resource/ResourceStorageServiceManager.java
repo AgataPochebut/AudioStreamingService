@@ -44,9 +44,7 @@ public class ResourceStorageServiceManager {
                 continue;
             }
             provider.delete(resource);
-            if(!provider.exist(resource)) {
-                return;
-            }
+            return;
         }
 
         throw new Exception("No siutable service");

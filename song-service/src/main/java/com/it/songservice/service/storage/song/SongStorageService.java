@@ -12,12 +12,6 @@ public interface SongStorageService {
 
     Song upload(Resource resource) throws Exception;
 
-    Song upload(org.springframework.core.io.Resource source, String name) throws Exception;
-
-    org.springframework.core.io.Resource download(Song entity) throws Exception;
-
     void delete(Song entity) throws Exception;
-
-    boolean exist(Song entity) throws Exception;
 
 }

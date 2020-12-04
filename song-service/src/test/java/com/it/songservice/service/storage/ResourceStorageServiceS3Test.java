@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ResourceStorageServiceS3Test {
 
     @Autowired
-    @Qualifier("ResourceStorageServiceS3")
+    @Qualifier("resourceStorageServiceS3")
     private ResourceStorageService storageService;
 
     @Autowired

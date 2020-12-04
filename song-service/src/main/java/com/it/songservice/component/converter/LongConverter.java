@@ -1,4 +1,4 @@
-package com.it.songservice.converter;
+package com.it.songservice.component.converter;
 
 import com.it.commonservice.model.BaseEntity;
 import org.dozer.CustomConverter;

@@ -18,26 +18,8 @@ public abstract class SongStorageDecorator implements SongStorageService {
     }
 
     @Override
-    public Song upload(org.springframework.core.io.Resource source, String name) throws Exception {
-        return storageService.upload(source, name);
-    }
-
-    @Override
-    public org.springframework.core.io.Resource download(Song entity) throws Exception {
-        return storageService.download(entity);
-    }
-
-    @Override
     public void delete(Song entity) throws Exception {
         storageService.delete(entity);
     }
-
-    @Override
-    public boolean exist(Song entity) throws Exception {
-        return storageService.exist(entity);
-    }
-
-
-
 
 }

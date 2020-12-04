@@ -33,21 +33,4 @@ public class Song extends BaseEntity {
     @JoinColumn(name = "album_id")
     private Album album;
 
-//    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    @JoinTable(name = "Song_Album",
-//            joinColumns = {@JoinColumn(name = "song_id")},
-//            inverseJoinColumns = {@JoinColumn(name = "album_id")})
-//    private Set<Album> albums;
-//
-//    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    @JoinTable(name = "Song_Artist",
-//            joinColumns = {@JoinColumn(name = "song_id")},
-//            inverseJoinColumns = {@JoinColumn(name = "artist_id")})
-//    private Set<Artist> artists;
-
-//    @ElementCollection
-//    @CollectionTable(name = "notes", joinColumns = @JoinColumn(name = "source_id"))
-//    @Column(name = "note")
-//    private Set<String> notes;
-
 }

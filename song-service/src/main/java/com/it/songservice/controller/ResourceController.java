@@ -1,10 +1,14 @@
 package com.it.songservice.controller;
 
-import com.it.songservice.jms.Producer;
+import com.it.songservice.dto.response.ResourceResponseDto;
+import com.it.songservice.dto.response.UploadResultResponseDto;
 import com.it.songservice.model.Resource;
+import com.it.songservice.model.UploadResult;
 import com.it.songservice.service.repository.ResourceRepositoryService;
 import com.it.songservice.service.storage.resource.ResourceStorageServiceManager;
+import com.it.songservice.service.upload.ResourceUploadService;
 import lombok.extern.slf4j.Slf4j;
+import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -32,18 +36,38 @@ public class ResourceController {
     private ResourceStorageServiceManager resourceStorageServiceManager;
 
     @Autowired
+    ResourceUploadService resourceUploadService;
+
+    @Autowired
     private ResourceRepositoryService repositoryService;
 
     @Autowired
-    private Producer producer;
+    private Mapper mapper;
+
+    @GetMapping(value = "uploadResult/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public UploadResultResponseDto uploadResult(@PathVariable Long id) throws Exception {
+        UploadResult uploadResult = resourceUploadService.getResultById(id);
+        final UploadResultResponseDto responseDto = mapper.map(uploadResult, UploadResultResponseDto.class);
+        return responseDto;
+    }
+
+    @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<ResourceResponseDto> get(@PathVariable Long id) {
+        Resource entity = repositoryService.findById(id);
+        final ResourceResponseDto responseDto = mapper.map(entity, ResourceResponseDto.class);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
 
     // Content type 'multipart/form-data;boundary
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    @ResponseStatus(value = HttpStatus.OK)
-    public void upload(@RequestParam("data") MultipartFile multipartFile) throws Exception {
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public Long upload(@RequestParam("data") MultipartFile multipartFile) throws Exception {
         Resource resource = resourceStorageServiceManager.upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
-        producer.upload(resource);
-        // exception & del res - handle in producer + throw uplExc - handle in restExcHandler
+        resourceUploadService.upload(resource);
+        return resource.getId();
     }
 
     // Accept 'application/octet-stream'
@@ -52,19 +76,13 @@ public class ResourceController {
         Resource resource = repositoryService.findById(id);
         org.springframework.core.io.Resource source = resourceStorageServiceManager.download(resource);
 
-        if (source == null) {
-            log.trace("No matching resource found - returning 404");
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-
         // check the resource's media type
         MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;
 
-        if (RequestMethod.HEAD.equals(request.getMethod())) {
-            setHeaders(response, source, mediaType);
-            return;
-        }
+//        if (RequestMethod.HEAD.equals(request.getMethod())) {
+//            setHeaders(response, source, mediaType);
+//            return;
+//        }
 
         if (request.getHeader(HttpHeaders.RANGE) != null) {
             writePartialContent(request, response, source, mediaType);

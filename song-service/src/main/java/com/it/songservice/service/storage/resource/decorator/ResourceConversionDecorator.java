@@ -1,36 +1,32 @@
 package com.it.songservice.service.storage.resource.decorator;
 
 import com.it.songservice.exception.UploadException;
-import com.it.songservice.feign.conversion.ConversionClient;
 import com.it.songservice.model.Resource;
+import com.it.songservice.service.conversion.ResourceConversionService;
 import com.it.songservice.service.storage.resource.ResourceStorageService;
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
 public class ResourceConversionDecorator extends ResourceStorageDecorator {
 
-    private ConversionClient conversionClient;
+    private ResourceConversionService conversionService;
 
-    public ResourceConversionDecorator(ResourceStorageService storageService, ConversionClient conversionClient) {
+    public ResourceConversionDecorator(ResourceStorageService storageService, ResourceConversionService conversionService) {
         super(storageService);
-        this.conversionClient = conversionClient;
+        this.conversionService = conversionService;
     }
 
     @Override
     public Resource upload(org.springframework.core.io.Resource source, String name) throws Exception {
+        Resource entity = super.upload(source, name);
         if (FilenameUtils.getExtension(name).equalsIgnoreCase("wav")) {
             try {
-                MultipartFile multipartFile = new MockMultipartFile(name, name, "multipart/form-data", source.getInputStream());
-                ResponseEntity<org.springframework.core.io.Resource> response = conversionClient.convert(multipartFile, "mp3");
-                source = response.getBody();
-                name = response.getHeaders().getContentDisposition().getFilename();
+                return conversionService.convert(entity, "mp3");
             } catch (Exception e) {
+                super.delete(entity);
                 throw new UploadException("Conv exc in " + name, e);
             }
         }
-        return super.upload(source, name);
+        return entity;
     }
 
 }

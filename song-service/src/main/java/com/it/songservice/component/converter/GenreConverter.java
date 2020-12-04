@@ -1,4 +1,4 @@
-package com.it.songservice.converter;
+package com.it.songservice.component.converter;
 
 import com.it.songservice.model.Genre;
 import com.it.songservice.service.repository.GenreRepositoryService;

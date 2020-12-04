@@ -1,6 +1,7 @@
 package com.it.songservice.component;
 
 import com.it.commonservice.dto.ErrorResponseDto;
+import com.it.songservice.exception.CustomException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -48,6 +49,30 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(responseDTO);
     }
 
+    @ExceptionHandler(value = {EntityNotFoundException.class})
+    protected ResponseEntity<Object> handle(EntityNotFoundException exception) {
+        String errorMessage = exception.getMessage();
+        log.error(errorMessage, exception);
+
+        ErrorResponseDto responseDTO = new ErrorResponseDto(HttpStatus.NOT_FOUND, errorMessage);
+        return ResponseEntity
+                .status(responseDTO.getHttpStatus())
+                .body(responseDTO);
+    }
+
+    @ExceptionHandler(value = {CustomException.class})
+    protected ResponseEntity<Object> handle(CustomException exception) {
+        String errorMessage = exception.getDetails().stream()
+                .map(i -> i.getMessage().concat(SEMICOLON))
+                .reduce(EMPTY, String::concat);
+        log.error(errorMessage, exception);
+
+        ErrorResponseDto responseDTO = new ErrorResponseDto(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage);
+        return ResponseEntity
+                .status(responseDTO.getHttpStatus())
+                .body(responseDTO);
+    }
+
     @ExceptionHandler(value = {Exception.class})
     protected ResponseEntity<Object> handle(Exception exception) {
         String errorMessage = exception.getMessage();
@@ -65,18 +90,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         log.error(errorMessage, exception);
 
         ErrorResponseDto responseDTO = new ErrorResponseDto(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage);
-        return ResponseEntity
-                .status(responseDTO.getHttpStatus())
-                .body(responseDTO);
-    }
-
-
-    @ExceptionHandler(value = {EntityNotFoundException.class})
-    protected ResponseEntity<Object> handle(EntityNotFoundException exception) {
-        String errorMessage = exception.getMessage();
-        log.error(errorMessage, exception);
-
-        ErrorResponseDto responseDTO = new ErrorResponseDto(HttpStatus.NOT_FOUND, errorMessage);
         return ResponseEntity
                 .status(responseDTO.getHttpStatus())
                 .body(responseDTO);

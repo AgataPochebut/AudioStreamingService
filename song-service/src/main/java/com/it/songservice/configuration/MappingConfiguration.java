@@ -1,20 +1,14 @@
 package com.it.songservice.configuration;
 
-import com.it.songservice.converter.AlbumConverter;
-import com.it.songservice.converter.ArtistConverter;
-import com.it.songservice.converter.GenreConverter;
-import com.it.songservice.converter.LongConverter;
+import com.it.songservice.component.converter.AlbumConverter;
+import com.it.songservice.component.converter.ArtistConverter;
+import com.it.songservice.component.converter.GenreConverter;
+import com.it.songservice.component.converter.LongConverter;
 import com.it.songservice.dto.request.AlbumRequestDto;
 import com.it.songservice.dto.request.ArtistRequestDto;
 import com.it.songservice.dto.request.GenreRequestDto;
-import com.it.songservice.dto.response.AlbumResponseDto;
-import com.it.songservice.dto.response.ArtistResponseDto;
-import com.it.songservice.dto.response.GenreResponseDto;
-import com.it.songservice.dto.response.SongResponseDto;
-import com.it.songservice.model.Album;
-import com.it.songservice.model.Artist;
-import com.it.songservice.model.Genre;
-import com.it.songservice.model.Song;
+import com.it.songservice.dto.response.*;
+import com.it.songservice.model.*;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 import org.dozer.loader.api.BeanMappingBuilder;
@@ -84,6 +78,9 @@ public class MappingConfiguration {
 
                 mapping(Genre.class, GenreResponseDto.class)
                         .fields("Name", "Name");
+
+//                mapping(UploadResult.class, UploadResultResponseDto.class)
+//                        .fields("Name", "Name");
 
             }
         });

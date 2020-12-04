@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 
 
 @StorageType(StorageTypes.FS)
-@Service("ResourceStorageServiceFS")
+@Service
 public class ResourceStorageServiceFS implements ResourceStorageService<FSResource> {
 
     @Value("${fs.defaultFolder}")

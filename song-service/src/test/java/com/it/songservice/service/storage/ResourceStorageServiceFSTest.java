@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ResourceStorageServiceFSTest {
 
     @Autowired
-    @Qualifier("ResourceStorageServiceFS")
+    @Qualifier("resourceStorageServiceFS")
     private ResourceStorageService storageService;
 
     @Value("${fs.defaultFolder}")
