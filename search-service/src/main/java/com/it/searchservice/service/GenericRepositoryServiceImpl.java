@@ -44,11 +44,6 @@ public class GenericRepositoryServiceImpl<T,U> implements GenericRepositoryServi
     }
 
     @Override
-    public void delete(T entity) {
-        repository.delete(entity);
-    }
-
-    @Override
     public List<T> search(String keyword){
         QueryBuilder queryBuilder = (keyword == null)
                 ? QueryBuilders.matchAllQuery()

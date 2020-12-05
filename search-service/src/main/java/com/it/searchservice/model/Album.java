@@ -20,4 +20,6 @@ public class Album extends BaseEntity {
 
     private Set<Artist> artists;
 
+    private Set<Genre> genres;
+
 }

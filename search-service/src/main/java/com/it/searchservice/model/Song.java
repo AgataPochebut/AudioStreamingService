@@ -16,8 +16,6 @@ public class Song extends BaseEntity {
     @NotEmpty
     private String name;
 
-    private Integer year;
-
     private Resource resource;
 
     private Set<String> notes;

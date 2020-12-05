@@ -14,8 +14,6 @@ public interface GenericRepositoryService<T,U> {
 
     void deleteById(U id);
 
-    void delete(T entity);
-
     List<T> search(String keyword);
 
 }

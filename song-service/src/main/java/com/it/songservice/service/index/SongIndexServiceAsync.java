@@ -1,5 +1,7 @@
 package com.it.songservice.service.index;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.it.songservice.model.Song;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +21,8 @@ public class SongIndexServiceAsync implements SongIndexService {
     private JmsTemplate jmsTemplate;
 
     @Override
-    public void save(Song entity) {
-        jmsTemplate.convertAndSend("create_index_song", entity, message -> {
+    public void save(Song entity) throws JsonProcessingException {
+        jmsTemplate.convertAndSend("create_index_song", new ObjectMapper().writeValueAsString(entity), message -> {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication != null) {
                 byte[] bytes = SerializationUtils.serialize(authentication);

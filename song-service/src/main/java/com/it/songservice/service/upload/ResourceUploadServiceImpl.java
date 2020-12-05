@@ -115,14 +115,9 @@ public class ResourceUploadServiceImpl implements ResourceUploadService {
     }
 
     public void setStatus(Long upload_id, UploadStatus status) {
-        jmsTemplate.execute((session, producer) -> {
-            Destination dest = session.createQueue("status");
-
-            Message message = session.createObjectMessage(status);
+        jmsTemplate.convertAndSend("status", status, message -> {
             message.setJMSCorrelationID(String.valueOf(upload_id));
-
-            producer.send(dest, message);
-            return null;
+            return message;
         });
     }
 

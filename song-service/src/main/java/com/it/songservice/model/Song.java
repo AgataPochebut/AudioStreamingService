@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Builder
 @Data
@@ -16,7 +17,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Entity
 @Table(name="SONGS")
-public class Song extends BaseEntity {
+public class Song extends BaseEntity implements Serializable {
 
     @NotNull
     @NotEmpty
