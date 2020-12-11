@@ -25,3 +25,6 @@ fs:
 
 storage:
   type: FS
+
+FFMPEG: D:\ffmpeg\ffmpeg.exe
+FFPROBE: D:\ffmpeg\ffprobe.exe

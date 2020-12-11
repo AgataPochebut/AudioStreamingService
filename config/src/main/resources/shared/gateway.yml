@@ -11,7 +11,6 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
-#            redirect-uri: ${REDIRECT_URI:http://localhost:8080/login/oauth2/code/google}
 
 zuul:
   sensitiveHeaders: Cookie, Set-Cookie
@@ -36,9 +35,3 @@ zuul:
     search-service:
       path: /search-service/**
       serviceId: search-service
-    storage-service:
-      path: /storage-service/**
-      serviceId: storage-service
-    ui:
-      path: /ui/**
-      serviceId: ui

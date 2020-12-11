@@ -14,9 +14,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @Slf4j
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final String SEMICOLON = ";";
-    private static final String EMPTY = "";
-
     @ExceptionHandler(value = {Exception.class})
     protected ResponseEntity<Object> handle(Exception exception, WebRequest request) {
         String errorMessage = exception.getMessage();
