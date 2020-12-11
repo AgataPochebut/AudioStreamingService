@@ -8,7 +8,6 @@ import com.it.songservice.service.upload.UploadResultService;
 import com.it.songservice.service.upload.ZipUploadService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +18,6 @@ import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
 import javax.xml.bind.DatatypeConverter;
 
-@Profile("prod")
 @Component
 @Slf4j
 public class Consumer {

@@ -241,7 +241,6 @@ public class ResourceController {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public UploadResultResponseDto uploadResult(@PathVariable Long id) throws Exception {
-//        UploadResult uploadResult = resourceUploadService.getResultById(id);
         UploadResult uploadResult = uploadResultRepositoryService.findById(id);
         final UploadResultResponseDto responseDto = mapper.map(uploadResult, UploadResultResponseDto.class);
         return responseDto;
