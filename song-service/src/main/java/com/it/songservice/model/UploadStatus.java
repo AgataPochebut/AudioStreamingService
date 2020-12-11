@@ -8,9 +8,11 @@ import java.io.Serializable;
 @Getter
 @AllArgsConstructor
 public enum UploadStatus implements Serializable {
-    PROCEEDED(0),
-    FINISHED(1),
-    FAILED(2);
+    STORED(1),
+    PROCEEDED(2),
+    UNPACKED(3),
+    FAILED(4),
+    FINISHED(5);
 
     private final int value;
 }

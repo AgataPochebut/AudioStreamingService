@@ -5,7 +5,7 @@ import com.it.songservice.model.UploadStatus;
 import com.it.songservice.service.repository.ResourceRepositoryService;
 import com.it.songservice.service.storage.resource.ResourceStorageServiceManager;
 import com.it.songservice.service.upload.ResourceUploadService;
-import lombok.SneakyThrows;
+import com.it.songservice.service.upload.SongUploadService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
@@ -38,13 +38,19 @@ public class ResourceIntegrationTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private ResourceUploadService uploadService;
+    private ResourceLoader resourceLoader;
 
     @Autowired
     private ResourceRepositoryService repositoryService;
 
     @Autowired
-    private ResourceStorageServiceManager storageService;
+    private ResourceUploadService uploadService;
+
+    @Autowired
+    private SongUploadService songUploadService;
+
+    @Autowired
+    private ResourceStorageServiceManager resourceStorageServiceManager;
 
     @Qualifier("jmsConnectionFactory")
     @Autowired
@@ -52,13 +58,13 @@ public class ResourceIntegrationTest {
 
     @BeforeEach
     void before() throws Exception {
-        org.springframework.core.io.Resource source_test = new FileSystemResource("src/test/resources/hurts - stay.mp3");
-        storageService.upload(source_test, source_test.getFilename());
+        org.springframework.core.io.Resource source = resourceLoader.getResource("classpath:hurts - stay.mp3");
+        resourceStorageServiceManager.upload(source, source.getFilename());
     }
 
     @Test
     void uploadZip() throws Exception {
-        org.springframework.core.io.Resource source = new FileSystemResource("src/test/resources/Hurts - Exile.zip");
+        org.springframework.core.io.Resource source = resourceLoader.getResource("classpath:Hurts - Exile.zip");
         MockMultipartFile mockMultipartFile = new MockMultipartFile("data", source.getFilename(), "multipart/form-data", source.getInputStream());
         MvcResult mvcResult = this.mockMvc.perform(multipart("/resources")
                 .file(mockMultipartFile)
@@ -66,23 +72,21 @@ public class ResourceIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
+        Long id = Long.valueOf(mvcResult.getResponse().getContentAsString());
+
         CountDownLatch latch = new CountDownLatch(1);
 
+        String selector = String.format("JMSCorrelationID='%s'", id);
         Connection connection = connectionFactory.createConnection();
         Session session = connection.createSession();
-        Destination destination = session.createQueue("upload_zip");
-        MessageConsumer consumer = session.createConsumer(destination);
-
-        MessageListener listener = new MessageListener() {
-            @SneakyThrows
-            @Override
-            public void onMessage(Message message) {
-                ObjectMessage objectMessage = (ObjectMessage) message;
-                Resource resource = (Resource) objectMessage.getObject();
-
-                uploadService.setStatus(resource.getId(), UploadStatus.FINISHED);
-
-                latch.countDown();
+        Destination destination = session.createQueue("status");
+        MessageConsumer consumer = session.createConsumer(destination, selector);
+        MessageListener listener = message -> {
+            try {
+                UploadStatus status = message.getBody(UploadStatus.class);
+                if (status == UploadStatus.FINISHED) latch.countDown();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         };
 
@@ -94,14 +98,13 @@ public class ResourceIntegrationTest {
         session.close();
         connection.close();
 
-        Long id = Long.valueOf(mvcResult.getResponse().getContentAsString());
-        UploadStatus status = uploadService.getResultById(id).getStatus();
-        assert(status).equals(UploadStatus.FINISHED);
+//        UploadStatus status = uploadService.getResultById(id).getStatus();
+//        assert(status).equals(UploadStatus.FINISHED);
     }
 
     @Test
     void uploadSong() throws Exception {
-        org.springframework.core.io.Resource source = new FileSystemResource("src/test/resources/HURTS - WONDERFUL LIFE.MP3");
+        org.springframework.core.io.Resource source = resourceLoader.getResource("classpath:HURTS - WONDERFUL LIFE.MP3");
         MockMultipartFile mockMultipartFile = new MockMultipartFile("data", source.getFilename(), "multipart/form-data", source.getInputStream());
         MvcResult mvcResult = this.mockMvc.perform(multipart("/resources")
                 .file(mockMultipartFile)
@@ -109,23 +112,27 @@ public class ResourceIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
+        Long id = Long.valueOf(mvcResult.getResponse().getContentAsString());
+
         CountDownLatch latch = new CountDownLatch(1);
 
+        String selector = String.format("JMSCorrelationID='%s'", id);
         Connection connection = connectionFactory.createConnection();
         Session session = connection.createSession();
         Destination destination = session.createQueue("upload_song");
-        MessageConsumer consumer = session.createConsumer(destination);
-
+        MessageConsumer consumer = session.createConsumer(destination, selector);
         MessageListener listener = new MessageListener() {
-            @SneakyThrows
             @Override
             public void onMessage(Message message) {
                 ObjectMessage objectMessage = (ObjectMessage) message;
-                Resource resource = (Resource) objectMessage.getObject();
-
-                uploadService.setStatus(resource.getId(), UploadStatus.FINISHED);
-
-                latch.countDown();
+                try {
+                    Resource resource = (Resource) objectMessage.getObject();
+                    songUploadService.upload(resource);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    latch.countDown();
+                }
             }
         };
 
@@ -137,9 +144,8 @@ public class ResourceIntegrationTest {
         session.close();
         connection.close();
 
-        Long id = Long.valueOf(mvcResult.getResponse().getContentAsString());
-        UploadStatus status = uploadService.getResultById(id).getStatus();
-        assert(status).equals(UploadStatus.FINISHED);
+//        UploadStatus status = uploadService.getResultById(id).getStatus();
+//        assert(status).equals(UploadStatus.FINISHED);
     }
 
     @Test
@@ -150,9 +156,8 @@ public class ResourceIntegrationTest {
                 .andReturn();
 
         org.springframework.core.io.Resource source = new ByteArrayResource(mvcResult.getResponse().getContentAsByteArray());
-        assertThat(source).isNotNull();
-
         Resource entity = repositoryService.findById(1L);
+        assertThat(source).isNotNull();
         assertThat(source.contentLength()).isEqualTo(entity.getSize());
         assertThat(DigestUtils.md5Hex(source.getInputStream())).isEqualTo(entity.getChecksum());
     }

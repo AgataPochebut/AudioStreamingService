@@ -2,13 +2,16 @@ package com.it.songservice;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.it.songservice.dto.request.AlbumRequestDto;
 import com.it.songservice.dto.response.AlbumResponseDto;
+import com.it.songservice.model.Album;
 import com.it.songservice.service.repository.AlbumRepositoryService;
 import org.dozer.Mapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -16,8 +19,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -62,37 +64,36 @@ class AlbumIntegrationTest {
         assertThat(dto).isEqualTo(mapper.map(repositoryService.findById(1L), AlbumResponseDto.class));
     }
 
-//    @Test
-//    void save() throws Exception {
-//        AlbumRequestDto dto = new AlbumRequestDto();
-//        dto.setName("test_new");
-//
-//        MvcResult mvcResult = this.mockMvc.perform(post("/albums")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(objectMapper.writeValueAsString(dto)))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//
-//        AlbumResponseDto responseDto = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), AlbumResponseDto.class);
-//        Album obj = repositoryService.findById(responseDto.getId());
-//        assertThat(obj.getName()).isEqualTo(dto.getName());
-//    }
-//
-//    @Test
-//    void update() throws Exception {
-//        AlbumRequestDto dto = new AlbumRequestDto();
-//        dto.setName("test_upd");
-//
-//        MvcResult mvcResult = this.mockMvc.perform(put("/albums/{id}", 1L)
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(objectMapper.writeValueAsString(dto)))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//
-//        AlbumResponseDto responseDto = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), AlbumResponseDto.class);
-//        Album obj = repositoryService.findById(1L);
-//        assertThat(obj.getName()).isEqualTo(dto.getName());
-//    }
+    @Test
+    void save() throws Exception {
+        AlbumRequestDto dto = new AlbumRequestDto();
+        dto.setName("test_new");
+
+        MvcResult mvcResult = this.mockMvc.perform(post("/albums")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Long id = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), Long.class);
+        Album obj = repositoryService.findById(id);
+        assertThat(obj.getName()).isEqualTo(dto.getName());
+    }
+
+    @Test
+    void update() throws Exception {
+        AlbumRequestDto dto = new AlbumRequestDto();
+        dto.setName("test_upd");
+
+        MvcResult mvcResult = this.mockMvc.perform(put("/albums/{id}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Album obj = repositoryService.findById(1L);
+        assertThat(obj.getName()).isEqualTo(dto.getName());
+    }
 
     @Test
     void deleteById() throws Exception {

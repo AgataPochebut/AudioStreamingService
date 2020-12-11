@@ -8,25 +8,15 @@ spring:
     active: test
 
   activemq:
-    broker-url: tcp://localhost:61616
-    user: admin
-    password: admin
+    broker-url: vm://embedded?broker.persistent=false,useShutdownHook=false
+    in-memory: true
+    non-blocking-redelivery: true
     packages:
       trust-all: true
-#  activemq:
-#    broker-url: vm://embedded?broker.persistent=false,useShutdownHook=false
-#    in-memory: true
-#    non-blocking-redelivery: true
-#    packages:
-#      trust-all: true
 
   cloud:
     discovery:
       enabled: false
-
-#stubrunner:
-#  ids-to-service-ids:
-#    search-service: search-service
 
 eureka:
   client:

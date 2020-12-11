@@ -22,7 +22,7 @@ public class Genre extends BaseEntity {
 
     @NotNull
     @NotEmpty
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false, unique = true)
     String name;
 
 }

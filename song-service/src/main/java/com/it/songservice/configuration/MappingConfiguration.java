@@ -79,9 +79,6 @@ public class MappingConfiguration {
                 mapping(Genre.class, GenreResponseDto.class)
                         .fields("Name", "Name");
 
-//                mapping(UploadResult.class, UploadResultResponseDto.class)
-//                        .fields("Name", "Name");
-
             }
         });
 

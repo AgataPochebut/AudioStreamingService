@@ -40,6 +40,14 @@ public class SongController {
     @Autowired
     private Mapper mapper;
 
+    // Content type 'multipart/form-data;boundary
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<Long> upload(@RequestParam("data") MultipartFile multipartFile) throws Exception {
+        Resource resource = resourceStorageServiceManager.upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
+        Song entity = storageService.upload(resource);
+        return new ResponseEntity<>(entity.getId(), HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity<List<SongResponseDto>> get() {
         final List<Song> list = repositoryService.findAll();
@@ -53,15 +61,6 @@ public class SongController {
     @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<SongResponseDto> get(@PathVariable Long id) {
         Song entity = repositoryService.findById(id);
-        final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
-
-    // Content type 'multipart/form-data;boundary
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<SongResponseDto> upload(@RequestParam("data") MultipartFile multipartFile) throws Exception {
-        Resource resource = resourceStorageServiceManager.upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
-        Song entity = storageService.upload(resource);
         final SongResponseDto responseDto = mapper.map(entity, SongResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }

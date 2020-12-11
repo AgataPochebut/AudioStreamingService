@@ -45,12 +45,4 @@ public class RedisTestConfiguration {
         return new JedisConnectionFactory(redisStandaloneConfiguration);
     }
 
-//    @Bean
-//    public RedisTemplate<Object, Object> redisTemplate() {
-//        final RedisTemplate<Object, Object> template = new RedisTemplate<>();
-//        template.setConnectionFactory(jedisConnectionFactory());
-//        template.setDefaultSerializer(redisSerializer);
-//        return template;
-//    }
-
 }

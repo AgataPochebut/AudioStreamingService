@@ -57,7 +57,7 @@ class GenreRepositoryTest {
     }
 
     @Test
-    void saveShouldReturnErrorAccountNotEmpty() throws Exception {
+    void saveShouldReturnErrorNameNotEmpty() throws Exception {
         Genre obj = new Genre();
         obj.setName("");
         assertThatExceptionOfType(ConstraintViolationException.class)

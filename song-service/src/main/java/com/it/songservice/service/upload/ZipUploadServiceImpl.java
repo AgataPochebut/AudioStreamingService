@@ -1,21 +1,17 @@
 package com.it.songservice.service.upload;
 
-import com.it.songservice.exception.UploadException;
 import com.it.songservice.model.Resource;
+import com.it.songservice.model.UploadResult;
 import com.it.songservice.model.UploadStatus;
+import com.it.songservice.service.repository.UploadResultRepositoryService;
 import com.it.songservice.service.storage.resource.ResourceStorageServiceManager;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.jms.core.JmsTemplate;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.SerializationUtils;
 
-import javax.xml.bind.DatatypeConverter;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -24,70 +20,62 @@ import java.util.zip.ZipInputStream;
 public class ZipUploadServiceImpl implements ZipUploadService {
 
     @Autowired
-    private JmsTemplate jmsTemplate;
-
-    @Autowired
     ResourceUploadService resourceUploadService;
 
     @Autowired
     ResourceStorageServiceManager resourceStorageServiceManager;
 
+    @Autowired
+    private UploadResultService uploadResultService;
+
+    @Autowired
+    private UploadResultRepositoryService uploadResultRepositoryService;
+
     public void upload(Resource resource) throws Exception {
+        UploadResult result = uploadResultRepositoryService.findByResource(resource.getId());
         try {
+            uploadResultService.setStatus(result, UploadStatus.PROCEEDED);
             org.springframework.core.io.Resource source = resourceStorageServiceManager.download(resource);
             ZipInputStream zin = new ZipInputStream(source.getInputStream());
             ZipEntry entry;
             while ((entry = zin.getNextEntry()) != null) {
                 if (!entry.isDirectory()) {
+                    UploadResult result1 = new UploadResult();
+                    result1.setParent(result);
                     try {
                         byte[] content = IOUtils.toByteArray(zin);
                         org.springframework.core.io.Resource source1 = new ByteArrayResource(content);
                         String name1 = FilenameUtils.getName(entry.getName());
                         Resource resource1 = resourceStorageServiceManager.upload(source1, name1);
-                        resourceUploadService.upload(resource1);//or uploadResource
-
-                        resourceUploadService.setCorr(resource.getId(), resource1.getId());
+                        result1.setResource(resource1.getId());
+                        result1.setStatus(UploadStatus.STORED);
+                        result1 = uploadResultRepositoryService.save(result1);
+                        resourceUploadService.upload(resource1);
                     } catch (Exception e) {
+                        result1 = uploadResultRepositoryService.save(result1);
+
                         String errorMessage = e.getMessage();
                         log.error(errorMessage, e);
 
-                        resourceUploadService.setMess(resource.getId(), errorMessage);
+                        uploadResultService.setStatus(result1, UploadStatus.FAILED);
+                        uploadResultService.setMess(result1, errorMessage);
                     }
                 }
                 zin.closeEntry();
             }
             zin.close();
-
-            resourceUploadService.setStatus(resource.getId(), UploadStatus.FINISHED);
-        }
-        catch (Exception e) {
+            uploadResultService.setStatus(result, UploadStatus.UNPACKED);
+        } catch (Exception e) {
             String errorMessage = e.getMessage();
             log.error(errorMessage, e);
 
-            resourceUploadService.setMess(resource.getId(), errorMessage);
-            resourceUploadService.setStatus(resource.getId(), UploadStatus.FAILED);
-
-            throw new UploadException("Can't unzip archive " + resource.getName(), e);
-        }
-        finally {
+            uploadResultService.setStatus(result, UploadStatus.FAILED);
+            uploadResultService.setMess(result, errorMessage);
+        } finally {
             try {
                 resourceStorageServiceManager.delete(resource);
             } catch (Exception ex) {
-
             }
         }
     }
-
-    private void uploadResource(Resource resource) {
-        jmsTemplate.convertAndSend("upload_resource", resource, message -> {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication != null) {
-                byte[] bytes = SerializationUtils.serialize(authentication);
-                String auth = DatatypeConverter.printBase64Binary(bytes);
-                message.setStringProperty("authentication", auth);
-            }
-            return message;
-        });
-    }
-
 }

@@ -75,8 +75,8 @@ class GenreIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        GenreResponseDto responseDto = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), GenreResponseDto.class);
-        Genre obj = repositoryService.findById(responseDto.getId());
+        Long id = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), Long.class);
+        Genre obj = repositoryService.findById(id);
         assertThat(obj.getName()).isEqualTo(dto.getName());
     }
 
@@ -91,7 +91,6 @@ class GenreIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        GenreResponseDto responseDto = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), GenreResponseDto.class);
         Genre obj = repositoryService.findById(1L);
         assertThat(obj.getName()).isEqualTo(dto.getName());
     }

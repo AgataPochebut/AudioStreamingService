@@ -26,12 +26,12 @@ public class Song extends BaseEntity implements Serializable {
 
     @NotNull
     @OneToOne
-    @JoinColumn(name = "resource_id")
+    @JoinColumn(name = "resource_id", nullable = false, unique = true)
     private Resource resource;
 
     @NotNull
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "album_id")
+    @JoinColumn(name = "album_id", nullable = false)
     private Album album;
 
 }

@@ -4,9 +4,12 @@ import com.it.songservice.dto.response.ResourceResponseDto;
 import com.it.songservice.dto.response.UploadResultResponseDto;
 import com.it.songservice.model.Resource;
 import com.it.songservice.model.UploadResult;
+import com.it.songservice.model.UploadStatus;
 import com.it.songservice.service.repository.ResourceRepositoryService;
+import com.it.songservice.service.repository.UploadResultRepositoryService;
 import com.it.songservice.service.storage.resource.ResourceStorageServiceManager;
 import com.it.songservice.service.upload.ResourceUploadService;
+import com.it.songservice.service.upload.UploadResultService;
 import lombok.extern.slf4j.Slf4j;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,30 +47,33 @@ public class ResourceController {
     @Autowired
     private Mapper mapper;
 
-    @GetMapping(value = "uploadResult/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
-    public UploadResultResponseDto uploadResult(@PathVariable Long id) throws Exception {
-        UploadResult uploadResult = resourceUploadService.getResultById(id);
-        final UploadResultResponseDto responseDto = mapper.map(uploadResult, UploadResultResponseDto.class);
-        return responseDto;
-    }
+    @Autowired
+    private UploadResultRepositoryService uploadResultRepositoryService;
 
-    @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<ResourceResponseDto> get(@PathVariable Long id) {
-        Resource entity = repositoryService.findById(id);
-        final ResourceResponseDto responseDto = mapper.map(entity, ResourceResponseDto.class);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
+    @Autowired
+    private UploadResultService uploadResultService;
 
     // Content type 'multipart/form-data;boundary
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
-    public Long upload(@RequestParam("data") MultipartFile multipartFile) throws Exception {
-        Resource resource = resourceStorageServiceManager.upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
-        resourceUploadService.upload(resource);
-        return resource.getId();
+    public ResponseEntity<Long> upload(@RequestParam("data") MultipartFile multipartFile) throws Exception {
+        UploadResult result = new UploadResult();
+        try {
+            Resource resource = resourceStorageServiceManager.upload(multipartFile.getResource(), multipartFile.getOriginalFilename());
+            result.setResource(resource.getId());
+            result.setStatus(UploadStatus.STORED);
+            result = uploadResultRepositoryService.save(result);
+            resourceUploadService.upload(resource);
+        }
+        catch (Exception e) {
+            result = uploadResultRepositoryService.save(result);
+
+            String errorMessage = e.getMessage();
+            log.error(errorMessage, e);
+
+            uploadResultService.setStatus(result, UploadStatus.FAILED);
+            uploadResultService.setMess(result, errorMessage);
+        }
+        return new ResponseEntity<>(result.getId(), HttpStatus.OK);
     }
 
     // Accept 'application/octet-stream'
@@ -79,10 +85,10 @@ public class ResourceController {
         // check the resource's media type
         MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;
 
-//        if (RequestMethod.HEAD.equals(request.getMethod())) {
-//            setHeaders(response, source, mediaType);
-//            return;
-//        }
+        if (RequestMethod.HEAD.equals(request.getMethod())) {
+            setHeaders(response, source, mediaType);
+            return;
+        }
 
         if (request.getHeader(HttpHeaders.RANGE) != null) {
             writePartialContent(request, response, source, mediaType);
@@ -222,6 +228,23 @@ public class ResourceController {
                 break;
             }
         }
+    }
+
+    @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<ResourceResponseDto> get(@PathVariable Long id) {
+        Resource entity = repositoryService.findById(id);
+        final ResourceResponseDto responseDto = mapper.map(entity, ResourceResponseDto.class);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "uploadResult/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public UploadResultResponseDto uploadResult(@PathVariable Long id) throws Exception {
+//        UploadResult uploadResult = resourceUploadService.getResultById(id);
+        UploadResult uploadResult = uploadResultRepositoryService.findById(id);
+        final UploadResultResponseDto responseDto = mapper.map(uploadResult, UploadResultResponseDto.class);
+        return responseDto;
     }
 
 }

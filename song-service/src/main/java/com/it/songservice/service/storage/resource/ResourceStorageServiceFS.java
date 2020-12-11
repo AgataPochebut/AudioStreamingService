@@ -44,10 +44,6 @@ public class ResourceStorageServiceFS implements ResourceStorageService<FSResour
 
     @Override
     public org.springframework.core.io.Resource download(FSResource resource) throws IOException {
-//        InputStream in = Files.newInputStream(Paths.get(resource.getFolderName(), resource.getName()));
-//        byte[] content = IOUtils.toByteArray(in);
-//        in.close();
-//        return new ByteArrayResource(content);
         return new FileSystemResource(Paths.get(resource.getFolderName(), resource.getName()));
     }
 

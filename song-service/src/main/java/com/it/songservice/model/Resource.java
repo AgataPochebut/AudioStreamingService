@@ -16,7 +16,6 @@ import javax.validation.constraints.NotNull;
 @Table(name="RESOURCES")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
-//@MappedSuperclass
 public class Resource extends BaseEntity {
 
     @NotNull

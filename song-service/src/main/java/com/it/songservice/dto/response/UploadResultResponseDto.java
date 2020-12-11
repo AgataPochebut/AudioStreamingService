@@ -1,5 +1,6 @@
 package com.it.songservice.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,8 +14,7 @@ public class UploadResultResponseDto {
 
     private String status;
 
-    private Set<String> messages;
-
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Set<UploadResultResponseDto> details;
 
 }

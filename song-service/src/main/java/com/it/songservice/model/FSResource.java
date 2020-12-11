@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @Builder
 @Data
@@ -18,8 +16,6 @@ import javax.validation.constraints.NotNull;
 @DiscriminatorValue("FS")
 public class FSResource extends Resource {
 
-    @NotNull
-    @NotEmpty
     private String folderName;
 
 }

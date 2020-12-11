@@ -2,12 +2,14 @@ package com.it.songservice.service.repository;
 
 import com.it.songservice.repository.GenericRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
+@Service
 @Transactional
 public abstract class GenericRepositoryServiceImpl<T, U> implements GenericRepositoryService<T, U> {
 
