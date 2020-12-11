@@ -1,13 +1,12 @@
-//package com.it.searchservice;
-//
-//import org.junit.jupiter.api.Test;
-//import org.springframework.boot.test.context.SpringBootTest;
-//
-//@SpringBootTest
-//class SearchServiceApplicationTests {
-//
+package com.it.searchservice;
+
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class SearchServiceApplicationTests {
+
 //	@Test
 //	void contextLoads() {
 //	}
-//
-//}
+
+}
