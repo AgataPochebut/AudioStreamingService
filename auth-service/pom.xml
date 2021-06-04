@@ -21,7 +21,7 @@
         <lombok>1.18.12</lombok>
         <dozer>5.5.1</dozer>
         <swagger>2.9.2</swagger>
-        <hibernate.validator>6.0.16.Final</hibernate.validator>
+        <hibernate.validator>6.0.20.Final</hibernate.validator>
         <h2>1.4.197</h2>
     </properties>
 
