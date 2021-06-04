@@ -19,7 +19,7 @@
 		<java.version>11</java.version>
 		<spring-cloud.version>Hoxton.SR4</spring-cloud.version>
 		<lombok>1.18.12</lombok>
-		<hibernate.validator>6.0.16.Final</hibernate.validator>
+		<hibernate.validator>6.0.20.Final</hibernate.validator>
 	</properties>
 
 	<dependencyManagement>
