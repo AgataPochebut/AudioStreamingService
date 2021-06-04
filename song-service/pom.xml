@@ -21,7 +21,7 @@
         <dozer>5.5.1</dozer>
         <swagger>2.9.2</swagger>
         <lombok>1.18.12</lombok>
-        <hibernate.validator>6.0.16.Final</hibernate.validator>
+        <hibernate.validator>6.0.20.Final</hibernate.validator>
         <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
         <org.projectlombok.version>1.18.2</org.projectlombok.version>
         <org.apache.maven.plugins.version>3.6.0</org.apache.maven.plugins.version>
